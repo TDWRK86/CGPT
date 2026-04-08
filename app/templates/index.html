@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tender Intake PoC</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+
+<h2>Tender Intake Proof of Concept</h2>
+
+<form method="post" action="/load">
+    <button type="submit">Load today’s opportunities</button>
+</form>
+
+<br>
+
+{% if opportunities %}
+<table border="1" cellpadding="6" cellspacing="0">
+    <tr>
+        <th>Select</th>
+        <th>Title</th>
+        <th>Buyer</th>
+        <th>Value</th>
+        <th>Stage</th>
+        <th>Description</th>
+    </tr>
+
+    {% for opp in opportunities %}
+    <tr>
+        <td><input type="checkbox"></td>
+        <td>{{ opp.title }}</td>
+        <td>{{ opp.buyer }}</td>
+        <td>£{{ opp.value }}</td>
+        <td>{{ opp.stage }}</td>
+        <td style="max-width:600px;">{{ opp.description }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No opportunities loaded yet.</p>
+{% endif %}
+
+</body>
+</html>
