@@ -170,6 +170,29 @@
             font-size: 0.75rem;
             margin: 1px 2px 1px 0;
         }
+
+        .desc {
+    max-width: 520px;
+}
+
+.desc-preview {
+    line-height: 1.4;
+}
+
+.read-more {
+    margin-top: 4px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: #1a3a5c;
+    font-size: 0.75rem;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.read-more:hover {
+    color: #10263f;
+}
         td.cpv { color: #666; font-size: 0.75rem; }
 
         .empty-state {
@@ -358,7 +381,18 @@
                 <td class="value">${fmt(o.value)}</td>
                 <td class="stage">${stages}</td>
                 <td class="cpv">${esc(o.cpvs || "—")}</td>
-                <td class="desc">${esc(o.description || "")}</td>
+                <td class="desc"
+                    data-fulltext="${esc(o.description || "")}"
+                    data-preview="${esc((o.description || "").substring(0, 220))}">
+                    <div class="desc-preview">
+                        ${esc((o.description || "").substring(0, 220))}
+                        ${(o.description || "").length > 220 ? "…" : ""}
+                    </div>
+
+                    ${(o.description || "").length > 220
+                        ? `<button class="read-more" onclick="toggleDesc(this)">Read more</button>`
+                        : ""}
+                </td>
                 <td>${(o.published_date || "").substring(0, 10)}</td>
             </tr>`;
         }).join("");
@@ -400,6 +434,19 @@
 
         stagesPopulated = true;
     }
+
+    function toggleDesc(btn) {
+    const td = btn.closest("td");
+    const preview = td.querySelector(".desc-preview");
+
+    if (btn.textContent === "Read more") {
+        preview.textContent = td.dataset.fulltext;
+        btn.textContent = "Read less";
+    } else {
+        preview.textContent = td.dataset.preview + "…";
+        btn.textContent = "Read more";
+    }
+}
 
     // ---- CLEAR ----
     function clearFilters() {
