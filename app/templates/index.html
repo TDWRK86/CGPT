@@ -11,230 +11,239 @@
             background: #f4f6f9;
             color: #222;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* ---- HEADER ---- */
         header {
             background: #1a3a5c;
             color: white;
-            padding: 16px 28px;
+            padding: 14px 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-shrink: 0;
         }
-
-        header h1 { font-size: 1.2rem; font-weight: 600; letter-spacing: .3px; }
+        header h1 { font-size: 1.1rem; font-weight: 600; }
 
         .load-btn {
             background: #e8a020;
             color: white;
             border: none;
-            padding: 9px 20px;
+            padding: 8px 18px;
             border-radius: 5px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             transition: background .15s;
         }
         .load-btn:hover { background: #cf8b18; }
-        .load-btn:disabled { background: #999; cursor: not-allowed; }
+        .load-btn:disabled { background: #888; cursor: not-allowed; }
 
-        #load-status {
-            font-size: 0.82rem;
-            color: #c8daf0;
-            margin-left: 12px;
-        }
+        #load-status { font-size: 0.78rem; color: #b8d0ec; margin-left: 10px; }
 
-        .main {
+        /* ---- TABS ---- */
+        .tab-bar {
+            background: #fff;
+            border-bottom: 2px solid #dde3ec;
             display: flex;
-            gap: 0;
-            height: calc(100vh - 56px);
+            padding: 0 24px;
+            flex-shrink: 0;
         }
+        .tab {
+            padding: 12px 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #888;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: color .15s, border-color .15s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab:hover { color: #1a3a5c; }
+        .tab.active { color: #1a3a5c; border-bottom-color: #1a3a5c; }
+        .tab-badge {
+            background: #e8a020;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 10px;
+            padding: 1px 7px;
+            min-width: 20px;
+            text-align: center;
+        }
+        .tab-badge.hidden { display: none; }
 
-        /* ---- FILTER SIDEBAR ---- */
+        /* ---- TAB PANELS ---- */
+        .tab-panel { display: none; flex: 1; overflow: hidden; }
+        .tab-panel.active { display: flex; }
+
+        /* ---- OPPORTUNITIES LAYOUT ---- */
+        #panel-opps { flex-direction: row; }
+
         .sidebar {
-            width: 270px;
+            width: 260px;
             flex-shrink: 0;
             background: #fff;
             border-right: 1px solid #dde3ec;
-            padding: 20px 16px;
+            padding: 18px 14px;
             overflow-y: auto;
         }
+        .sidebar h2 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: .8px; color: #999; margin-bottom: 14px; }
 
-        .sidebar h2 {
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: .8px;
-            color: #888;
-            margin-bottom: 16px;
-        }
-
-        .filter-group { margin-bottom: 18px; }
-
-        .filter-group label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #444;
-            margin-bottom: 5px;
-        }
-
+        .filter-group { margin-bottom: 16px; }
+        .filter-group label { display: block; font-size: 0.78rem; font-weight: 600; color: #444; margin-bottom: 4px; }
         .filter-group input[type="text"],
         .filter-group input[type="number"],
         .filter-group input[type="date"] {
             width: 100%;
-            padding: 7px 9px;
+            padding: 6px 8px;
             border: 1px solid #ccd3de;
             border-radius: 4px;
-            font-size: 0.82rem;
-            color: #222;
+            font-size: 0.8rem;
             outline: none;
             transition: border-color .15s;
         }
         .filter-group input:focus { border-color: #1a3a5c; }
-
-        .row2 { display: flex; gap: 8px; }
+        .row2 { display: flex; gap: 6px; }
         .row2 input { width: 50%; }
-
-        .checkbox-group { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
-        .checkbox-group label { font-weight: 400; font-size: 0.82rem; display: flex; align-items: center; gap: 6px; cursor: pointer; }
-
-        .clear-btn {
-            width: 100%;
-            padding: 8px;
-            background: none;
-            border: 1px solid #ccd3de;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            color: #555;
-            cursor: pointer;
-            margin-top: 4px;
-            transition: background .15s;
-        }
+        .checkbox-group { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+        .checkbox-group label { font-weight: 400; font-size: 0.79rem; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .clear-btn { width: 100%; padding: 7px; background: none; border: 1px solid #ccd3de; border-radius: 4px; font-size: 0.78rem; color: #555; cursor: pointer; margin-top: 2px; }
         .clear-btn:hover { background: #f0f3f7; }
 
-        /* ---- TABLE AREA ---- */
-        .content {
-            flex: 1;
-            overflow: auto;
-            padding: 20px 24px;
-        }
+        .content { flex: 1; overflow: auto; padding: 18px 22px; display: flex; flex-direction: column; }
 
-        .toolbar {
+        .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-shrink: 0; }
+        #result-count { font-size: 0.8rem; color: #666; }
+
+        /* ---- TABLE ---- */
+        #table-container { flex: 1; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+        thead th { background: #1a3a5c; color: #fff; text-align: left; padding: 9px 10px; font-weight: 600; white-space: nowrap; }
+        thead th:first-child { width: 36px; text-align: center; }
+        tbody tr:nth-child(even) { background: #f8fafc; }
+        tbody tr:hover { background: #eef3fa; }
+        tbody tr.selected-row { background: #fef3e0 !important; }
+        td { padding: 8px 10px; vertical-align: top; border-bottom: 1px solid #eaeef4; }
+        td.desc { max-width: 420px; color: #444; line-height: 1.4; }
+        td.value { white-space: nowrap; }
+        td.stage span { display: inline-block; background: #dde8f5; color: #1a3a5c; border-radius: 3px; padding: 1px 5px; font-size: 0.72rem; margin: 1px 2px 1px 0; }
+        td.cpv { color: #777; font-size: 0.73rem; }
+        td:first-child { text-align: center; }
+
+        /* ---- SELECTION BAR ---- */
+        .selection-bar {
+            background: #1a3a5c;
+            color: white;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        #result-count {
-            font-size: 0.82rem;
-            color: #666;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.82rem;
-            background: #fff;
+            padding: 10px 18px;
             border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 1px 4px rgba(0,0,0,.08);
+            margin-top: 12px;
+            flex-shrink: 0;
         }
+        .selection-bar.hidden { display: none; }
+        .selection-bar span { font-size: 0.85rem; }
+        .review-btn { background: #e8a020; color: white; border: none; padding: 7px 18px; border-radius: 5px; font-size: 0.83rem; font-weight: 600; cursor: pointer; }
+        .review-btn:hover { background: #cf8b18; }
 
-        thead th {
-            background: #1a3a5c;
-            color: #fff;
-            text-align: left;
-            padding: 10px 12px;
-            font-weight: 600;
-            white-space: nowrap;
+        /* ---- REVIEW PANEL ---- */
+        #panel-review { flex-direction: column; padding: 24px; overflow-y: auto; }
+
+        .review-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .review-header h2 { font-size: 1rem; font-weight: 600; color: #1a3a5c; }
+        #review-count { font-size: 0.8rem; color: #888; }
+
+        .review-empty { text-align: center; padding: 80px 20px; color: #aaa; font-size: 0.9rem; }
+
+        /* ---- REVIEW CARDS ---- */
+        .review-card {
+            background: #fff;
+            border: 1px solid #dde3ec;
+            border-radius: 8px;
+            padding: 18px 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+            display: grid;
+            grid-template-columns: 1fr 220px;
+            gap: 16px;
+            margin-bottom: 14px;
         }
+        .card-title { font-size: 0.92rem; font-weight: 700; color: #1a3a5c; margin-bottom: 5px; }
+        .card-meta { font-size: 0.77rem; color: #777; display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
+        .card-desc { font-size: 0.8rem; color: #444; line-height: 1.5; margin-bottom: 8px; }
+        .card-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
+        .card-tags span { background: #dde8f5; color: #1a3a5c; border-radius: 3px; padding: 1px 6px; font-size: 0.72rem; }
 
-        tbody tr:nth-child(even) { background: #f8fafc; }
-        tbody tr:hover { background: #eef3fa; }
+        .card-actions { display: flex; flex-direction: column; gap: 12px; }
 
-        td {
-            padding: 9px 12px;
-            vertical-align: top;
-            border-bottom: 1px solid #eaeef4;
+        /* Stars — row-reverse so CSS sibling trick works left-to-right visually */
+        .star-row { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 2px; }
+        .star-row input[type="radio"] { display: none; }
+        .star-row label { font-size: 1.5rem; color: #d0d5de; cursor: pointer; transition: color .1s; line-height: 1; }
+        .star-row label:hover,
+        .star-row label:hover ~ label,
+        .star-row input[type="radio"]:checked ~ label { color: #e8a020; }
+
+        .notes-field {
+            width: 100%;
+            min-height: 80px;
+            padding: 7px 9px;
+            border: 1px solid #ccd3de;
+            border-radius: 4px;
+            font-size: 0.79rem;
+            font-family: inherit;
+            resize: vertical;
+            outline: none;
         }
+        .notes-field:focus { border-color: #1a3a5c; }
 
-        td.desc { max-width: 520px; color: #444; line-height: 1.4; }
-        td.value { white-space: nowrap; }
-        td.stage span {
-            display: inline-block;
-            background: #dde8f5;
-            color: #1a3a5c;
-            border-radius: 3px;
-            padding: 1px 6px;
-            font-size: 0.75rem;
-            margin: 1px 2px 1px 0;
-        }
+        .remove-btn { background: none; border: 1px solid #e0868a; color: #c0464c; border-radius: 4px; padding: 5px 12px; font-size: 0.76rem; cursor: pointer; align-self: flex-start; }
+        .remove-btn:hover { background: #fdf0f0; }
 
-        .desc {
-    max-width: 520px;
-}
-
-.desc-preview {
-    line-height: 1.4;
-}
-
-.read-more {
-    margin-top: 4px;
-    padding: 0;
-    border: none;
-    background: none;
-    color: #1a3a5c;
-    font-size: 0.75rem;
-    cursor: pointer;
-    text-decoration: underline;
-}
-
-.read-more:hover {
-    color: #10263f;
-}
-        td.cpv { color: #666; font-size: 0.75rem; }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #aaa;
-            font-size: 0.9rem;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 14px; height: 14px;
-            border: 2px solid #ccd3de;
-            border-top-color: #1a3a5c;
-            border-radius: 50%;
-            animation: spin .6s linear infinite;
-            vertical-align: middle;
-            margin-right: 6px;
-        }
+        /* ---- UTILS ---- */
+        .empty-state { text-align: center; padding: 60px 20px; color: #aaa; font-size: 0.88rem; }
+        .spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid #ccd3de; border-top-color: #1a3a5c; border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; margin-right: 5px; }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header>
     <h1>📋 Tender Intake — Proof of Concept</h1>
-    <div style="display:flex;align-items:center;">
+    <div style="display:flex;align-items:center;gap:10px;">
         <button class="load-btn" id="loadBtn" onclick="loadOpportunities()">Load today's opportunities</button>
         <span id="load-status"></span>
     </div>
 </header>
 
-<div class="main">
+<!-- TAB BAR -->
+<div class="tab-bar">
+    <div class="tab active" id="tab-opps" onclick="switchTab('opps')">
+        Opportunities
+    </div>
+    <div class="tab" id="tab-review" onclick="switchTab('review')">
+        Review
+        <span class="tab-badge hidden" id="badge-review"></span>
+    </div>
+</div>
 
-    <!-- FILTER SIDEBAR -->
+<!-- ===== OPPORTUNITIES TAB ===== -->
+<div class="tab-panel active" id="panel-opps">
+
     <aside class="sidebar">
         <h2>Filters</h2>
 
         <div class="filter-group">
             <label>CPV Prefixes</label>
             <input type="text" id="f-cpv" placeholder="e.g. 30, 48, 72" oninput="debouncedFetch()">
-            <div style="font-size:0.72rem;color:#999;margin-top:3px;">Comma-separated prefixes</div>
+            <div style="font-size:0.7rem;color:#aaa;margin-top:2px;">Comma-separated</div>
         </div>
 
         <div class="filter-group">
@@ -247,9 +256,7 @@
 
         <div class="filter-group">
             <label>Stage / Tags</label>
-            <div class="checkbox-group" id="stage-checkboxes">
-                <!-- populated from data -->
-            </div>
+            <div class="checkbox-group" id="stage-checkboxes"></div>
         </div>
 
         <div class="filter-group">
@@ -268,211 +275,308 @@
         <button class="clear-btn" onclick="clearFilters()">Clear all filters</button>
     </aside>
 
-    <!-- TABLE -->
     <main class="content">
         <div class="toolbar">
             <span id="result-count">—</span>
         </div>
         <div id="table-container">
-            <div class="empty-state">Click <strong>Load today's opportunities</strong> to fetch data, then use the filters to narrow results.</div>
+            <div class="empty-state">Click <strong>Load today's opportunities</strong> to fetch data.</div>
+        </div>
+        <div class="selection-bar hidden" id="selection-bar">
+            <span id="selection-label">0 opportunities selected</span>
+            <button class="review-btn" onclick="switchTab('review')">Review selected →</button>
         </div>
     </main>
 </div>
 
+<!-- ===== REVIEW TAB ===== -->
+<div class="tab-panel" id="panel-review">
+    <div style="width:100%;">
+        <div class="review-header">
+            <h2>Selected for Review</h2>
+            <span id="review-count"></span>
+        </div>
+        <div id="review-container">
+            <div class="review-empty">No opportunities selected yet.<br>Go to the <strong>Opportunities</strong> tab and tick some checkboxes.</div>
+        </div>
+    </div>
+</div>
+
 <script>
-    // Known stage tags to show as checkboxes.
-    // Once data loads we'll supplement with any we see in the data.
+    // =====================
+    // STATE
+    // =====================
+    const selected   = new Map();   // id → opportunity object
+    const reviewMeta = new Map();   // id → { score, notes }
+
+    let stagesPopulated = false;
+    let debounceTimer;
+
     const KNOWN_STAGES = [
-        "tender", "tenderUpdate", "preQualification",
-        "planning", "planningUpdate",
-        "award", "awardUpdate", "contract", "contractUpdate",
+        "tender","tenderUpdate","preQualification",
+        "planning","planningUpdate",
+        "award","awardUpdate","contract","contractUpdate",
     ];
 
-    let allData = [];           // full CSV (loaded lazily on first filter)
-    let stagesPopulated = false;
+    // =====================
+    // TABS
+    // =====================
+    function switchTab(name) {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+        document.getElementById("tab-" + name).classList.add("active");
+        document.getElementById("panel-" + name).classList.add("active");
+        if (name === "review") renderReview();
+    }
 
-    // ---- LOAD ----
+    // =====================
+    // LOAD
+    // =====================
     async function loadOpportunities() {
         const btn = document.getElementById("loadBtn");
         const status = document.getElementById("load-status");
         btn.disabled = true;
         btn.textContent = "Loading…";
         status.textContent = "";
-
         try {
             const resp = await fetch("/load", { method: "POST" });
             const data = await resp.json();
             status.textContent = `✓ ${data.new_saved} new record(s) saved (${data.total_fetched} fetched)`;
-        } catch (e) {
+        } catch {
             status.textContent = "⚠ Load failed";
         } finally {
             btn.disabled = false;
             btn.textContent = "Load today's opportunities";
         }
-
-        // refresh the table with current filters after loading
         await fetchAndRender();
     }
 
-    // ---- FILTER FETCH ----
+    // =====================
+    // FETCH & RENDER TABLE
+    // =====================
     async function fetchAndRender() {
         const params = new URLSearchParams();
-
         const cpv = document.getElementById("f-cpv").value.trim();
         if (cpv) params.set("cpv_prefixes", cpv);
-
         const minV = document.getElementById("f-min").value;
         if (minV) params.set("min_value", minV);
-
         const maxV = document.getElementById("f-max").value;
         if (maxV) params.set("max_value", maxV);
-
-        const checkedStages = [...document.querySelectorAll("#stage-checkboxes input:checked")]
-            .map(cb => cb.value);
+        const checkedStages = [...document.querySelectorAll("#stage-checkboxes input:checked")].map(cb => cb.value);
         if (checkedStages.length) params.set("stages", checkedStages.join(","));
-
         const buyer = document.getElementById("f-buyer").value.trim();
         if (buyer) params.set("buyer", buyer);
+        const df = document.getElementById("f-date-from").value;
+        if (df) params.set("date_from", df);
+        const dt = document.getElementById("f-date-to").value;
+        if (dt) params.set("date_to", dt);
 
-        const dateFrom = document.getElementById("f-date-from").value;
-        if (dateFrom) params.set("date_from", dateFrom);
-
-        const dateTo = document.getElementById("f-date-to").value;
-        if (dateTo) params.set("date_to", dateTo);
-
-        const container = document.getElementById("table-container");
-        container.innerHTML = `<div class="empty-state"><span class="spinner"></span>Fetching…</div>`;
+        document.getElementById("table-container").innerHTML =
+            `<div class="empty-state"><span class="spinner"></span>Fetching…</div>`;
 
         try {
             const resp = await fetch("/opportunities?" + params.toString());
             const data = await resp.json();
-            allData = data;
             populateStages(data);
             renderTable(data);
-        } catch (e) {
-            container.innerHTML = `<div class="empty-state">⚠ Error fetching data.</div>`;
+        } catch {
+            document.getElementById("table-container").innerHTML =
+                `<div class="empty-state">⚠ Error fetching data.</div>`;
         }
     }
 
-    // ---- RENDER TABLE ----
     function renderTable(data) {
-        const container = document.getElementById("table-container");
         document.getElementById("result-count").textContent =
             `${data.length} opportunit${data.length === 1 ? "y" : "ies"}`;
 
         if (!data.length) {
-            container.innerHTML = `<div class="empty-state">No opportunities match the current filters.</div>`;
+            document.getElementById("table-container").innerHTML =
+                `<div class="empty-state">No opportunities match the current filters.</div>`;
             return;
         }
 
-        const fmt = v => {
-            const n = parseFloat(v);
-            return isNaN(n) ? "—" : "£" + n.toLocaleString("en-GB");
-        };
+        const fmt = v => { const n = parseFloat(v); return isNaN(n) ? "—" : "£" + n.toLocaleString("en-GB"); };
 
         const rows = data.map(o => {
-            const stages = (o.stage || "").split(",").filter(Boolean)
-                .map(s => `<span>${s.trim()}</span>`).join("");
+            const id = String(o.id);
+            const isChecked = selected.has(id);
+            const stages = (o.stage || "").split(",").filter(Boolean).map(s => `<span>${esc(s.trim())}</span>`).join("");
+            // Safely embed the opportunity data as a base64-encoded JSON attribute to avoid quoting issues
+            const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(o))));
             return `
-            <tr>
-                <td><input type="checkbox"></td>
-                <td>${esc(o.title || "—")}</td>
+            <tr class="${isChecked ? "selected-row" : ""}" id="row-${id}">
+                <td><input type="checkbox" data-id="${id}" data-opp="${encoded}" ${isChecked ? "checked" : ""} onchange="toggleSelected(this)"></td>
+                
+                <td>
+                ${o.source_url
+                    ? `<a href="${esc(o.source_url)}" target="_blank" rel="noopener">${esc(o.title || "—")}</a>`
+                    : esc(o.title || "—")}
+                </td>
+
                 <td>${esc(o.buyer || "—")}</td>
                 <td class="value">${fmt(o.value)}</td>
                 <td class="stage">${stages}</td>
                 <td class="cpv">${esc(o.cpvs || "—")}</td>
-                <td class="desc"
-                    data-fulltext="${esc(o.description || "")}"
-                    data-preview="${esc((o.description || "").substring(0, 220))}">
-                    <div class="desc-preview">
-                        ${esc((o.description || "").substring(0, 220))}
-                        ${(o.description || "").length > 220 ? "…" : ""}
-                    </div>
-
-                    ${(o.description || "").length > 220
-                        ? `<button class="read-more" onclick="toggleDesc(this)">Read more</button>`
-                        : ""}
-                </td>
+                <td class="desc">${esc(o.description || "")}</td>
                 <td>${(o.published_date || "").substring(0, 10)}</td>
             </tr>`;
         }).join("");
 
-        container.innerHTML = `
+        document.getElementById("table-container").innerHTML = `
         <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Title</th>
-                    <th>Buyer</th>
-                    <th>Value</th>
-                    <th>Stage</th>
-                    <th>CPVs</th>
-                    <th>Description</th>
-                    <th>Published</th>
-                </tr>
-            </thead>
+            <thead><tr>
+                <th></th><th>Title</th><th>Buyer</th><th>Value</th>
+                <th>Stage</th><th>CPVs</th><th>Description</th><th>Published</th>
+            </tr></thead>
             <tbody>${rows}</tbody>
         </table>`;
     }
 
-    // ---- STAGE CHECKBOXES ----
+    // =====================
+    // SELECTION
+    // =====================
+    function toggleSelected(checkbox) {
+        const id = checkbox.dataset.id;
+        const opp = JSON.parse(decodeURIComponent(escape(atob(checkbox.dataset.opp))));
+        const row = document.getElementById("row-" + id);
+
+        if (checkbox.checked) {
+            selected.set(id, opp);
+            if (!reviewMeta.has(id)) reviewMeta.set(id, { score: 0, notes: "" });
+            if (row) row.classList.add("selected-row");
+        } else {
+            selected.delete(id);
+            if (row) row.classList.remove("selected-row");
+        }
+        updateSelectionBar();
+    }
+
+    function updateSelectionBar() {
+        const count = selected.size;
+        const bar   = document.getElementById("selection-bar");
+        const badge = document.getElementById("badge-review");
+
+        document.getElementById("selection-label").textContent =
+            `${count} opportunit${count === 1 ? "y" : "ies"} selected`;
+
+        if (count > 0) {
+            bar.classList.remove("hidden");
+            badge.textContent = count;
+            badge.classList.remove("hidden");
+        } else {
+            bar.classList.add("hidden");
+            badge.classList.add("hidden");
+        }
+    }
+
+    // =====================
+    // REVIEW
+    // =====================
+    function renderReview() {
+        const container = document.getElementById("review-container");
+        const countEl   = document.getElementById("review-count");
+
+        if (selected.size === 0) {
+            container.innerHTML = `<div class="review-empty">No opportunities selected yet.<br>Go to the <strong>Opportunities</strong> tab and tick some checkboxes.</div>`;
+            countEl.textContent = "";
+            return;
+        }
+
+        countEl.textContent = `${selected.size} selected`;
+        const fmt = v => { const n = parseFloat(v); return isNaN(n) ? "—" : "£" + n.toLocaleString("en-GB"); };
+
+        const cards = [...selected.values()].map(o => {
+            const id   = String(o.id);
+            const meta = reviewMeta.get(id) || { score: 0, notes: "" };
+            const stages = (o.stage || "").split(",").filter(Boolean).map(s => `<span>${esc(s.trim())}</span>`).join("");
+
+            // Stars: rendered right-to-left (row-reverse) so the CSS ~ sibling trick fills left→right on hover/check
+            const stars = [5,4,3,2,1].map(n => `
+                <input type="radio" id="star-${id}-${n}" name="score-${id}" value="${n}" ${meta.score === n ? "checked" : ""} onchange="setScore('${id}', ${n})">
+                <label for="star-${id}-${n}" title="${n} star${n > 1 ? "s" : ""}">★</label>
+            `).join("");
+
+            return `
+            <div class="review-card" id="card-${id}">
+                <div class="card-main">
+                    <div class="card-title">${esc(o.title || "—")}</div>
+                    <div class="card-meta">
+                        <span>🏢 ${esc(o.buyer || "—")}</span>
+                        <span>💰 ${fmt(o.value)}</span>
+                        <span>📅 ${(o.published_date || "").substring(0,10) || "—"}</span>
+                    </div>
+                    ${stages ? `<div class="card-tags">${stages}</div>` : ""}
+                    <div class="card-desc">${esc(o.description || "No description provided")}</div>
+                    ${o.cpvs ? `<div style="font-size:0.73rem;color:#999;margin-top:4px;">CPVs: ${esc(o.cpvs)}</div>` : ""}
+                </div>
+                <div class="card-actions">
+                    <div>
+                        <div style="font-size:0.75rem;font-weight:600;color:#555;margin-bottom:6px;">Score</div>
+                        <div class="star-row">${stars}</div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.75rem;font-weight:600;color:#555;margin-bottom:4px;">Notes</div>
+                        <textarea class="notes-field" placeholder="Add notes…" oninput="setNotes('${id}', this.value)">${esc(meta.notes)}</textarea>
+                    </div>
+                    <button class="remove-btn" onclick="removeFromReview('${id}')">✕ Remove</button>
+                </div>
+            </div>`;
+        }).join("");
+
+        container.innerHTML = cards;
+    }
+
+    function setScore(id, score) {
+        const meta = reviewMeta.get(id) || { score: 0, notes: "" };
+        reviewMeta.set(id, { ...meta, score: parseInt(score) });
+    }
+
+    function setNotes(id, notes) {
+        const meta = reviewMeta.get(id) || { score: 0, notes: "" };
+        reviewMeta.set(id, { ...meta, notes });
+    }
+
+    function removeFromReview(id) {
+        selected.delete(id);
+        reviewMeta.delete(id);
+        // uncheck in table if it's still rendered
+        const cb = document.querySelector(`input[data-id="${id}"]`);
+        if (cb) cb.checked = false;
+        const row = document.getElementById("row-" + id);
+        if (row) row.classList.remove("selected-row");
+        updateSelectionBar();
+        renderReview();
+    }
+
+    // =====================
+    // STAGES / FILTERS
+    // =====================
     function populateStages(data) {
         if (stagesPopulated) return;
-
-        // Collect all unique stages seen in data + known list
         const seen = new Set(KNOWN_STAGES);
-        data.forEach(o => {
-            (o.stage || "").split(",").forEach(s => { if (s.trim()) seen.add(s.trim()); });
-        });
-
-        const el = document.getElementById("stage-checkboxes");
-        el.innerHTML = [...seen].sort().map(s => `
-            <label>
-                <input type="checkbox" value="${s}" onchange="debouncedFetch()">
-                ${s}
-            </label>`).join("");
-
+        data.forEach(o => (o.stage || "").split(",").forEach(s => { if (s.trim()) seen.add(s.trim()); }));
+        document.getElementById("stage-checkboxes").innerHTML =
+            [...seen].sort().map(s => `<label><input type="checkbox" value="${s}" onchange="debouncedFetch()"> ${s}</label>`).join("");
         stagesPopulated = true;
     }
 
-    function toggleDesc(btn) {
-    const td = btn.closest("td");
-    const preview = td.querySelector(".desc-preview");
-
-    if (btn.textContent === "Read more") {
-        preview.textContent = td.dataset.fulltext;
-        btn.textContent = "Read less";
-    } else {
-        preview.textContent = td.dataset.preview + "…";
-        btn.textContent = "Read more";
-    }
-}
-
-    // ---- CLEAR ----
     function clearFilters() {
-        ["f-cpv","f-min","f-max","f-buyer","f-date-from","f-date-to"]
-            .forEach(id => document.getElementById(id).value = "");
+        ["f-cpv","f-min","f-max","f-buyer","f-date-from","f-date-to"].forEach(id => document.getElementById(id).value = "");
         document.querySelectorAll("#stage-checkboxes input").forEach(cb => cb.checked = false);
         fetchAndRender();
     }
 
-    // ---- DEBOUNCE ----
-    let debounceTimer;
     function debouncedFetch() {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(fetchAndRender, 350);
     }
 
-    // ---- ESCAPE ----
     function esc(str) {
-        return String(str)
-            .replace(/&/g,"&amp;").replace(/</g,"&lt;")
-            .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+        return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
     }
 
-    // Auto-load table on page open (shows whatever is in CSV already)
+    // Auto-load whatever is in the CSV on page open
     fetchAndRender();
 </script>
-
 </body>
 </html>

@@ -16,7 +16,7 @@ CSV_PATH = DATA_DIR / "opportunities.csv"
 
 CSV_FIELDS = [
     "id", "title", "buyer", "value", "cpvs", "stage",
-    "published_date", "description", "source",
+    "published_date", "description", "source", "source_url",
 ]
 
 # ---------------------------
@@ -62,7 +62,6 @@ def extract_all_cpvs(release):
 
 
 def normalise_opportunity(release):
-    """Convert a raw OCDS release into a flat opportunity dict."""
     tender = release.get("tender", {})
     tags = release.get("tag", [])
     all_cpvs = extract_all_cpvs(release)
@@ -76,8 +75,16 @@ def normalise_opportunity(release):
         or "No description provided"
     )
 
+    release_id = release.get("id")
+
+    source_url = (
+        f"https://www.find-tender.service.gov.uk/Notice/{release_id}"
+        if release_id
+        else None
+    )
+
     return {
-        "id": release.get("id"),
+        "id": release_id,
         "title": tender.get("title", "N/A"),
         "buyer": buyer,
         "value": tender.get("value", {}).get("amount"),
@@ -86,6 +93,7 @@ def normalise_opportunity(release):
         "published_date": release.get("date", ""),
         "description": description,
         "source": "Find a Tender",
+        "source_url": source_url,
     }
 
 
