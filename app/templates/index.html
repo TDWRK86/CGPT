@@ -2,8 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tender Intake PoC</title>
     <style>
+        /* Fluid base: 16 px floor (never shrinks below normal), scales up
+           to 18 px on wide screens like 1920×1200.
+           All rem-based sizes grow proportionally on large displays. */
+        html { font-size: clamp(16px, 1.1vw, 18px); }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
@@ -19,11 +25,13 @@
         header {
             background: #1a3a5c;
             color: white;
-            padding: 14px 28px;
+            padding: 0.875rem 1.75rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         header h1 { font-size: 1.1rem; font-weight: 600; }
         .load-btn {
@@ -46,11 +54,12 @@
             background: #fff;
             border-bottom: 2px solid #dde3ec;
             display: flex;
-            padding: 0 24px;
+            padding: 0 1.5rem;
             flex-shrink: 0;
+            overflow-x: auto;
         }
         .tab {
-            padding: 12px 20px;
+            padding: 0.75rem 1.25rem;
             font-size: 0.85rem;
             font-weight: 600;
             color: #888;
@@ -83,19 +92,20 @@
         /* ---- OPPORTUNITIES LAYOUT ---- */
         #panel-opps { flex-direction: row; }
         .sidebar {
-            width: 260px;
+            width: 270px;
             flex-shrink: 0;
             background: #fff;
             border-right: 1px solid #dde3ec;
             padding: 18px 14px;
             overflow-y: auto;
         }
-        .sidebar h2 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: .8px; color: #999; margin-bottom: 14px; }
+        .sidebar h2 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: #999; margin-bottom: 14px; }
         .filter-group { margin-bottom: 16px; }
         .filter-group label { display: block; font-size: 0.78rem; font-weight: 600; color: #444; margin-bottom: 4px; }
         .filter-group input[type="text"],
         .filter-group input[type="number"],
-        .filter-group input[type="date"] {
+        .filter-group input[type="date"],
+        .filter-group select {
             width: 100%;
             padding: 6px 8px;
             border: 1px solid #ccd3de;
@@ -104,7 +114,8 @@
             outline: none;
             transition: border-color .15s;
         }
-        .filter-group input:focus { border-color: #1a3a5c; }
+        .filter-group input:focus,
+        .filter-group select:focus { border-color: #1a3a5c; }
         .row2 { display: flex; gap: 6px; }
         .row2 input { width: 50%; }
         .checkbox-group { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
@@ -112,14 +123,14 @@
         .clear-btn { width: 100%; padding: 7px; background: none; border: 1px solid #ccd3de; border-radius: 4px; font-size: 0.78rem; color: #555; cursor: pointer; margin-top: 2px; }
         .clear-btn:hover { background: #f0f3f7; }
 
-        .content { flex: 1; overflow: auto; padding: 18px 22px; display: flex; flex-direction: column; }
+        .content { flex: 1; overflow: auto; padding: 1.125rem 1.375rem; display: flex; flex-direction: column; min-width: 0; }
         .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-shrink: 0; }
         #result-count { font-size: 0.8rem; color: #666; }
         .sort-select { padding: 5px 8px; border: 1px solid #ccd3de; border-radius: 4px; font-size: 0.78rem; color: #444; outline: none; cursor: pointer; }
         .sort-select:focus { border-color: #1a3a5c; }
 
         /* ---- TABLE ---- */
-        #table-container { flex: 1; }
+        #table-container { flex: 1; overflow-x: auto; min-width: 0; }
         table { width: 100%; border-collapse: collapse; font-size: 0.8rem; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
         thead th { background: #1a3a5c; color: #fff; text-align: left; padding: 9px 10px; font-weight: 600; white-space: nowrap; }
         thead th:first-child { width: 36px; text-align: center; }
@@ -178,6 +189,16 @@
         tr.row--active-batch.selected-row { background: #fef3e0 !important; }
         .batch-toggle-icon { font-size: 0.65rem; color: #aaa; min-width: 8px; text-align: center; }
 
+        /* ---- SOURCE SWITCHER ---- */
+        .source-switcher { display: flex; gap: 8px; margin-bottom: 12px; flex-shrink: 0; flex-wrap: wrap; }
+        .source-pill {
+            padding: 5px 16px; border: 1.5px solid #ccd3de; border-radius: 20px;
+            background: #fff; font-size: 0.8rem; font-weight: 600; color: #666;
+            cursor: pointer; transition: all .15s; white-space: nowrap;
+        }
+        .source-pill:hover { border-color: #1a3a5c; color: #1a3a5c; }
+        .source-pill.active { background: #1a3a5c; border-color: #1a3a5c; color: #fff; }
+
         /* ---- SELECTION BAR ---- */
         .selection-bar {
             background: #1a3a5c; color: white; display: flex;
@@ -191,7 +212,7 @@
 
         /* ---- REVIEW PANEL ---- */
         #panel-review { flex-direction: column; padding: 0; overflow: hidden; }
-        .review-panel-inner { flex: 1; overflow-y: auto; padding: 24px; }
+        .review-panel-inner { flex: 1; overflow-y: auto; padding: clamp(14px, 1.5rem, 24px); }
         .review-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
         .review-header h2 { font-size: 1rem; font-weight: 600; color: #1a3a5c; }
         #review-count { font-size: 0.8rem; color: #888; }
@@ -226,6 +247,12 @@
         .notes-field:focus { border-color: #1a3a5c; }
         .remove-btn { background: none; border: 1px solid #e0868a; color: #c0464c; border-radius: 4px; padding: 5px 12px; font-size: 0.76rem; cursor: pointer; align-self: flex-start; }
         .remove-btn:hover { background: #fdf0f0; }
+        .card-view-btn {
+            background: #1a3a5c; color: white; border: none;
+            border-radius: 4px; padding: 5px 12px; font-size: 0.76rem; font-weight: 600;
+            cursor: pointer; white-space: nowrap; align-self: flex-start;
+        }
+        .card-view-btn:hover { background: #152e4a; }
 
         /* ---- TRIAGE BAR (sticky top of review panel) ---- */
         .triage-bar {
@@ -251,7 +278,7 @@
         .clear-review-btn.hidden { display: none; }
 
         /* ---- TRIAGE PANEL ---- */
-        #panel-triage { flex-direction: column; padding: 24px; overflow-y: auto; }
+        #panel-triage { flex-direction: column; padding: clamp(14px, 1.5rem, 24px); overflow-y: auto; }
         .triage-session { margin-bottom: 20px; border: 1px solid #dde3ec; border-radius: 6px; overflow: hidden; }
         .triage-session-header {
             display: flex; align-items: center; gap: 10px;
@@ -291,8 +318,8 @@
         #fullscreen-overlay.hidden { display: none; }
         .fs-header {
             background: #1a3a5c; color: white;
-            padding: 13px 24px;
-            display: flex; align-items: center; gap: 16px;
+            padding: 0.8125rem 1.5rem;
+            display: flex; align-items: center; gap: 1rem;
             flex-shrink: 0;
         }
         .fs-close-btn {
@@ -305,11 +332,11 @@
         .fs-progress { font-size: 0.95rem; font-weight: 700; opacity: 0.9; white-space: nowrap; }
         .fs-body {
             flex: 1; display: flex; align-items: stretch; overflow: hidden;
-            padding: 28px 0;
+            padding: clamp(14px, 1.75rem, 28px) 0;
         }
         .fs-nav {
-            width: 76px; flex-shrink: 0; align-self: center;
-            background: none; border: none; font-size: 3.8rem; color: #b8c2ce;
+            width: clamp(44px, 4.75rem, 76px); flex-shrink: 0; align-self: center;
+            background: none; border: none; font-size: clamp(2rem, 3.8vw, 3.8rem); color: #b8c2ce;
             cursor: pointer; border-radius: 8px; margin: 0 6px;
             transition: color .15s, background .15s;
             line-height: 1;
@@ -319,13 +346,14 @@
         .fs-card {
             flex: 1; background: #fff; border-radius: 12px;
             box-shadow: 0 4px 24px rgba(0,0,0,.1);
-            overflow-y: auto; padding: 52px 68px;
-            display: flex; flex-direction: column; gap: 24px;
+            overflow-y: auto;
+            padding: clamp(24px, 3.25rem, 52px) clamp(24px, 4.25rem, 68px);
+            display: flex; flex-direction: column; gap: clamp(14px, 1.5rem, 24px);
         }
         .fs-title { font-size: 1.75rem; font-weight: 700; color: #1a3a5c; line-height: 1.3; }
         .fs-title a { color: inherit; text-decoration: none; }
         .fs-title a:hover { text-decoration: underline; }
-        .fs-meta { display: flex; gap: 32px; font-size: 1rem; color: #666; flex-wrap: wrap; }
+        .fs-meta { display: flex; gap: 2rem; font-size: 1rem; color: #666; flex-wrap: wrap; }
         .fs-tags { display: flex; gap: 7px; flex-wrap: wrap; }
         .fs-tags span { background: #dde8f5; color: #1a3a5c; border-radius: 3px; padding: 2px 8px; font-size: 0.85rem; }
         .fs-cpvs { font-size: 0.85rem; color: #aaa; }
@@ -352,6 +380,25 @@
         .empty-state { text-align: center; padding: 60px 20px; color: #aaa; font-size: 0.88rem; }
         .spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid #ccd3de; border-top-color: #1a3a5c; border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; margin-right: 5px; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ---- RESPONSIVE BREAKPOINTS ---- */
+
+        /* 1280px and below: tighten review card action column */
+        @media (max-width: 1280px) {
+            .review-card { grid-template-columns: 28px 1fr 190px; }
+        }
+
+        /* 1100px and below: review card actions wrap below the main content */
+        @media (max-width: 1100px) {
+            .review-card { grid-template-columns: 28px 1fr; }
+            .card-actions {
+                grid-column: 2;
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -381,42 +428,151 @@
 <!-- ===== OPPORTUNITIES TAB ===== -->
 <div class="tab-panel active" id="panel-opps">
     <aside class="sidebar">
-        <h2>Filters</h2>
-        <div class="filter-group">
-            <label>Keyword Search</label>
-            <input type="text" id="f-keyword" placeholder="e.g. framework, Ministry of Defence" oninput="debouncedFetch()">
-        </div>
-        <div class="filter-group">
-            <label>CPV Prefixes</label>
-            <input type="text" id="f-cpv" placeholder="e.g. 30, 48, 72" oninput="debouncedFetch()">
-            <div style="font-size:0.7rem;color:#aaa;margin-top:2px;">Comma-separated</div>
-        </div>
-        <div class="filter-group">
-            <label>Contract Value (£)</label>
-            <div class="row2">
-                <input type="number" id="f-min" placeholder="Min" oninput="debouncedFetch()">
-                <input type="number" id="f-max" placeholder="Max" oninput="debouncedFetch()">
+
+        <!-- ── Find a Tender Filters ── -->
+        <div id="filters-fat" class="source-filters">
+            <h2>Filters</h2>
+            <div class="filter-group">
+                <label>Keyword Search</label>
+                <input type="text" id="f-keyword" placeholder="e.g. framework, Ministry of Defence" oninput="debouncedFetch()">
             </div>
-        </div>
-        <div class="filter-group">
-            <label>Stage / Tags</label>
-            <div class="checkbox-group" id="stage-checkboxes"></div>
-        </div>
-        <div class="filter-group">
-            <label>Buyer Name</label>
-            <input type="text" id="f-buyer" placeholder="Search buyer…" oninput="debouncedFetch()">
-        </div>
-        <div class="filter-group">
-            <label>Published Date</label>
-            <div class="row2">
-                <input type="date" id="f-date-from" onchange="debouncedFetch()">
-                <input type="date" id="f-date-to" onchange="debouncedFetch()">
+            <div class="filter-group">
+                <label>CPV Prefixes</label>
+                <input type="text" id="f-cpv" placeholder="e.g. 30, 48, 72" oninput="debouncedFetch()">
+                <div style="font-size:0.7rem;color:#aaa;margin-top:2px;">Comma-separated</div>
             </div>
+            <div class="filter-group">
+                <label>Contract Value (£)</label>
+                <div class="row2">
+                    <input type="number" id="f-min" placeholder="Min" oninput="debouncedFetch()">
+                    <input type="number" id="f-max" placeholder="Max" oninput="debouncedFetch()">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Stage / Tags</label>
+                <div class="checkbox-group" id="stage-checkboxes"></div>
+            </div>
+            <div class="filter-group">
+                <label>Buyer Name</label>
+                <input type="text" id="f-buyer" placeholder="Search buyer…" oninput="debouncedFetch()">
+            </div>
+            <div class="filter-group">
+                <label>Published Date</label>
+                <div class="row2">
+                    <input type="date" id="f-date-from" onchange="debouncedFetch()">
+                    <input type="date" id="f-date-to" onchange="debouncedFetch()">
+                </div>
+            </div>
+            <button class="clear-btn" onclick="clearFilters()">Clear all filters</button>
         </div>
-        <button class="clear-btn" onclick="clearFilters()">Clear all filters</button>
+
+        <!-- ── Contracts Finder Filters ── -->
+        <div id="filters-cf" class="source-filters" style="display:none">
+            <h2>Filters</h2>
+            <div class="filter-group">
+                <label>Keyword Search</label>
+                <input type="text" id="cf-keyword" placeholder="e.g. framework, software" oninput="debouncedFetch()">
+            </div>
+            <div class="filter-group">
+                <label>CPV Prefixes</label>
+                <input type="text" id="cf-cpv" placeholder="e.g. 30, 48, 72" oninput="debouncedFetch()">
+                <div style="font-size:0.7rem;color:#aaa;margin-top:2px;">Comma-separated</div>
+            </div>
+            <div class="filter-group">
+                <label>Contract Value (£)</label>
+                <div class="row2">
+                    <input type="number" id="cf-min" placeholder="Min" oninput="debouncedFetch()">
+                    <input type="number" id="cf-max" placeholder="Max" oninput="debouncedFetch()">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Procurement Stage</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="cf-stage-planning" value="planning" onchange="debouncedFetch()" checked> Planning</label>
+                    <label><input type="checkbox" id="cf-stage-tender"   value="tender"   onchange="debouncedFetch()" checked> Tender</label>
+                    <label><input type="checkbox" id="cf-stage-award"    value="award"    onchange="debouncedFetch()"> Award</label>
+                    <label><input type="checkbox" id="cf-stage-contract" value="contract" onchange="debouncedFetch()"> Contract</label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Buyer Name</label>
+                <input type="text" id="cf-buyer" placeholder="Search buyer…" oninput="debouncedFetch()">
+            </div>
+            <div class="filter-group">
+                <label>Published Date</label>
+                <div class="row2">
+                    <input type="date" id="cf-date-from" onchange="debouncedFetch()">
+                    <input type="date" id="cf-date-to"   onchange="debouncedFetch()">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Display period</label>
+                <select id="cf-days-back" onchange="debouncedFetch()">
+                    <option value="7"  selected>Last 7 days</option>
+                    <option value="14">Last 14 days</option>
+                    <option value="30">Last 30 days</option>
+                </select>
+            </div>
+            <button class="clear-btn" onclick="clearCfFilters()">Clear all filters</button>
+        </div>
+
+        <!-- ── Public Contracts Scotland Filters ── -->
+        <div id="filters-pcs" class="source-filters" style="display:none">
+            <h2>Filters</h2>
+            <div class="filter-group">
+                <label>Keyword Search</label>
+                <input type="text" id="pcs-keyword" placeholder="e.g. framework, software" oninput="debouncedFetch()">
+            </div>
+            <div class="filter-group">
+                <label>CPV Prefixes</label>
+                <input type="text" id="pcs-cpv" placeholder="e.g. 30, 48, 72" oninput="debouncedFetch()">
+                <div style="font-size:0.7rem;color:#aaa;margin-top:2px;">Comma-separated</div>
+            </div>
+            <div class="filter-group">
+                <label>Contract Value (£)</label>
+                <div class="row2">
+                    <input type="number" id="pcs-min" placeholder="Min" oninput="debouncedFetch()">
+                    <input type="number" id="pcs-max" placeholder="Max" oninput="debouncedFetch()">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Notice Type</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="pcs-type-1" value="1" onchange="debouncedFetch()" checked> Contract Notice</label>
+                    <label><input type="checkbox" id="pcs-type-4" value="4" onchange="debouncedFetch()" checked> Prior Info Notice</label>
+                    <label><input type="checkbox" id="pcs-type-5" value="5" onchange="debouncedFetch()" checked> Award Notice</label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Buyer Name</label>
+                <input type="text" id="pcs-buyer" placeholder="Search buyer…" oninput="debouncedFetch()">
+            </div>
+            <div class="filter-group">
+                <label>Published Date</label>
+                <div class="row2">
+                    <input type="date" id="pcs-date-from" onchange="debouncedFetch()">
+                    <input type="date" id="pcs-date-to"   onchange="debouncedFetch()">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Display period</label>
+                <select id="pcs-months-back" onchange="debouncedFetch()">
+                    <option value="1">Last 1 month</option>
+                    <option value="2" selected>Last 2 months</option>
+                    <option value="3">Last 3 months</option>
+                </select>
+            </div>
+            <button class="clear-btn" onclick="clearPcsFilters()">Clear all filters</button>
+        </div>
+
     </aside>
 
     <main class="content">
+        <div class="source-switcher">
+            <button class="source-pill active" id="src-fat"  onclick="switchSource('fat')">Find a Tender</button>
+            <button class="source-pill"        id="src-cf"   onclick="switchSource('cf')">Contracts Finder</button>
+            <button class="source-pill"        id="src-pcs"  onclick="switchSource('pcs')">Public Contracts Scotland</button>
+        </div>
         <div class="toolbar">
             <div style="display:flex;flex-direction:column;gap:2px;">
                 <span id="result-count">—</span>
@@ -500,6 +656,7 @@
     const reviewMeta     = new Map();   // id → { score, notes }
     const triageSelected = new Set();   // ids checked in review tab for triage
 
+    let activeSource      = "fat";
     let stagesPopulated   = false;
     let debounceTimer;
     let currentData       = [];
@@ -508,7 +665,9 @@
     let collapsedSessions = new Set();
 
     // Fullscreen state
+    let fsMode    = "triage";  // "triage" | "review"
     let fsSession = null;
+    let fsOpps    = [];
     let fsIndex   = 0;
     let fsNotes   = {};
 
@@ -528,6 +687,35 @@
         document.getElementById("panel-" + name).classList.add("active");
         if (name === "review") renderReview();
         if (name === "triage") renderTriage();
+    }
+
+    // =====================
+    // SOURCE SWITCHER
+    // =====================
+    function switchSource(src) {
+        activeSource = src;
+        document.querySelectorAll(".source-pill").forEach(p => p.classList.remove("active"));
+        document.getElementById("src-" + src).classList.add("active");
+
+        // Load button adapts to the active source
+        const loadBtn    = document.getElementById("loadBtn");
+        const loadStatus = document.getElementById("load-status");
+        loadBtn.style.display    = "";
+        loadStatus.style.display = "";
+        const labels = {
+            fat: "Load today's opportunities",
+            cf:  "Load Contracts Finder",
+            pcs: "Load Public Contracts Scotland",
+        };
+        loadBtn.textContent = labels[src];
+        loadBtn.onclick = src === "fat" ? loadOpportunities
+                        : src === "cf"  ? loadContractsFinder
+                        :                 loadPcsData;
+
+        // Show the correct filter panel
+        document.querySelectorAll(".source-filters").forEach(f => f.style.display = "none");
+        document.getElementById("filters-" + src).style.display = "";
+        fetchAndRender();
     }
 
     // =====================
@@ -552,44 +740,199 @@
         await fetchAndRender();
     }
 
+    async function loadContractsFinder() {
+        const btn    = document.getElementById("loadBtn");
+        const status = document.getElementById("load-status");
+        btn.disabled = true;
+        btn.textContent = "Loading…";
+        status.textContent = "";
+        try {
+            const resp = await fetch("/load/contracts-finder", { method: "POST" });
+            const data = await resp.json();
+            status.textContent = `✓ ${data.new_saved} new record(s) saved (${data.total_fetched} fetched)`;
+        } catch {
+            status.textContent = "⚠ Load failed";
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "Load Contracts Finder";
+        }
+        await fetchAndRender();
+    }
+
+    async function loadPcsData() {
+        const btn    = document.getElementById("loadBtn");
+        const status = document.getElementById("load-status");
+        btn.disabled = true;
+        btn.textContent = "Loading…";
+        status.textContent = "";
+        try {
+            const resp = await fetch("/load/pcs", { method: "POST" });
+            const data = await resp.json();
+            status.textContent = `✓ ${data.new_saved} new record(s) saved (${data.total_fetched} fetched)`;
+        } catch {
+            status.textContent = "⚠ Load failed";
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "Load Public Contracts Scotland";
+        }
+        await fetchAndRender();
+    }
+
+    // =====================
+    // FILTER PARAM BUILDERS
+    // =====================
+    function buildFatParams() {
+        const p = new URLSearchParams();
+        const kw = document.getElementById("f-keyword").value.trim();
+        if (kw) p.set("keyword", kw);
+        const cpv = document.getElementById("f-cpv").value.trim();
+        if (cpv) p.set("cpv_prefixes", cpv);
+        const minV = document.getElementById("f-min").value;
+        if (minV) p.set("min_value", minV);
+        const maxV = document.getElementById("f-max").value;
+        if (maxV) p.set("max_value", maxV);
+        const stages = [...document.querySelectorAll("#stage-checkboxes input:checked")].map(cb => cb.value);
+        if (stages.length) p.set("stages", stages.join(","));
+        const buyer = document.getElementById("f-buyer").value.trim();
+        if (buyer) p.set("buyer", buyer);
+        const df = document.getElementById("f-date-from").value;
+        if (df) p.set("date_from", df);
+        const dt = document.getElementById("f-date-to").value;
+        if (dt) p.set("date_to", dt);
+        return p;
+    }
+
+    function buildCfParams() {
+        const p = new URLSearchParams();
+        const kw = document.getElementById("cf-keyword").value.trim();
+        if (kw) p.set("keyword", kw);
+        const cpv = document.getElementById("cf-cpv").value.trim();
+        if (cpv) p.set("cpv_prefixes", cpv);
+        const minV = document.getElementById("cf-min").value;
+        if (minV) p.set("min_value", minV);
+        const maxV = document.getElementById("cf-max").value;
+        if (maxV) p.set("max_value", maxV);
+        const stages = ["planning","tender","award","contract"]
+            .filter(s => document.getElementById("cf-stage-" + s)?.checked);
+        if (stages.length) p.set("stages", stages.join(","));
+        const buyer = document.getElementById("cf-buyer").value.trim();
+        if (buyer) p.set("buyer", buyer);
+        // "Display period" select → compute date_from; manual date picker overrides it
+        const manualDf = document.getElementById("cf-date-from").value;
+        if (manualDf) {
+            p.set("date_from", manualDf);
+        } else {
+            const daysBack = parseInt(document.getElementById("cf-days-back").value, 10);
+            const d = new Date();
+            d.setDate(d.getDate() - (daysBack - 1));
+            p.set("date_from", d.toISOString().substring(0, 10));
+        }
+        const dt = document.getElementById("cf-date-to").value;
+        if (dt) p.set("date_to", dt);
+        return p;
+    }
+
+    function buildPcsParams() {
+        const p = new URLSearchParams();
+        const kw = document.getElementById("pcs-keyword").value.trim();
+        if (kw) p.set("keyword", kw);
+        const cpv = document.getElementById("pcs-cpv").value.trim();
+        if (cpv) p.set("cpv_prefixes", cpv);
+        const minV = document.getElementById("pcs-min").value;
+        if (minV) p.set("min_value", minV);
+        const maxV = document.getElementById("pcs-max").value;
+        if (maxV) p.set("max_value", maxV);
+        // Notice type checkboxes → map to OCDS stage tags for post-filter
+        const stageMap = { 1: "tender", 4: "planning", 5: "award" };
+        const selectedStages = [1,4,5]
+            .filter(t => document.getElementById("pcs-type-" + t)?.checked)
+            .map(t => stageMap[t]);
+        // Only send stages filter when it's a true subset (all checked = no filter needed)
+        if (selectedStages.length > 0 && selectedStages.length < 3) {
+            p.set("stages", selectedStages.join(","));
+        }
+        const buyer = document.getElementById("pcs-buyer").value.trim();
+        if (buyer) p.set("buyer", buyer);
+        // "Display period" select → compute date_from; manual date picker overrides it
+        const manualDf = document.getElementById("pcs-date-from").value;
+        if (manualDf) {
+            p.set("date_from", manualDf);
+        } else {
+            const monthsBack = parseInt(document.getElementById("pcs-months-back").value, 10);
+            const d = new Date();
+            d.setMonth(d.getMonth() - monthsBack);
+            p.set("date_from", d.toISOString().substring(0, 10));
+        }
+        const dt = document.getElementById("pcs-date-to").value;
+        if (dt) p.set("date_to", dt);
+        return p;
+    }
+
+    function clearCfFilters() {
+        ["cf-keyword","cf-cpv","cf-min","cf-max","cf-buyer","cf-date-from","cf-date-to"]
+            .forEach(id => document.getElementById(id).value = "");
+        ["planning","tender","award","contract"].forEach(s => {
+            const el = document.getElementById("cf-stage-" + s);
+            if (el) el.checked = (s === "planning" || s === "tender");
+        });
+        document.getElementById("cf-days-back").value = "7";
+        fetchAndRender();
+    }
+
+    function clearPcsFilters() {
+        ["pcs-keyword","pcs-cpv","pcs-min","pcs-max","pcs-buyer","pcs-date-from","pcs-date-to"]
+            .forEach(id => document.getElementById(id).value = "");
+        [1,4,5].forEach(t => {
+            const el = document.getElementById("pcs-type-" + t);
+            if (el) el.checked = true;
+        });
+        document.getElementById("pcs-months-back").value = "2";
+        fetchAndRender();
+    }
+
     // =====================
     // FETCH & RENDER
     // =====================
     async function fetchAndRender() {
-        const params = new URLSearchParams();
-        const kw   = document.getElementById("f-keyword").value.trim();
-        if (kw)   params.set("keyword", kw);
-        const cpv  = document.getElementById("f-cpv").value.trim();
-        if (cpv)  params.set("cpv_prefixes", cpv);
-        const minV = document.getElementById("f-min").value;
-        if (minV) params.set("min_value", minV);
-        const maxV = document.getElementById("f-max").value;
-        if (maxV) params.set("max_value", maxV);
-        const checkedStages = [...document.querySelectorAll("#stage-checkboxes input:checked")].map(cb => cb.value);
-        if (checkedStages.length) params.set("stages", checkedStages.join(","));
-        const buyer = document.getElementById("f-buyer").value.trim();
-        if (buyer) params.set("buyer", buyer);
-        const df = document.getElementById("f-date-from").value;
-        if (df)   params.set("date_from", df);
-        const dt = document.getElementById("f-date-to").value;
-        if (dt)   params.set("date_to", dt);
+        const params = activeSource === "fat" ? buildFatParams()
+                     : activeSource === "cf"  ? buildCfParams()
+                     :                         buildPcsParams();
 
+        const liveMsg = activeSource !== "fat"
+            ? "Fetching from saved data…"
+            : "Fetching…";
         document.getElementById("table-container").innerHTML =
-            `<div class="empty-state"><span class="spinner"></span>Fetching…</div>`;
+            `<div class="empty-state"><span class="spinner"></span>${liveMsg}</div>`;
 
         try {
-            const [oppResp, batchResp] = await Promise.all([
-                fetch("/opportunities?" + params.toString()),
-                fetch("/batches"),
-            ]);
-            const data      = await oppResp.json();
-            const batchData = await batchResp.json();
-
-            batchMeta   = batchData;
-            currentData = data;
-
-            populateStages(data);
-            renderTable(data);
+            if (activeSource === "fat") {
+                const [oppResp, batchResp] = await Promise.all([
+                    fetch("/opportunities?" + params.toString()),
+                    fetch("/batches"),
+                ]);
+                const data      = await oppResp.json();
+                const batchData = await batchResp.json();
+                batchMeta   = batchData;
+                currentData = data;
+                populateStages(data);
+                renderTable(data);
+            } else {
+                const endpoint     = activeSource === "cf"
+                    ? "/live/contracts-finder?" + params.toString()
+                    : "/live/pcs?" + params.toString();
+                const batchEndpoint = activeSource === "cf"
+                    ? "/batches/contracts-finder"
+                    : "/batches/pcs";
+                const [oppResp, batchResp] = await Promise.all([
+                    fetch(endpoint),
+                    fetch(batchEndpoint),
+                ]);
+                const data      = await oppResp.json();
+                const batchData = await batchResp.json();
+                batchMeta   = batchData;
+                currentData = data;
+                renderTable(data);
+            }
         } catch {
             document.getElementById("table-container").innerHTML =
                 `<div class="empty-state">⚠ Error fetching data.</div>`;
@@ -759,10 +1102,30 @@
     function openFullscreen(sessionId, startIndex) {
         const session = triageSessions.find(s => s.session_id === sessionId);
         if (!session || !session.opportunities.length) return;
+        fsMode    = "triage";
         fsSession = session;
+        fsOpps    = session.opportunities;
         fsIndex   = startIndex || 0;
         fsNotes   = {};
-        session.opportunities.forEach(o => { fsNotes[String(o.id)] = o.notes || ""; });
+        fsOpps.forEach(o => { fsNotes[String(o.id)] = o.notes || ""; });
+        document.getElementById("fullscreen-overlay").classList.remove("hidden");
+        document.addEventListener("keydown", fsKeyHandler);
+        renderFsCard();
+    }
+
+    function openReviewFullscreen(startId) {
+        const opps = [...selected.values()];
+        if (!opps.length) return;
+        fsMode    = "review";
+        fsSession = null;
+        fsOpps    = opps;
+        const idx = opps.findIndex(o => String(o.id) === String(startId));
+        fsIndex   = idx >= 0 ? idx : 0;
+        fsNotes   = {};
+        opps.forEach(o => {
+            const meta = reviewMeta.get(String(o.id)) || { notes: "" };
+            fsNotes[String(o.id)] = meta.notes || "";
+        });
         document.getElementById("fullscreen-overlay").classList.remove("hidden");
         document.addEventListener("keydown", fsKeyHandler);
         renderFsCard();
@@ -770,31 +1133,43 @@
 
     function closeFullscreen() {
         fsSaveCurrentNotes();
-        if (fsSession) {
-            // Persist edited notes back into the in-memory session
-            fsSession.opportunities.forEach(o => {
+        if (fsMode === "triage" && fsSession) {
+            fsOpps.forEach(o => {
                 const key = String(o.id);
                 if (key in fsNotes) o.notes = fsNotes[key];
             });
             fsPatchServer();
+        } else if (fsMode === "review") {
+            fsOpps.forEach(o => {
+                const key = String(o.id);
+                if (key in fsNotes) {
+                    const meta = reviewMeta.get(key) || { score: 0, notes: "" };
+                    reviewMeta.set(key, { ...meta, notes: fsNotes[key] });
+                    const cardEl = document.getElementById("card-" + key);
+                    if (cardEl) {
+                        const ta = cardEl.querySelector(".notes-field");
+                        if (ta) ta.value = fsNotes[key];
+                    }
+                }
+            });
         }
         document.getElementById("fullscreen-overlay").classList.add("hidden");
         document.removeEventListener("keydown", fsKeyHandler);
         fsSession = null;
-        renderTriage();
+        fsOpps    = [];
+        if (fsMode === "triage") renderTriage();
     }
 
     function fsSaveCurrentNotes() {
-        if (!fsSession) return;
         const ta = document.getElementById("fs-notes");
-        if (ta && fsSession.opportunities[fsIndex]) {
-            fsNotes[String(fsSession.opportunities[fsIndex].id)] = ta.value;
+        if (ta && fsOpps[fsIndex]) {
+            fsNotes[String(fsOpps[fsIndex].id)] = ta.value;
         }
     }
 
     async function fsPatchServer() {
         if (!fsSession) return;
-        const opps = fsSession.opportunities.map(o => ({
+        const opps = fsOpps.map(o => ({
             id:             String(o.id),
             title:          o.title          || "",
             buyer:          o.buyer          || "",
@@ -820,7 +1195,7 @@
 
     function fsNavigate(dir) {
         fsSaveCurrentNotes();
-        fsIndex = Math.max(0, Math.min(fsSession.opportunities.length - 1, fsIndex + dir));
+        fsIndex = Math.max(0, Math.min(fsOpps.length - 1, fsIndex + dir));
         renderFsCard();
     }
 
@@ -831,13 +1206,14 @@
     }
 
     function renderFsCard() {
-        const o     = fsSession.opportunities[fsIndex];
-        const total = fsSession.opportunities.length;
+        const o     = fsOpps[fsIndex];
+        const total = fsOpps.length;
         const fmt   = v => { const n = parseFloat(v); return isNaN(n) ? "—" : "£" + n.toLocaleString("en-GB"); };
         const id    = String(o.id);
         const notes = fsNotes[id] ?? "";
 
-        document.getElementById("fs-header-label").textContent = fsSession.label;
+        const headerLabel = fsMode === "review" ? "Review" : (fsSession ? fsSession.label : "");
+        document.getElementById("fs-header-label").textContent = headerLabel;
         document.getElementById("fs-progress").textContent     = `${fsIndex + 1} / ${total}`;
         document.getElementById("fs-prev").disabled = fsIndex === 0;
         document.getElementById("fs-next").disabled = fsIndex === total - 1;
@@ -973,12 +1349,6 @@
             const meta   = reviewMeta.get(id) || { score: 0, notes: "" };
             const stages = (o.stage || "").split(",").filter(Boolean)
                 .map(s => `<span>${esc(s.trim())}</span>`).join("");
-            const stars = [5,4,3,2,1].map(n => `
-                <input type="radio" id="star-${id}-${n}" name="score-${id}" value="${n}"
-                    ${meta.score === n ? "checked" : ""} onchange="setScore('${id}', ${n})">
-                <label for="star-${id}-${n}" title="${n} star${n > 1 ? "s" : ""}">★</label>
-            `).join("");
-
             return `
             <div class="review-card" id="card-${id}">
                 <div class="card-select">
@@ -1008,25 +1378,17 @@
                 </div>
                 <div class="card-actions">
                     <div>
-                        <div style="font-size:0.75rem;font-weight:600;color:#555;margin-bottom:6px;">Score</div>
-                        <div class="star-row">${stars}</div>
-                    </div>
-                    <div>
                         <div style="font-size:0.75rem;font-weight:600;color:#555;margin-bottom:4px;">Notes</div>
                         <textarea class="notes-field" placeholder="Add notes…"
                             oninput="setNotes('${id}', this.value)">${esc(meta.notes)}</textarea>
                     </div>
+                    <button class="card-view-btn" onclick="openReviewFullscreen('${id}')">Full View</button>
                     <button class="remove-btn" onclick="removeFromReview('${id}')">✕ Remove</button>
                 </div>
             </div>`;
         }).join("");
 
         container.innerHTML = cards;
-    }
-
-    function setScore(id, score) {
-        const meta = reviewMeta.get(id) || { score: 0, notes: "" };
-        reviewMeta.set(id, { ...meta, score: parseInt(score) });
     }
 
     function setNotes(id, notes) {
@@ -1177,12 +1539,16 @@
                 : "";
             const displayLabel = dayOfWeek ? `${dayOfWeek}, ${session.label}` : session.label;
 
-            const cards = session.opportunities.map(o => `
+            const cards = session.opportunities.map((o, idx) => `
                 <div class="triage-card">
-                    <div class="card-title">
-                        ${o.source_url
-                            ? `<a href="${esc(o.source_url)}" target="_blank" rel="noopener">${esc(o.title || "—")}</a>`
-                            : esc(o.title || "—")}
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+                        <div class="card-title">
+                            ${o.source_url
+                                ? `<a href="${esc(o.source_url)}" target="_blank" rel="noopener">${esc(o.title || "—")}</a>`
+                                : esc(o.title || "—")}
+                        </div>
+                        <button class="card-view-btn" style="flex-shrink:0;"
+                            onclick="openFullscreen('${esc(sid)}', ${idx})">View</button>
                     </div>
                     <div class="card-meta">
                         <span><span class="meta-lbl">Supplier</span>${esc(o.buyer || "—")}</span>

@@ -102,6 +102,80 @@
           "contract_end": ""
         }
       ]
+    },
+    {
+      "session_id": "triage_20260414_193710",
+      "label": "14 Apr 2026, 19:37",
+      "created_at": "2026-04-14T19:37:10.024343+01:00",
+      "opportunities": [
+        {
+          "id": "033a6847-82a6-4030-9ad0-3eadc2586851-892875",
+          "title": "SZC - Waterproofing Materials",
+          "buyer": "Sizewell C Limited",
+          "value": 5000000.0,
+          "cpvs": "45261420",
+          "stage": "tender",
+          "published_date": "2026-04-14",
+          "description": "The waterproofing package includes the supply of all materials, namely bonded and unbonded membranes, waterbar materials and accessories, which are assembled and installed to form a specific waterproofing system to meet the design requirements. Dependent on the waterproofing system used, the waterproofing materials can be cast into the concrete when poured or applied post pour. The system design is installed to prevent the ingress of water into. \r\n      \r\n      The requirement includes 120,000 m2 bonded membrane, 45,000 m2 unbonded membrane, 30,000 l/m joint waterbars, 4,500 l/m hydrophilic waterbars, 15,800 l/m elastomer waterbars, 36,540 l/m PVC waterbars as well as related accessories such as 22,000 units of sealants and adhesives and compressible materials to suit seismic design.",
+          "source_url": "https://www.contractsfinder.service.gov.uk/Notice/033a6847-82a6-4030-9ad0-3eadc2586851",
+          "score": 0,
+          "notes": "",
+          "contract_start": "2026-11-03T00:00:00Z",
+          "contract_end": "2027-12-02T23:59:59Z"
+        }
+      ]
+    },
+    {
+      "session_id": "triage_20260414_194958",
+      "label": "14 Apr 2026, 19:49",
+      "created_at": "2026-04-14T19:49:58.926869+01:00",
+      "opportunities": [
+        {
+          "id": "rls-1-APR553835",
+          "title": "Supply and Installation of UPVC Windows & Doors",
+          "buyer": "East Ayrshire Council",
+          "value": null,
+          "cpvs": "44221000, 44221220, 45421100",
+          "stage": "planning",
+          "published_date": "2026-04-14",
+          "description": "Supply and installation of windows and doors, including fire doors within council owned domestic properties.",
+          "source_url": "https://www.publiccontractsscotland.gov.uk",
+          "score": 0,
+          "notes": "",
+          "contract_start": "",
+          "contract_end": ""
+        },
+        {
+          "id": "rls-2-APR553817",
+          "title": "PIN - Easter Langlee Solar PV Feasibility Study",
+          "buyer": "Scottish Borders Council",
+          "value": null,
+          "cpvs": "71311300, 71311000, 71313000, 71314300, 71351200",
+          "stage": "planning",
+          "published_date": "2026-04-14",
+          "description": "Scottish Borders Council are seeking to engage with the market in relation to a proposed feasibility study for installation of solar PV at a former landfill.",
+          "source_url": "https://www.publiccontractsscotland.gov.uk",
+          "score": 0,
+          "notes": "",
+          "contract_start": "",
+          "contract_end": ""
+        },
+        {
+          "id": "rls-3-APR553754",
+          "title": "New Town Quarter, Edinburgh",
+          "buyer": "The Wheatley Housing Group Limited",
+          "value": 30000000.0,
+          "cpvs": "45000000, 45211360",
+          "stage": "planning",
+          "published_date": "2026-04-13",
+          "description": "The New Town Quarter development, located on Dundas Street, on the northern edge of Edinburgh\u00e2\u0080\u0099s New Town World Heritage Site. This brief is to deliver the affordable housing component (consisting of 108 Mid-Market Rent (MMR) homes delivered across a single block) of the wider mixed-use redevelopment of the former Royal Bank of Scotland headquarters, representing one of the city\u00e2\u0080\u0099s most significant brownfield regeneration opportunities.",
+          "source_url": "https://www.publiccontractsscotland.gov.uk",
+          "score": 0,
+          "notes": "",
+          "contract_start": "",
+          "contract_end": ""
+        }
+      ]
     }
   ]
 }

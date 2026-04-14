@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Optional
 from pydantic import BaseModel
 
+from app.scraper.contracts_finder import fetch_contracts_finder
+from app.scraper.pcs import fetch_pcs
 from app.scraper.find_tender import (
     load_findtender_opps,
     load_csv,
@@ -15,6 +17,10 @@ from app.scraper.find_tender import (
     save_triage_session,
     delete_triage_session,
     update_triage_session_opportunities,
+    load_source_csv,
+    save_to_source_csv,
+    _load_source_batches,
+    _get_or_create_source_batch,
 )
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -48,22 +54,22 @@ class TriagePatchRequest(BaseModel):
     opportunities: list[TriageOpportunity]
 
 
+# -----------------------------------------------------------------------
+# HOME
+# -----------------------------------------------------------------------
+
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse(
-        request=request,
-        name="index.html",
-        context={},
-    )
+    return templates.TemplateResponse(request=request, name="index.html", context={})
 
+
+# -----------------------------------------------------------------------
+# FIND A TENDER
+# -----------------------------------------------------------------------
 
 @app.post("/load")
 def load_opportunities():
-    """
-    Fetch today's + yesterday's opportunities from Find a Tender,
-    append new records to the CSV (deduplicating by id).
-    Seals the previous batch and opens a new one if the active batch has rows.
-    """
+    """Fetch today's + yesterday's FaT opportunities, append new records to CSV."""
     total_fetched, new_saved, batch_id = load_findtender_opps()
     state = _load_batches()
     return JSONResponse({
@@ -76,15 +82,10 @@ def load_opportunities():
 
 @app.get("/batches")
 def get_batches():
-    """Return batch metadata in reverse-chronological order."""
+    """Return FaT batch metadata in reverse-chronological order."""
     state = _load_batches()
-    batches = sorted(
-        state.get("batches", []),
-        key=lambda b: b["batch_id"],
-        reverse=True,
-    )
     return JSONResponse({
-        "batches": batches,
+        "batches": sorted(state.get("batches", []), key=lambda b: b["batch_id"], reverse=True),
         "active_batch_id": state.get("active_batch_id"),
         "last_seen_batch_id": state.get("last_seen_batch_id"),
     })
@@ -101,11 +102,10 @@ def get_opportunities(
     date_to: Optional[str] = Query(None),
     keyword: Optional[str] = Query(None),
 ):
-    all_opps = load_csv()
-    cpv_list   = [p.strip() for p in cpv_prefixes.split(",") if p.strip()] if cpv_prefixes else None
+    all_opps  = load_csv()
+    cpv_list  = [p.strip() for p in cpv_prefixes.split(",") if p.strip()] if cpv_prefixes else None
     stage_list = [s.strip() for s in stages.split(",") if s.strip()] if stages else None
-
-    filtered = filter_opportunities(
+    filtered  = filter_opportunities(
         all_opps,
         cpv_prefixes=cpv_list,
         min_value=min_value,
@@ -116,24 +116,136 @@ def get_opportunities(
         date_to=date_to,
         keyword=keyword,
     )
+    return JSONResponse(sorted(filtered, key=lambda o: o.get("published_date") or "", reverse=True))
 
-    sorted_filtered = sorted(
-        filtered,
-        key=lambda o: o.get("published_date") or "",
-        reverse=True,
+
+# -----------------------------------------------------------------------
+# CONTRACTS FINDER
+# -----------------------------------------------------------------------
+
+@app.post("/load/contracts-finder")
+def load_cf():
+    """Fetch the last 7 days from Contracts Finder, append new records to CF CSV."""
+    opps = fetch_contracts_finder(days_back=7)
+    batch_id = _get_or_create_source_batch("cf")
+    new_saved = save_to_source_csv("cf", opps, batch_id)
+    state = _load_source_batches("cf")
+    return JSONResponse({
+        "total_fetched": len(opps),
+        "new_saved": new_saved,
+        "batch_id": batch_id,
+        "last_seen_batch_id": state.get("last_seen_batch_id"),
+    })
+
+
+@app.get("/batches/contracts-finder")
+def get_cf_batches():
+    """Return CF batch metadata in reverse-chronological order."""
+    state = _load_source_batches("cf")
+    return JSONResponse({
+        "batches": sorted(state.get("batches", []), key=lambda b: b["batch_id"], reverse=True),
+        "active_batch_id": state.get("active_batch_id"),
+        "last_seen_batch_id": state.get("last_seen_batch_id"),
+    })
+
+
+@app.get("/live/contracts-finder")
+def live_contracts_finder(
+    cpv_prefixes: Optional[str] = Query(None),
+    min_value: Optional[float] = Query(None),
+    max_value: Optional[float] = Query(None),
+    stages: Optional[str] = Query(None),
+    buyer: Optional[str] = Query(None),
+    date_from: Optional[str] = Query(None),
+    date_to: Optional[str] = Query(None),
+    keyword: Optional[str] = Query(None),
+):
+    """Read CF opportunities from the saved CSV and apply filters."""
+    all_opps  = load_source_csv("cf")
+    cpv_list  = [p.strip() for p in cpv_prefixes.split(",") if p.strip()] if cpv_prefixes else None
+    stage_list = [s.strip() for s in stages.split(",") if s.strip()] if stages else None
+    filtered  = filter_opportunities(
+        all_opps,
+        cpv_prefixes=cpv_list,
+        min_value=min_value,
+        max_value=max_value,
+        stages=stage_list,
+        buyer=buyer,
+        date_from=date_from,
+        date_to=date_to,
+        keyword=keyword,
     )
-    return JSONResponse(sorted_filtered)
+    return JSONResponse(sorted(filtered, key=lambda o: o.get("published_date") or "", reverse=True))
 
+
+# -----------------------------------------------------------------------
+# PUBLIC CONTRACTS SCOTLAND
+# -----------------------------------------------------------------------
+
+@app.post("/load/pcs")
+def load_pcs():
+    """Fetch the last 2 months from Public Contracts Scotland, append new records to PCS CSV."""
+    opps = fetch_pcs(months_back=2)
+    batch_id = _get_or_create_source_batch("pcs")
+    new_saved = save_to_source_csv("pcs", opps, batch_id)
+    state = _load_source_batches("pcs")
+    return JSONResponse({
+        "total_fetched": len(opps),
+        "new_saved": new_saved,
+        "batch_id": batch_id,
+        "last_seen_batch_id": state.get("last_seen_batch_id"),
+    })
+
+
+@app.get("/batches/pcs")
+def get_pcs_batches():
+    """Return PCS batch metadata in reverse-chronological order."""
+    state = _load_source_batches("pcs")
+    return JSONResponse({
+        "batches": sorted(state.get("batches", []), key=lambda b: b["batch_id"], reverse=True),
+        "active_batch_id": state.get("active_batch_id"),
+        "last_seen_batch_id": state.get("last_seen_batch_id"),
+    })
+
+
+@app.get("/live/pcs")
+def live_pcs(
+    cpv_prefixes: Optional[str] = Query(None),
+    min_value: Optional[float] = Query(None),
+    max_value: Optional[float] = Query(None),
+    stages: Optional[str] = Query(None),
+    buyer: Optional[str] = Query(None),
+    date_from: Optional[str] = Query(None),
+    date_to: Optional[str] = Query(None),
+    keyword: Optional[str] = Query(None),
+):
+    """Read PCS opportunities from the saved CSV and apply filters."""
+    all_opps  = load_source_csv("pcs")
+    cpv_list  = [p.strip() for p in cpv_prefixes.split(",") if p.strip()] if cpv_prefixes else None
+    stage_list = [s.strip() for s in stages.split(",") if s.strip()] if stages else None
+    filtered  = filter_opportunities(
+        all_opps,
+        cpv_prefixes=cpv_list,
+        min_value=min_value,
+        max_value=max_value,
+        stages=stage_list,
+        buyer=buyer,
+        date_from=date_from,
+        date_to=date_to,
+        keyword=keyword,
+    )
+    return JSONResponse(sorted(filtered, key=lambda o: o.get("published_date") or "", reverse=True))
+
+
+# -----------------------------------------------------------------------
+# TRIAGE
+# -----------------------------------------------------------------------
 
 @app.get("/triage")
 def get_triage():
     """Return all triage sessions, most recent first."""
     state = load_triage()
-    sessions = sorted(
-        state.get("sessions", []),
-        key=lambda s: s["session_id"],
-        reverse=True,
-    )
+    sessions = sorted(state.get("sessions", []), key=lambda s: s["session_id"], reverse=True)
     return JSONResponse({"sessions": sessions})
 
 

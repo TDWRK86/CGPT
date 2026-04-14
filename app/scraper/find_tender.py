@@ -462,3 +462,121 @@ def filter_opportunities(
         results.append(opp)
 
     return results
+
+
+# ---------------------------
+# MULTI-SOURCE CSV / BATCH PERSISTENCE
+# Parameterised by source key: "cf" or "pcs"
+# ---------------------------
+
+def _source_csv_path(source: str) -> Path:
+    return DATA_DIR / f"opportunities_{source}.csv"
+
+
+def _source_batches_path(source: str) -> Path:
+    return DATA_DIR / f"batches_{source}.json"
+
+
+def load_source_csv(source: str) -> list[dict]:
+    """Read all opportunities from the source-specific CSV. Returns [] if missing."""
+    path = _source_csv_path(source)
+    if not path.exists():
+        return []
+    with open(path, newline="", encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
+def save_to_source_csv(source: str, opportunities: list[dict], batch_id: str) -> int:
+    """
+    Append new opportunities to the source CSV, deduplicating by `id`.
+    Stamps each new record with the given batch_id.
+    Returns the number of new records written.
+    """
+    _ensure_data_dir()
+    path = _source_csv_path(source)
+
+    existing_ids: set[str] = set()
+    if path.exists():
+        with open(path, newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                existing_ids.add(row["id"])
+
+    new_records = [o for o in opportunities if str(o.get("id", "")) not in existing_ids]
+    if not new_records:
+        return 0
+
+    for rec in new_records:
+        rec["batch_id"] = batch_id
+
+    write_header = not path.exists() or os.path.getsize(path) == 0
+    with open(path, "a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS, extrasaction="ignore")
+        if write_header:
+            writer.writeheader()
+        writer.writerows(new_records)
+
+    return len(new_records)
+
+
+def _load_source_batches(source: str) -> dict:
+    path = _source_batches_path(source)
+    if not path.exists():
+        return {"batches": [], "active_batch_id": None, "last_seen_batch_id": None}
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _save_source_batches(source: str, state: dict) -> None:
+    _ensure_data_dir()
+    path = _source_batches_path(source)
+    tmp = path.with_suffix(".tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(state, f, indent=2)
+    tmp.replace(path)
+
+
+def _get_or_create_source_batch(source: str) -> str:
+    """
+    Return the batch_id to stamp on new records for this load call.
+    Same sealing rules as _get_or_create_batch() but for an arbitrary source.
+    """
+    state = _load_source_batches(source)
+    now = datetime.now(timezone.utc).astimezone()
+    new_batch_id = "batch_" + now.strftime("%Y%m%d_%H%M%S")
+    label = f"{now.day} {now.strftime('%b %Y')}, {now.strftime('%H:%M')}"
+
+    if not state["active_batch_id"]:
+        new_batch = {
+            "batch_id": new_batch_id,
+            "label": label,
+            "created_at": now.isoformat(),
+            "sealed": False,
+        }
+        state["batches"].append(new_batch)
+        state["active_batch_id"] = new_batch_id
+        _save_source_batches(source, state)
+        return new_batch_id
+
+    active_id = state["active_batch_id"]
+    existing = load_source_csv(source)
+    batch_has_rows = any(row.get("batch_id") == active_id for row in existing)
+
+    if not batch_has_rows:
+        return active_id
+
+    # Seal current batch, open a new one
+    for b in state["batches"]:
+        if b["batch_id"] == active_id:
+            b["sealed"] = True
+    state["last_seen_batch_id"] = active_id
+
+    new_batch = {
+        "batch_id": new_batch_id,
+        "label": label,
+        "created_at": now.isoformat(),
+        "sealed": False,
+    }
+    state["batches"].append(new_batch)
+    state["active_batch_id"] = new_batch_id
+    _save_source_batches(source, state)
+    return new_batch_id
