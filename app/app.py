@@ -4,12 +4,12 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 from typing import Optional
-from datetime import datetime
 
 from app.scraper.find_tender import (
     load_findtender_opps,
     load_csv,
     filter_opportunities,
+    _load_batches,
 )
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -34,13 +34,33 @@ def load_opportunities():
     """
     Fetch today's + yesterday's opportunities from Find a Tender,
     append new records to the CSV (deduplicating by id).
-
-    Returns JSON with counts so the frontend can display a summary.
+    Seals the previous batch and opens a new one if the active batch has rows.
     """
-    total_fetched, new_saved = load_findtender_opps()
+    total_fetched, new_saved, batch_id = load_findtender_opps()
+    state = _load_batches()
     return JSONResponse({
         "total_fetched": total_fetched,
         "new_saved": new_saved,
+        "batch_id": batch_id,
+        "last_seen_batch_id": state.get("last_seen_batch_id"),
+    })
+
+
+@app.get("/batches")
+def get_batches():
+    """
+    Return batch metadata in reverse-chronological order.
+    """
+    state = _load_batches()
+    batches = sorted(
+        state.get("batches", []),
+        key=lambda b: b["batch_id"],
+        reverse=True,
+    )
+    return JSONResponse({
+        "batches": batches,
+        "active_batch_id": state.get("active_batch_id"),
+        "last_seen_batch_id": state.get("last_seen_batch_id"),
     })
 
 
@@ -53,6 +73,7 @@ def get_opportunities(
     buyer: Optional[str] = Query(None),
     date_from: Optional[str] = Query(None, description="YYYY-MM-DD"),
     date_to: Optional[str] = Query(None, description="YYYY-MM-DD"),
+    keyword: Optional[str] = Query(None, description="Free-text search across title, description, and buyer"),
 ):
     """
     Read all opportunities from the CSV and return a filtered JSON list.
@@ -72,14 +93,13 @@ def get_opportunities(
         buyer=buyer,
         date_from=date_from,
         date_to=date_to,
+        keyword=keyword,
     )
 
-    
     sorted_filtered = sorted(
         filtered,
-        key=lambda o: datetime.fromisoformat(o["published_date"]),
+        key=lambda o: o.get("published_date") or "",
         reverse=True,
     )
-
 
     return JSONResponse(sorted_filtered)

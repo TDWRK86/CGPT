@@ -132,11 +132,97 @@
         tbody tr:hover { background: #eef3fa; }
         tbody tr.selected-row { background: #fef3e0 !important; }
         td { padding: 8px 10px; vertical-align: top; border-bottom: 1px solid #eaeef4; }
-        td.desc { max-width: 420px; color: #444; line-height: 1.4; }
+        td.desc { max-width: 420px; color: #444; line-height: 1.4; vertical-align: top; }
+        .desc-clamp {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .desc-clamp.expanded {
+            display: block;
+            overflow: visible;
+            -webkit-line-clamp: unset;
+            line-clamp: unset;
+        }
+        .read-more-btn {
+            background: none;
+            border: none;
+            color: #1a3a5c;
+            font-size: 0.72rem;
+            cursor: pointer;
+            padding: 2px 0 0;
+            text-decoration: underline;
+            display: block;
+        }
+        .read-more-btn:hover { color: #e8a020; }
         td.value { white-space: nowrap; }
         td.stage span { display: inline-block; background: #dde8f5; color: #1a3a5c; border-radius: 3px; padding: 1px 5px; font-size: 0.72rem; margin: 1px 2px 1px 0; }
         td.cpv { color: #777; font-size: 0.73rem; }
         td:first-child { text-align: center; }
+
+        /* ---- BATCH SECTION HEADERS ---- */
+        tbody.batch-group tr.batch-section-header { cursor: pointer; }
+        tbody.batch-group tr.batch-section-header td { padding: 0; border: none; }
+        tbody.batch-group tr.batch-section-header:hover .batch-header-inner { filter: brightness(0.96); }
+
+        /* Collapsed: hide data rows */
+        tbody.batch-group.collapsed tr.batch-data-row { display: none; }
+
+        .batch-header-inner {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            user-select: none;
+        }
+        .batch-meta-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .batch-count-text { font-size: 0.72rem; color: #999; }
+        .batch-toggle-icon { font-size: 0.65rem; color: #aaa; min-width: 8px; text-align: center; }
+        .batch-lbl { font-size: 0.78rem; font-weight: 600; color: #1a3a5c; }
+        .batch-lbl--muted { color: #777; font-weight: 500; }
+        .batch-last-seen-text {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #856404;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Active batch header: blue */
+        tbody.batch-group--active tr.batch-section-header td {
+            background: #eaf3ff;
+            border-bottom: 1px solid #c7dff5;
+        }
+        /* New (not active) batch header: pale blue */
+        tbody.batch-group--new tr.batch-section-header td {
+            background: #f3f8ff;
+            border-bottom: 1px solid #daeaf7;
+        }
+        /* First old batch (last-seen boundary): amber */
+        tbody.batch-group--last-seen tr.batch-section-header td {
+            background: #fff3cd;
+            border-top: 2px solid #ffc107;
+            border-bottom: 1px solid #ffe08a;
+        }
+        tbody.batch-group--last-seen .batch-count-text,
+        tbody.batch-group--last-seen .batch-toggle-icon { color: #a07c10; }
+        /* Older batches: grey */
+        tbody.batch-group--old tr.batch-section-header td {
+            background: #f0f3f7;
+            border-bottom: 1px solid #dde3ec;
+        }
+
+        /* Active batch rows: very light blue tint */
+        tr.batch-data-row.row--active-batch { background: #f7fbff !important; }
+        tr.batch-data-row.row--active-batch:hover { background: #eef3fa !important; }
+        tr.batch-data-row.row--active-batch.selected-row { background: #fef3e0 !important; }
 
         /* ---- SELECTION BAR ---- */
         .selection-bar {
@@ -184,7 +270,7 @@
 
         .card-actions { display: flex; flex-direction: column; gap: 12px; }
 
-        /* Stars — row-reverse so CSS sibling trick works left-to-right visually */
+        /* Stars */
         .star-row { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 2px; }
         .star-row input[type="radio"] { display: none; }
         .star-row label { font-size: 1.5rem; color: #d0d5de; cursor: pointer; transition: color .1s; line-height: 1; }
@@ -209,6 +295,8 @@
         .remove-btn:hover { background: #fdf0f0; }
 
         /* ---- UTILS ---- */
+        .batch-badge { border-radius: 3px; padding: 1px 6px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; }
+        .batch-badge--new { background: #e8a020; color: white; }
         .empty-state { text-align: center; padding: 60px 20px; color: #aaa; font-size: 0.88rem; }
         .spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid #ccd3de; border-top-color: #1a3a5c; border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; margin-right: 5px; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -241,6 +329,11 @@
 
     <aside class="sidebar">
         <h2>Filters</h2>
+
+        <div class="filter-group">
+            <label>Keyword Search</label>
+            <input type="text" id="f-keyword" placeholder="e.g. framework, Ministry of Defence" oninput="debouncedFetch()">
+        </div>
 
         <div class="filter-group">
             <label>CPV Prefixes</label>
@@ -318,15 +411,51 @@
     const selected   = new Map();   // id → opportunity object
     const reviewMeta = new Map();   // id → { score, notes }
 
-    let stagesPopulated = false;
+    let stagesPopulated  = false;
     let debounceTimer;
-    let currentData = [];           // last fetched results, sorted before render
+    let currentData      = [];
+    let batchMeta        = { batches: [], active_batch_id: null, last_seen_batch_id: null };
+    let prevActiveBatchId = null;   // detect when a new batch is created after Load
+
+    // Collapse state — persists across filter changes within the session
+    let collapsedBatches = new Set();   // batch IDs that are collapsed
+    let seenBatchIds     = new Set();   // initialised this session (for default state)
+
+    // Per-filter "last seen" tracking
+    let currentFilterKey      = "";
+    let currentFilterLastSeen = null;
 
     const KNOWN_STAGES = [
         "tender","tenderUpdate","preQualification",
         "planning","planningUpdate",
         "award","awardUpdate","contract","contractUpdate",
     ];
+
+    // =====================
+    // PER-FILTER TRACKING
+    // =====================
+    function getFilterKey() {
+        return JSON.stringify({
+            kw:     document.getElementById("f-keyword").value.trim(),
+            cpv:    document.getElementById("f-cpv").value.trim(),
+            min:    document.getElementById("f-min").value,
+            max:    document.getElementById("f-max").value,
+            stages: [...document.querySelectorAll("#stage-checkboxes input:checked")]
+                        .map(cb => cb.value).sort().join(","),
+            buyer:  document.getElementById("f-buyer").value.trim(),
+            df:     document.getElementById("f-date-from").value,
+            dt:     document.getElementById("f-date-to").value,
+        });
+    }
+
+    function getFilterLastSeen(key) {
+        // Per-filter localStorage entry, falling back to the global last-seen batch
+        return localStorage.getItem("fls:" + key) || batchMeta.last_seen_batch_id || null;
+    }
+
+    function setFilterLastSeen(key, batchId) {
+        if (batchId) localStorage.setItem("fls:" + key, batchId);
+    }
 
     // =====================
     // TABS
@@ -343,7 +472,7 @@
     // LOAD
     // =====================
     async function loadOpportunities() {
-        const btn = document.getElementById("loadBtn");
+        const btn    = document.getElementById("loadBtn");
         const status = document.getElementById("load-status");
         btn.disabled = true;
         btn.textContent = "Loading…";
@@ -362,12 +491,16 @@
     }
 
     // =====================
-    // FETCH & RENDER TABLE
+    // FETCH & RENDER
     // =====================
     async function fetchAndRender() {
+        currentFilterKey = getFilterKey();
+
         const params = new URLSearchParams();
-        const cpv = document.getElementById("f-cpv").value.trim();
-        if (cpv) params.set("cpv_prefixes", cpv);
+        const kw   = document.getElementById("f-keyword").value.trim();
+        if (kw)   params.set("keyword", kw);
+        const cpv  = document.getElementById("f-cpv").value.trim();
+        if (cpv)  params.set("cpv_prefixes", cpv);
         const minV = document.getElementById("f-min").value;
         if (minV) params.set("min_value", minV);
         const maxV = document.getElementById("f-max").value;
@@ -377,25 +510,47 @@
         const buyer = document.getElementById("f-buyer").value.trim();
         if (buyer) params.set("buyer", buyer);
         const df = document.getElementById("f-date-from").value;
-        if (df) params.set("date_from", df);
+        if (df)   params.set("date_from", df);
         const dt = document.getElementById("f-date-to").value;
-        if (dt) params.set("date_to", dt);
+        if (dt)   params.set("date_to", dt);
 
         document.getElementById("table-container").innerHTML =
             `<div class="empty-state"><span class="spinner"></span>Fetching…</div>`;
 
         try {
-            const resp = await fetch("/opportunities?" + params.toString());
-            const data = await resp.json();
+            const [oppResp, batchResp] = await Promise.all([
+                fetch("/opportunities?" + params.toString()),
+                fetch("/batches"),
+            ]);
+            const data      = await oppResp.json();
+            const batchData = await batchResp.json();
+
+            // If a new batch was just created, collapse the old active batch
+            if (prevActiveBatchId && batchData.active_batch_id !== prevActiveBatchId) {
+                collapsedBatches.add(prevActiveBatchId);
+            }
+            prevActiveBatchId = batchData.active_batch_id;
+
+            batchMeta   = batchData;
             currentData = data;
+
+            // Compute per-filter last seen BEFORE rendering
+            currentFilterLastSeen = getFilterLastSeen(currentFilterKey);
+
             populateStages(data);
             renderTable(data);
+
+            // Record that this filter has now been seen up to the current active batch
+            setFilterLastSeen(currentFilterKey, batchMeta.active_batch_id);
         } catch {
             document.getElementById("table-container").innerHTML =
                 `<div class="empty-state">⚠ Error fetching data.</div>`;
         }
     }
 
+    // =====================
+    // SORT
+    // =====================
     function sortData(data) {
         const order = document.getElementById("sort-select").value;
         const copy = [...data];
@@ -418,6 +573,9 @@
         return copy;
     }
 
+    // =====================
+    // RENDER TABLE (with collapsible batch groups)
+    // =====================
     function renderTable(data) {
         data = sortData(data);
         document.getElementById("result-count").textContent =
@@ -429,31 +587,127 @@
             return;
         }
 
-        const fmt = v => { const n = parseFloat(v); return isNaN(n) ? "—" : "£" + n.toLocaleString("en-GB"); };
+        const fmt          = v => { const n = parseFloat(v); return isNaN(n) ? "—" : "£" + n.toLocaleString("en-GB"); };
+        const activeBatchId  = batchMeta.active_batch_id  || null;
+        const filterLastSeen = currentFilterLastSeen;
 
-        const rows = data.map(o => {
-            const id = String(o.id);
-            const isChecked = selected.has(id);
-            const stages = (o.stage || "").split(",").filter(Boolean).map(s => `<span>${esc(s.trim())}</span>`).join("");
-            // Safely embed the opportunity data as a base64-encoded JSON attribute to avoid quoting issues
-            const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+        // Label lookup
+        const batchLabels = {};
+        (batchMeta.batches || []).forEach(b => { batchLabels[b.batch_id] = b.label; });
+
+        // Group rows by batch_id, maintaining sort order
+        const groups = [];
+        let lastGroup = null;
+        data.forEach(o => {
+            const bid = o.batch_id || "";
+            if (!lastGroup || lastGroup.batchId !== bid) {
+                lastGroup = { batchId: bid, rows: [] };
+                groups.push(lastGroup);
+            }
+            lastGroup.rows.push(o);
+        });
+
+        // Initialise default collapse state for batch groups new to this session.
+        // Active batch = expanded; everything else = collapsed.
+        groups.forEach(g => {
+            if (!seenBatchIds.has(g.batchId)) {
+                seenBatchIds.add(g.batchId);
+                if (g.batchId !== activeBatchId) {
+                    collapsedBatches.add(g.batchId);
+                }
+            }
+        });
+
+        // A batch is "new for this filter" if it arrived after filterLastSeen.
+        // An empty filterLastSeen means we have no prior record → treat active batch as new.
+        const isBatchNew = bid => !filterLastSeen || !bid || bid > filterLastSeen;
+
+        // The first "old" batch is where the amber "last seen" divider lives.
+        // Only shown when there IS a filterLastSeen value (i.e. this filter has been used before).
+        const firstOldGroup = filterLastSeen ? groups.find(g => !isBatchNew(g.batchId)) : null;
+
+        // Build tbody HTML for each group
+        const tbodies = groups.map(g => {
+            const isActive    = g.batchId === activeBatchId;
+            const isNew       = isBatchNew(g.batchId) && !isActive;   // "new but not the live batch"
+            const isLastSeen  = g === firstOldGroup;
+            const isCollapsed = collapsedBatches.has(g.batchId);
+            const count       = g.rows.length;
+            const label       = batchLabels[g.batchId] || g.batchId || "Previous data";
+            const toggleIcon  = isCollapsed ? "▶" : "▼";
+            const countText   = isCollapsed
+                ? `${count} hidden`
+                : `${count} result${count !== 1 ? "s" : ""}`;
+
+            // Determine tbody modifier class
+            let modifier;
+            if (isActive)   modifier = "batch-group--active";
+            else if (isNew) modifier = "batch-group--new";
+            else if (isLastSeen) modifier = "batch-group--last-seen";
+            else            modifier = "batch-group--old";
+
+            // Header inner content
+            let headerHtml;
+            if (isActive) {
+                headerHtml = `
+                    <span class="batch-badge batch-badge--new">NEW</span>
+                    <span class="batch-lbl">${esc(label)}</span>`;
+            } else if (isLastSeen) {
+                headerHtml = `
+                    <span class="batch-last-seen-text">▼ Last seen with this filter</span>
+                    <span class="batch-lbl batch-lbl--muted">&nbsp;·&nbsp; ${esc(label)}</span>`;
+            } else {
+                headerHtml = `<span class="batch-lbl batch-lbl--muted">${esc(label)}</span>`;
+            }
+
+            // Data rows
+            const dataRows = g.rows.map(o => {
+                const id = String(o.id);
+                const isChecked = selected.has(id);
+                const stages = (o.stage || "").split(",").filter(Boolean)
+                    .map(s => `<span>${esc(s.trim())}</span>`).join("");
+                const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+                const rowClasses = [
+                    "batch-data-row",
+                    isChecked ? "selected-row" : "",
+                    isActive  ? "row--active-batch" : "",
+                ].filter(Boolean).join(" ");
+
+                return `
+                <tr class="${rowClasses}" id="row-${id}">
+                    <td><input type="checkbox" data-id="${id}" data-opp="${encoded}"
+                        ${isChecked ? "checked" : ""} onchange="toggleSelected(this)"></td>
+                    <td>${o.source_url
+                        ? `<a href="${esc(o.source_url)}" target="_blank" rel="noopener">${esc(o.title || "—")}</a>`
+                        : esc(o.title || "—")}</td>
+                    <td>${esc(o.buyer || "—")}</td>
+                    <td class="value">${fmt(o.value)}</td>
+                    <td class="stage">${stages}</td>
+                    <td class="cpv">${esc(o.cpvs || "—")}</td>
+                    <td class="desc">
+                        <div class="desc-clamp" id="dc-${id}">${esc(o.description || "")}</div>
+                        ${o.description ? `<button class="read-more-btn" onclick="toggleDesc('dc-${id}',this)">Read more</button>` : ""}
+                    </td>
+                    <td>${(o.published_date || "").substring(0, 10)}</td>
+                </tr>`;
+            }).join("");
+
             return `
-            <tr class="${isChecked ? "selected-row" : ""}" id="row-${id}">
-                <td><input type="checkbox" data-id="${id}" data-opp="${encoded}" ${isChecked ? "checked" : ""} onchange="toggleSelected(this)"></td>
-                
-                <td>
-                ${o.source_url
-                    ? `<a href="${esc(o.source_url)}" target="_blank" rel="noopener">${esc(o.title || "—")}</a>`
-                    : esc(o.title || "—")}
-                </td>
-
-                <td>${esc(o.buyer || "—")}</td>
-                <td class="value">${fmt(o.value)}</td>
-                <td class="stage">${stages}</td>
-                <td class="cpv">${esc(o.cpvs || "—")}</td>
-                <td class="desc">${esc(o.description || "")}</td>
-                <td>${(o.published_date || "").substring(0, 10)}</td>
-            </tr>`;
+            <tbody class="batch-group ${modifier}${isCollapsed ? " collapsed" : ""}"
+                   data-batch="${g.batchId}">
+                <tr class="batch-section-header" onclick="toggleBatch('${g.batchId}')">
+                    <td colspan="8">
+                        <div class="batch-header-inner">
+                            <span class="batch-toggle-icon">${toggleIcon}</span>
+                            ${headerHtml}
+                            <span class="batch-meta-right">
+                                <span class="batch-count-text">${countText}</span>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                ${dataRows}
+            </tbody>`;
         }).join("");
 
         document.getElementById("table-container").innerHTML = `
@@ -462,15 +716,56 @@
                 <th></th><th>Title</th><th>Buyer</th><th>Value</th>
                 <th>Stage</th><th>CPVs</th><th>Description</th><th>Published</th>
             </tr></thead>
-            <tbody>${rows}</tbody>
+            ${tbodies}
         </table>`;
+
+        // Hide "Read more" buttons for descriptions that aren't actually clipped
+        document.querySelectorAll(".desc-clamp").forEach(el => {
+            if (el.scrollHeight <= el.clientHeight) {
+                const btn = el.nextElementSibling;
+                if (btn && btn.classList.contains("read-more-btn")) btn.style.display = "none";
+            }
+        });
+    }
+
+    // =====================
+    // DESCRIPTION TOGGLE
+    // =====================
+    function toggleDesc(elemId, btn) {
+        const el = document.getElementById(elemId);
+        if (!el) return;
+        const expanded = el.classList.toggle("expanded");
+        btn.textContent = expanded ? "Read less" : "Read more";
+    }
+
+    // =====================
+    // TOGGLE BATCH COLLAPSE
+    // =====================
+    function toggleBatch(batchId) {
+        const tbody  = document.querySelector(`tbody.batch-group[data-batch="${batchId}"]`);
+        if (!tbody) return;
+        const icon     = tbody.querySelector(".batch-toggle-icon");
+        const countEl  = tbody.querySelector(".batch-count-text");
+        const count    = tbody.querySelectorAll("tr.batch-data-row").length;
+
+        if (collapsedBatches.has(batchId)) {
+            collapsedBatches.delete(batchId);
+            tbody.classList.remove("collapsed");
+            if (icon)    icon.textContent    = "▼";
+            if (countEl) countEl.textContent = `${count} result${count !== 1 ? "s" : ""}`;
+        } else {
+            collapsedBatches.add(batchId);
+            tbody.classList.add("collapsed");
+            if (icon)    icon.textContent    = "▶";
+            if (countEl) countEl.textContent = `${count} hidden`;
+        }
     }
 
     // =====================
     // SELECTION
     // =====================
     function toggleSelected(checkbox) {
-        const id = checkbox.dataset.id;
+        const id  = checkbox.dataset.id;
         const opp = JSON.parse(decodeURIComponent(escape(atob(checkbox.dataset.opp))));
         const row = document.getElementById("row-" + id);
 
@@ -520,13 +815,14 @@
         const fmt = v => { const n = parseFloat(v); return isNaN(n) ? "—" : "£" + n.toLocaleString("en-GB"); };
 
         const cards = [...selected.values()].map(o => {
-            const id   = String(o.id);
-            const meta = reviewMeta.get(id) || { score: 0, notes: "" };
-            const stages = (o.stage || "").split(",").filter(Boolean).map(s => `<span>${esc(s.trim())}</span>`).join("");
+            const id     = String(o.id);
+            const meta   = reviewMeta.get(id) || { score: 0, notes: "" };
+            const stages = (o.stage || "").split(",").filter(Boolean)
+                .map(s => `<span>${esc(s.trim())}</span>`).join("");
 
-            // Stars: rendered right-to-left (row-reverse) so the CSS ~ sibling trick fills left→right on hover/check
             const stars = [5,4,3,2,1].map(n => `
-                <input type="radio" id="star-${id}-${n}" name="score-${id}" value="${n}" ${meta.score === n ? "checked" : ""} onchange="setScore('${id}', ${n})">
+                <input type="radio" id="star-${id}-${n}" name="score-${id}" value="${n}"
+                    ${meta.score === n ? "checked" : ""} onchange="setScore('${id}', ${n})">
                 <label for="star-${id}-${n}" title="${n} star${n > 1 ? "s" : ""}">★</label>
             `).join("");
 
@@ -550,7 +846,8 @@
                     </div>
                     <div>
                         <div style="font-size:0.75rem;font-weight:600;color:#555;margin-bottom:4px;">Notes</div>
-                        <textarea class="notes-field" placeholder="Add notes…" oninput="setNotes('${id}', this.value)">${esc(meta.notes)}</textarea>
+                        <textarea class="notes-field" placeholder="Add notes…"
+                            oninput="setNotes('${id}', this.value)">${esc(meta.notes)}</textarea>
                     </div>
                     <button class="remove-btn" onclick="removeFromReview('${id}')">✕ Remove</button>
                 </div>
@@ -573,7 +870,6 @@
     function removeFromReview(id) {
         selected.delete(id);
         reviewMeta.delete(id);
-        // uncheck in table if it's still rendered
         const cb = document.querySelector(`input[data-id="${id}"]`);
         if (cb) cb.checked = false;
         const row = document.getElementById("row-" + id);
@@ -590,12 +886,15 @@
         const seen = new Set(KNOWN_STAGES);
         data.forEach(o => (o.stage || "").split(",").forEach(s => { if (s.trim()) seen.add(s.trim()); }));
         document.getElementById("stage-checkboxes").innerHTML =
-            [...seen].sort().map(s => `<label><input type="checkbox" value="${s}" onchange="debouncedFetch()"> ${s}</label>`).join("");
+            [...seen].sort().map(s =>
+                `<label><input type="checkbox" value="${s}" onchange="debouncedFetch()"> ${s}</label>`
+            ).join("");
         stagesPopulated = true;
     }
 
     function clearFilters() {
-        ["f-cpv","f-min","f-max","f-buyer","f-date-from","f-date-to"].forEach(id => document.getElementById(id).value = "");
+        ["f-keyword","f-cpv","f-min","f-max","f-buyer","f-date-from","f-date-to"]
+            .forEach(id => document.getElementById(id).value = "");
         document.querySelectorAll("#stage-checkboxes input").forEach(cb => cb.checked = false);
         fetchAndRender();
     }
@@ -606,7 +905,9 @@
     }
 
     function esc(str) {
-        return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+        return String(str)
+            .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+            .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
     }
 
     // Auto-load whatever is in the CSV on page open

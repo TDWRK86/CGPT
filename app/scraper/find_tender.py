@@ -1,4 +1,5 @@
 import csv
+import json
 import os
 import requests
 import urllib3
@@ -13,10 +14,12 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 CSV_PATH = DATA_DIR / "opportunities.csv"
+BATCHES_PATH = DATA_DIR / "batches.json"
 
 CSV_FIELDS = [
     "id", "title", "buyer", "value", "cpvs", "stage",
     "published_date", "description", "source", "source_url",
+    "batch_id",
 ]
 
 # ---------------------------
@@ -30,6 +33,79 @@ DEFAULT_EXCLUDE_TAGS = [
 DEFAULT_INCLUDE_TAGS = [
     "tender", "preQualification", "planning", "planningUpdate"
 ]
+
+
+# ---------------------------
+# BATCH HELPERS
+# ---------------------------
+def _load_batches() -> dict:
+    """Read batches.json, returning a default structure if missing."""
+    if not BATCHES_PATH.exists():
+        return {"batches": [], "active_batch_id": None, "last_seen_batch_id": None}
+    with open(BATCHES_PATH, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _save_batches(state: dict) -> None:
+    """Write batches.json atomically via a tmp file."""
+    _ensure_data_dir()
+    tmp = BATCHES_PATH.with_suffix(".tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(state, f, indent=2)
+    tmp.replace(BATCHES_PATH)
+
+
+def _get_or_create_batch() -> str:
+    """
+    Return the batch_id to stamp on new records for this /load call.
+
+    Rules:
+    - No active batch yet → create the first one.
+    - Active batch has no rows yet → reuse it (handles spam-click / reload).
+    - Active batch has rows → seal it, set last_seen_batch_id, create a new one.
+    """
+    state = _load_batches()
+    now = datetime.now(timezone.utc).astimezone()
+    new_batch_id = "batch_" + now.strftime("%Y%m%d_%H%M%S")
+    label = f"{now.day} {now.strftime('%b %Y')}, {now.strftime('%H:%M')}"
+
+    if not state["active_batch_id"]:
+        new_batch = {
+            "batch_id": new_batch_id,
+            "label": label,
+            "created_at": now.isoformat(),
+            "sealed": False,
+        }
+        state["batches"].append(new_batch)
+        state["active_batch_id"] = new_batch_id
+        _save_batches(state)
+        return new_batch_id
+
+    active_id = state["active_batch_id"]
+
+    # Check if active batch actually has any CSV rows yet
+    existing = load_csv()
+    batch_has_rows = any(row.get("batch_id") == active_id for row in existing)
+
+    if not batch_has_rows:
+        return active_id
+
+    # Seal current batch, open a new one
+    for b in state["batches"]:
+        if b["batch_id"] == active_id:
+            b["sealed"] = True
+    state["last_seen_batch_id"] = active_id
+
+    new_batch = {
+        "batch_id": new_batch_id,
+        "label": label,
+        "created_at": now.isoformat(),
+        "sealed": False,
+    }
+    state["batches"].append(new_batch)
+    state["active_batch_id"] = new_batch_id
+    _save_batches(state)
+    return new_batch_id
 
 
 # ---------------------------
@@ -104,17 +180,43 @@ def _ensure_data_dir():
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 
+def _migrate_csv_if_needed() -> None:
+    """
+    One-time migration: if the CSV exists but has no batch_id column,
+    rewrite it with the updated header and batch_id='' for all old rows.
+    Idempotent — safe to call on every startup.
+    """
+    if not CSV_PATH.exists():
+        return
+    with open(CSV_PATH, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        if "batch_id" in (reader.fieldnames or []):
+            return  # already migrated
+        rows = list(reader)
+
+    tmp = CSV_PATH.with_suffix(".migration.tmp")
+    with open(tmp, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS, extrasaction="ignore")
+        writer.writeheader()
+        for row in rows:
+            row.setdefault("batch_id", "")
+            writer.writerow(row)
+    tmp.replace(CSV_PATH)
+
+
 def load_csv() -> list[dict]:
     """Read all opportunities from the CSV. Returns [] if file doesn't exist."""
+    _migrate_csv_if_needed()
     if not CSV_PATH.exists():
         return []
     with open(CSV_PATH, newline="", encoding="utf-8") as f:
         return list(csv.DictReader(f))
 
 
-def save_to_csv(opportunities: list[dict]) -> int:
+def save_to_csv(opportunities: list[dict], batch_id: str) -> int:
     """
     Append new opportunities to the CSV, deduplicating by `id`.
+    Stamps each new record with the given batch_id.
 
     Returns:
         int: Number of new records actually written.
@@ -131,6 +233,9 @@ def save_to_csv(opportunities: list[dict]) -> int:
 
     if not new_records:
         return 0
+
+    for rec in new_records:
+        rec["batch_id"] = batch_id
 
     write_header = not CSV_PATH.exists() or os.path.getsize(CSV_PATH) == 0
 
@@ -170,15 +275,15 @@ def _fetch_for_date(date: str) -> list[dict]:
     return [normalise_opportunity(r) for r in releases]
 
 
-def load_findtender_opps() -> tuple[int, int]:
+def load_findtender_opps() -> tuple[int, int, str]:
     """
     Fetch today's and yesterday's opportunities, append new ones to the CSV.
 
     Returns:
-        tuple[int, int]: (total_fetched, new_saved)
-            total_fetched — number of records returned by the API across both days
-            new_saved     — number of records actually written (excluding duplicates)
+        tuple[int, int, str]: (total_fetched, new_saved, batch_id)
     """
+    batch_id = _get_or_create_batch()
+
     today = datetime.now(timezone.utc)
     yesterday = today - timedelta(days=1)
 
@@ -191,8 +296,8 @@ def load_findtender_opps() -> tuple[int, int]:
     for date in dates:
         all_opps.extend(_fetch_for_date(date))
 
-    new_saved = save_to_csv(all_opps)
-    return len(all_opps), new_saved
+    new_saved = save_to_csv(all_opps, batch_id)
+    return len(all_opps), new_saved, batch_id
 
 
 # ---------------------------
@@ -208,6 +313,7 @@ def filter_opportunities(
     buyer: str | None = None,
     date_from: str | None = None,
     date_to: str | None = None,
+    keyword: str | None = None,
 ) -> list[dict]:
     """
     Filter a list of opportunity dicts (as returned by load_csv()).
@@ -269,6 +375,17 @@ def filter_opportunities(
             continue
         if date_to and pub_date and pub_date > date_to:
             continue
+
+        # --- keyword filter ---
+        if keyword:
+            needle = keyword.lower()
+            haystack = " ".join([
+                opp.get("title") or "",
+                opp.get("description") or "",
+                opp.get("buyer") or "",
+            ]).lower()
+            if needle not in haystack:
+                continue
 
         results.append(opp)
 
