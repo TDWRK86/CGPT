@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 from typing import Optional
+from datetime import datetime
 
 from app.scraper.find_tender import (
     load_findtender_opps,
@@ -73,4 +74,12 @@ def get_opportunities(
         date_to=date_to,
     )
 
-    return JSONResponse(filtered)
+    
+    sorted_filtered = sorted(
+        filtered,
+        key=lambda o: datetime.fromisoformat(o["published_date"]),
+        reverse=True,
+    )
+
+
+    return JSONResponse(sorted_filtered)

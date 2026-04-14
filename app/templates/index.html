@@ -120,6 +120,8 @@
 
         .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-shrink: 0; }
         #result-count { font-size: 0.8rem; color: #666; }
+        .sort-select { padding: 5px 8px; border: 1px solid #ccd3de; border-radius: 4px; font-size: 0.78rem; color: #444; outline: none; cursor: pointer; }
+        .sort-select:focus { border-color: #1a3a5c; }
 
         /* ---- TABLE ---- */
         #table-container { flex: 1; }
@@ -278,6 +280,13 @@
     <main class="content">
         <div class="toolbar">
             <span id="result-count">—</span>
+            <select class="sort-select" id="sort-select" onchange="renderTable(currentData)">
+                <option value="date-desc">Newest first</option>
+                <option value="date-asc">Oldest first</option>
+                <option value="value-desc">Value: high to low</option>
+                <option value="value-asc">Value: low to high</option>
+                <option value="title-asc">Title: A → Z</option>
+            </select>
         </div>
         <div id="table-container">
             <div class="empty-state">Click <strong>Load today's opportunities</strong> to fetch data.</div>
@@ -311,6 +320,7 @@
 
     let stagesPopulated = false;
     let debounceTimer;
+    let currentData = [];           // last fetched results, sorted before render
 
     const KNOWN_STAGES = [
         "tender","tenderUpdate","preQualification",
@@ -377,6 +387,7 @@
         try {
             const resp = await fetch("/opportunities?" + params.toString());
             const data = await resp.json();
+            currentData = data;
             populateStages(data);
             renderTable(data);
         } catch {
@@ -385,7 +396,30 @@
         }
     }
 
+    function sortData(data) {
+        const order = document.getElementById("sort-select").value;
+        const copy = [...data];
+        copy.sort((a, b) => {
+            switch (order) {
+                case "date-asc":
+                    return (a.published_date || "").localeCompare(b.published_date || "");
+                case "date-desc":
+                    return (b.published_date || "").localeCompare(a.published_date || "");
+                case "value-desc":
+                    return (parseFloat(b.value) || 0) - (parseFloat(a.value) || 0);
+                case "value-asc":
+                    return (parseFloat(a.value) || 0) - (parseFloat(b.value) || 0);
+                case "title-asc":
+                    return (a.title || "").localeCompare(b.title || "");
+                default:
+                    return 0;
+            }
+        });
+        return copy;
+    }
+
     function renderTable(data) {
+        data = sortData(data);
         document.getElementById("result-count").textContent =
             `${data.length} opportunit${data.length === 1 ? "y" : "ies"}`;
 
