@@ -134,6 +134,7 @@
         .cpv-scroll { max-height: 68px; overflow-y: auto; line-height: 1.7; }
         td.date-cell { white-space: nowrap; font-size: 0.76rem; vertical-align: top; }
         .date-modified { color: #888; font-size: 0.71rem; margin-top: 2px; }
+        .meta-lbl { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #aaa; margin-right: 3px; }
         td:first-child { text-align: center; }
 
         /* ---- DESCRIPTION CLAMP ---- */
@@ -161,10 +162,17 @@
             font-size: 0.78rem;
             font-weight: 700;
             color: #856404;
-            text-align: left;
             cursor: default;
-            white-space: nowrap;
         }
+        .divider-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .show-old-btn {
+            background: none; border: 1px solid #a07c10; color: #856404;
+            border-radius: 4px; padding: 3px 12px; font-size: 0.74rem; font-weight: 600;
+            cursor: pointer; white-space: nowrap; flex-shrink: 0;
+        }
+        .show-old-btn:hover { background: rgba(0,0,0,.06); }
+        #table-container table tr.old-row { display: none; }
+        #table-container table.show-old tr.old-row { display: table-row; }
         tr.row--active-batch { background: #f7fbff !important; }
         tr.row--active-batch:hover { background: #eef3fa !important; }
         tr.row--active-batch.selected-row { background: #fef3e0 !important; }
@@ -264,14 +272,79 @@
         .triage-card {
             background: #fff; border: 1px solid #dde3ec; border-radius: 8px;
             padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,.06);
-            display: grid; grid-template-columns: 1fr 160px;
-            gap: 12px; margin-bottom: 10px; margin-top: 0;
+            margin-bottom: 10px;
         }
-        .triage-card-score { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-        .star-display { font-size: 1.2rem; letter-spacing: 1px; }
-        .star-display .filled { color: #e8a020; }
-        .star-display .empty  { color: #d0d5de; }
-        .triage-card-notes { font-size: 0.78rem; color: #555; font-style: italic; text-align: right; max-width: 150px; word-wrap: break-word; }
+        .triage-card-notes { font-size: 0.78rem; color: #555; font-style: italic; margin-top: 6px; }
+        .delete-session-btn {
+            margin-left: auto; flex-shrink: 0;
+            background: none; border: 1px solid #e0868a; color: #c0464c;
+            border-radius: 4px; padding: 3px 10px; font-size: 0.74rem; cursor: pointer;
+        }
+        .delete-session-btn:hover { background: #fdf0f0; }
+
+        /* ---- FULLSCREEN OVERLAY ---- */
+        #fullscreen-overlay {
+            position: fixed; inset: 0; z-index: 1000;
+            background: #eef2f7;
+            display: flex; flex-direction: column;
+        }
+        #fullscreen-overlay.hidden { display: none; }
+        .fs-header {
+            background: #1a3a5c; color: white;
+            padding: 13px 24px;
+            display: flex; align-items: center; gap: 16px;
+            flex-shrink: 0;
+        }
+        .fs-close-btn {
+            background: rgba(255,255,255,.15); border: none; color: white;
+            padding: 6px 16px; border-radius: 5px; font-size: 0.85rem;
+            font-weight: 600; cursor: pointer; flex-shrink: 0;
+        }
+        .fs-close-btn:hover { background: rgba(255,255,255,.28); }
+        .fs-header-label { flex: 1; font-size: 0.85rem; opacity: 0.75; padding: 0 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .fs-progress { font-size: 0.95rem; font-weight: 700; opacity: 0.9; white-space: nowrap; }
+        .fs-body {
+            flex: 1; display: flex; align-items: stretch; overflow: hidden;
+            padding: 28px 0;
+        }
+        .fs-nav {
+            width: 76px; flex-shrink: 0; align-self: center;
+            background: none; border: none; font-size: 3.8rem; color: #b8c2ce;
+            cursor: pointer; border-radius: 8px; margin: 0 6px;
+            transition: color .15s, background .15s;
+            line-height: 1;
+        }
+        .fs-nav:hover:not(:disabled) { background: rgba(0,0,0,.05); color: #1a3a5c; }
+        .fs-nav:disabled { color: #dde3ec; cursor: default; }
+        .fs-card {
+            flex: 1; background: #fff; border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,.1);
+            overflow-y: auto; padding: 52px 68px;
+            display: flex; flex-direction: column; gap: 24px;
+        }
+        .fs-title { font-size: 1.75rem; font-weight: 700; color: #1a3a5c; line-height: 1.3; }
+        .fs-title a { color: inherit; text-decoration: none; }
+        .fs-title a:hover { text-decoration: underline; }
+        .fs-meta { display: flex; gap: 32px; font-size: 1rem; color: #666; flex-wrap: wrap; }
+        .fs-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+        .fs-tags span { background: #dde8f5; color: #1a3a5c; border-radius: 3px; padding: 2px 8px; font-size: 0.85rem; }
+        .fs-cpvs { font-size: 0.85rem; color: #aaa; }
+        .fs-description { font-size: 1.05rem; color: #333; line-height: 1.85; white-space: pre-wrap; }
+        .fs-divider { border: none; border-top: 1px solid #eaeef4; margin: 0; }
+        .fs-notes-label { font-size: 0.9rem; font-weight: 700; color: #444; margin-bottom: 8px; }
+        .fs-notes-textarea {
+            width: 100%; min-height: 130px; padding: 14px 16px;
+            border: 1px solid #ccd3de; border-radius: 6px;
+            font-size: 1rem; font-family: inherit; resize: vertical; outline: none;
+            line-height: 1.65; color: #333;
+        }
+        .fs-notes-textarea:focus { border-color: #1a3a5c; }
+        .view-session-btn {
+            background: #1a3a5c; color: white; border: none;
+            border-radius: 4px; padding: 3px 12px; font-size: 0.74rem; font-weight: 600;
+            cursor: pointer; white-space: nowrap; flex-shrink: 0;
+        }
+        .view-session-btn:hover { background: #152e4a; }
 
         /* ---- SHARED ---- */
         .batch-badge { border-radius: 3px; padding: 1px 6px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; }
@@ -405,6 +478,20 @@
     </div>
 </div>
 
+<!-- FULLSCREEN OVERLAY -->
+<div id="fullscreen-overlay" class="hidden">
+    <div class="fs-header">
+        <button class="fs-close-btn" onclick="closeFullscreen()">✕ Close</button>
+        <span id="fs-header-label" class="fs-header-label"></span>
+        <span id="fs-progress" class="fs-progress"></span>
+    </div>
+    <div class="fs-body">
+        <button id="fs-prev" class="fs-nav" onclick="fsNavigate(-1)">&#8249;</button>
+        <div class="fs-card" id="fs-card-inner"></div>
+        <button id="fs-next" class="fs-nav" onclick="fsNavigate(1)">&#8250;</button>
+    </div>
+</div>
+
 <script>
     // =====================
     // STATE
@@ -419,6 +506,11 @@
     let batchMeta         = { batches: [], active_batch_id: null, last_seen_batch_id: null };
     let triageSessions    = [];
     let collapsedSessions = new Set();
+
+    // Fullscreen state
+    let fsSession = null;
+    let fsIndex   = 0;
+    let fsNotes   = {};
 
     const KNOWN_STAGES = [
         "tender","tenderUpdate","preQualification",
@@ -559,13 +651,14 @@
         const newRows = data.filter(isNew);
         const oldRows = data.filter(o => !isNew(o));
 
-        const renderRow = o => {
+        const renderRow = (o, isOld = false) => {
             const id = String(o.id);
             const isChecked = selected.has(id);
             const stages = (o.stage || "").split(",").filter(Boolean)
                 .map(s => `<span>${esc(s.trim())}</span>`).join("");
             const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(o))));
             const rowClasses = [
+                isOld                          ? "old-row"           : "",
                 isChecked                      ? "selected-row"      : "",
                 o.batch_id === activeBatchId   ? "row--active-batch" : "",
             ].filter(Boolean).join(" ");
@@ -586,25 +679,34 @@
                     ${o.description ? `<button class="read-more-btn" onclick="toggleDesc('dc-${id}',this)">Read more</button>` : ""}
                 </td>
                 <td class="date-cell">
-                    <div>${fmtDate(o.published_date)}</div>
+                    <div><span class="meta-lbl">Published</span>${fmtDate(o.published_date)}</div>
                     ${o.date_modified && o.date_modified.substring(0,16) !== (o.published_date||"").substring(0,16)
-                        ? `<div class="date-modified">✏ ${fmtDate(o.date_modified)}</div>`
+                        ? `<div class="date-modified"><span class="meta-lbl">Modified</span>${fmtDate(o.date_modified)}</div>`
+                        : ""}
+                    ${fmtContract(o.contract_start, o.contract_end)
+                        ? `<div style="margin-top:2px;"><span class="meta-lbl">Contract</span>${fmtContract(o.contract_start, o.contract_end)}</div>`
                         : ""}
                 </td>
             </tr>`;
         };
+
+        // Old rows are hidden behind the divider when there are new rows to show above it
+        const hideOld = newRows.length > 0 && oldRows.length > 0;
 
         // Divider banner — shown whenever there's a last-seen batch and old rows exist
         let dividerHtml = "";
         if (lastSeenBatch && oldRows.length > 0) {
             const day   = new Date(lastSeenBatch.created_at).toLocaleDateString("en-GB", { weekday: "long" });
             const label = `${day}, ${lastSeenBatch.label}`;
-            const prefix = newRows.length === 0
-                ? `Nothing new since`
-                : `↓ Last loaded`;
+            const leftText = newRows.length === 0
+                ? `Nothing new since ${esc(label)}`
+                : `↓ Last loaded ${esc(label)}`;
+            const btn = hideOld
+                ? `<button class="show-old-btn" onclick="toggleOldRows(this, ${oldRows.length})">Show ${oldRows.length} previous result${oldRows.length !== 1 ? "s" : ""} ↓</button>`
+                : "";
             dividerHtml = `
             <tr class="divider-banner">
-                <td colspan="8">${prefix} ${esc(label)} · ${oldRows.length} previous result${oldRows.length !== 1 ? "s" : ""} below</td>
+                <td colspan="8"><div class="divider-inner"><span>${leftText}</span>${btn}</div></td>
             </tr>`;
         }
 
@@ -612,12 +714,12 @@
         <table>
             <thead><tr>
                 <th></th><th>Title</th><th>Buyer</th><th>Value</th>
-                <th>Stage</th><th>CPVs</th><th>Description</th><th>Published</th>
+                <th>Stage</th><th>CPVs</th><th>Description</th><th>Dates</th>
             </tr></thead>
             <tbody>
-                ${newRows.map(renderRow).join("")}
+                ${newRows.map(o => renderRow(o, false)).join("")}
                 ${dividerHtml}
-                ${oldRows.map(renderRow).join("")}
+                ${oldRows.map(o => renderRow(o, hideOld)).join("")}
             </tbody>
         </table>`;
 
@@ -637,6 +739,157 @@
         const el = document.getElementById(elemId);
         if (!el) return;
         btn.textContent = el.classList.toggle("expanded") ? "Read less" : "Read more";
+    }
+
+    // =====================
+    // TOGGLE OLD ROWS
+    // =====================
+    function toggleOldRows(btn, count) {
+        const table = document.querySelector("#table-container table");
+        if (!table) return;
+        const showing = table.classList.toggle("show-old");
+        btn.textContent = showing
+            ? "Hide previous results ↑"
+            : `Show ${count} previous result${count !== 1 ? "s" : ""} ↓`;
+    }
+
+    // =====================
+    // FULLSCREEN VIEW
+    // =====================
+    function openFullscreen(sessionId, startIndex) {
+        const session = triageSessions.find(s => s.session_id === sessionId);
+        if (!session || !session.opportunities.length) return;
+        fsSession = session;
+        fsIndex   = startIndex || 0;
+        fsNotes   = {};
+        session.opportunities.forEach(o => { fsNotes[String(o.id)] = o.notes || ""; });
+        document.getElementById("fullscreen-overlay").classList.remove("hidden");
+        document.addEventListener("keydown", fsKeyHandler);
+        renderFsCard();
+    }
+
+    function closeFullscreen() {
+        fsSaveCurrentNotes();
+        if (fsSession) {
+            // Persist edited notes back into the in-memory session
+            fsSession.opportunities.forEach(o => {
+                const key = String(o.id);
+                if (key in fsNotes) o.notes = fsNotes[key];
+            });
+            fsPatchServer();
+        }
+        document.getElementById("fullscreen-overlay").classList.add("hidden");
+        document.removeEventListener("keydown", fsKeyHandler);
+        fsSession = null;
+        renderTriage();
+    }
+
+    function fsSaveCurrentNotes() {
+        if (!fsSession) return;
+        const ta = document.getElementById("fs-notes");
+        if (ta && fsSession.opportunities[fsIndex]) {
+            fsNotes[String(fsSession.opportunities[fsIndex].id)] = ta.value;
+        }
+    }
+
+    async function fsPatchServer() {
+        if (!fsSession) return;
+        const opps = fsSession.opportunities.map(o => ({
+            id:             String(o.id),
+            title:          o.title          || "",
+            buyer:          o.buyer          || "",
+            value:          parseFloat(o.value) || null,
+            cpvs:           o.cpvs           || "",
+            stage:          o.stage          || "",
+            published_date: (o.published_date || "").substring(0, 10),
+            description:    o.description    || "",
+            source_url:     o.source_url     || null,
+            score:          o.score          || 0,
+            notes:          fsNotes[String(o.id)] ?? o.notes ?? "",
+            contract_start: o.contract_start || "",
+            contract_end:   o.contract_end   || "",
+        }));
+        try {
+            await fetch(`/triage/${encodeURIComponent(fsSession.session_id)}`, {
+                method:  "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body:    JSON.stringify({ opportunities: opps }),
+            });
+        } catch { /* silent — notes are still in memory */ }
+    }
+
+    function fsNavigate(dir) {
+        fsSaveCurrentNotes();
+        fsIndex = Math.max(0, Math.min(fsSession.opportunities.length - 1, fsIndex + dir));
+        renderFsCard();
+    }
+
+    function fsKeyHandler(e) {
+        if (e.key === "ArrowLeft"  && !e.target.matches("textarea")) { e.preventDefault(); fsNavigate(-1); }
+        if (e.key === "ArrowRight" && !e.target.matches("textarea")) { e.preventDefault(); fsNavigate(1); }
+        if (e.key === "Escape") closeFullscreen();
+    }
+
+    function renderFsCard() {
+        const o     = fsSession.opportunities[fsIndex];
+        const total = fsSession.opportunities.length;
+        const fmt   = v => { const n = parseFloat(v); return isNaN(n) ? "—" : "£" + n.toLocaleString("en-GB"); };
+        const id    = String(o.id);
+        const notes = fsNotes[id] ?? "";
+
+        document.getElementById("fs-header-label").textContent = fsSession.label;
+        document.getElementById("fs-progress").textContent     = `${fsIndex + 1} / ${total}`;
+        document.getElementById("fs-prev").disabled = fsIndex === 0;
+        document.getElementById("fs-next").disabled = fsIndex === total - 1;
+
+        const stages = (o.stage || "").split(",").filter(Boolean)
+            .map(s => `<span>${esc(s.trim())}</span>`).join("");
+
+        document.getElementById("fs-card-inner").innerHTML = `
+            <div class="fs-title">
+                ${o.source_url
+                    ? `<a href="${esc(o.source_url)}" target="_blank" rel="noopener">${esc(o.title || "—")}</a>`
+                    : esc(o.title || "—")}
+            </div>
+            <div class="fs-meta">
+                <span><span class="meta-lbl">Supplier</span>${esc(o.buyer || "—")}</span>
+                <span><span class="meta-lbl">TCV</span>${fmt(o.value)}</span>
+                <span><span class="meta-lbl">Published</span>${fmtDateOnly(o.published_date)}</span>
+                ${fmtContract(o.contract_start, o.contract_end)
+                    ? `<span><span class="meta-lbl">Contract</span>${fmtContract(o.contract_start, o.contract_end)}</span>`
+                    : ""}
+                ${o.date_modified && o.date_modified.substring(0,16) !== (o.published_date||"").substring(0,16)
+                    ? `<span style="color:#aaa;"><span class="meta-lbl">Modified</span>${fmtDateOnly(o.date_modified)}</span>`
+                    : ""}
+            </div>
+            ${stages ? `<div class="fs-tags">${stages}</div>` : ""}
+            ${o.cpvs ? `<div class="fs-cpvs">CPVs: ${esc(o.cpvs)}</div>` : ""}
+            <hr class="fs-divider">
+            <div class="fs-description">${esc(o.description || "No description provided")}</div>
+            <hr class="fs-divider">
+            <div>
+                <div class="fs-notes-label">Notes</div>
+                <textarea class="fs-notes-textarea" id="fs-notes" placeholder="Add notes for this opportunity…">${esc(notes)}</textarea>
+            </div>`;
+
+        // Focus notes if there's content, otherwise leave cursor out of the way
+        document.getElementById("fs-notes").setSelectionRange(0, 0);
+    }
+
+    // =====================
+    // DELETE TRIAGE SESSION
+    // =====================
+    async function deleteTriageSession(sessionId, label) {
+        if (!confirm(`Delete triage session "${label}"?\n\nThis cannot be undone.`)) return;
+        try {
+            const resp = await fetch(`/triage/${encodeURIComponent(sessionId)}`, { method: "DELETE" });
+            if (!resp.ok) throw new Error();
+            triageSessions = triageSessions.filter(s => s.session_id !== sessionId);
+            updateTriageBadge();
+            renderTriage();
+        } catch {
+            alert("Failed to delete session. Please try again.");
+        }
     }
 
     // =====================
@@ -739,11 +992,14 @@
                             : esc(o.title || "—")}
                     </div>
                     <div class="card-meta">
-                        <span>🏢 ${esc(o.buyer || "—")}</span>
-                        <span>💰 ${fmt(o.value)}</span>
-                        <span>📅 ${fmtDate(o.published_date)}</span>
+                        <span><span class="meta-lbl">Supplier</span>${esc(o.buyer || "—")}</span>
+                        <span><span class="meta-lbl">TCV</span>${fmt(o.value)}</span>
+                        <span><span class="meta-lbl">Published</span>${fmtDate(o.published_date)}</span>
                         ${o.date_modified && o.date_modified.substring(0,16) !== (o.published_date||"").substring(0,16)
-                            ? `<span style="color:#888;">✏ ${fmtDate(o.date_modified)}</span>`
+                            ? `<span style="color:#888;"><span class="meta-lbl">Modified</span>${fmtDate(o.date_modified)}</span>`
+                            : ""}
+                        ${fmtContract(o.contract_start, o.contract_end)
+                            ? `<span><span class="meta-lbl">Contract</span>${fmtContract(o.contract_start, o.contract_end)}</span>`
                             : ""}
                     </div>
                     ${stages ? `<div class="card-tags">${stages}</div>` : ""}
@@ -846,6 +1102,8 @@
                 source_url:     opp.source_url     || null,
                 score:          meta.score,
                 notes:          meta.notes,
+                contract_start: opp.contract_start || "",
+                contract_end:   opp.contract_end   || "",
             };
         });
 
@@ -909,12 +1167,6 @@
         countEl.textContent = `${triageSessions.length} session${triageSessions.length !== 1 ? "s" : ""}`;
         const fmt = v => { const n = parseFloat(v); return isNaN(n) ? "—" : "£" + n.toLocaleString("en-GB"); };
 
-        function starHtml(score) {
-            return [1,2,3,4,5].map(n =>
-                `<span class="${n <= score ? "filled" : "empty"}">★</span>`
-            ).join("");
-        }
-
         const html = triageSessions.map((session, idx) => {
             const sid = session.session_id;
             const isCollapsed = collapsedSessions.has(sid);
@@ -927,27 +1179,25 @@
 
             const cards = session.opportunities.map(o => `
                 <div class="triage-card">
-                    <div class="card-main">
-                        <div class="card-title">
-                            ${o.source_url
-                                ? `<a href="${esc(o.source_url)}" target="_blank" rel="noopener">${esc(o.title || "—")}</a>`
-                                : esc(o.title || "—")}
-                        </div>
-                        <div class="card-meta">
-                            <span>🏢 ${esc(o.buyer || "—")}</span>
-                            <span>💰 ${fmt(o.value)}</span>
-                            <span>📅 ${esc(o.published_date || "—")}</span>
-                        </div>
-                        ${o.stage ? `<div class="card-tags">${
-                            o.stage.split(",").filter(Boolean)
-                                .map(s => `<span>${esc(s.trim())}</span>`).join("")
-                        }</div>` : ""}
-                        <div class="card-desc">${esc(o.description || "")}</div>
+                    <div class="card-title">
+                        ${o.source_url
+                            ? `<a href="${esc(o.source_url)}" target="_blank" rel="noopener">${esc(o.title || "—")}</a>`
+                            : esc(o.title || "—")}
                     </div>
-                    <div class="triage-card-score">
-                        <div class="star-display">${starHtml(o.score || 0)}</div>
-                        ${o.notes ? `<div class="triage-card-notes">${esc(o.notes)}</div>` : ""}
+                    <div class="card-meta">
+                        <span><span class="meta-lbl">Supplier</span>${esc(o.buyer || "—")}</span>
+                        <span><span class="meta-lbl">TCV</span>${fmt(o.value)}</span>
+                        <span><span class="meta-lbl">Published</span>${fmtDateOnly(o.published_date)}</span>
+                        ${fmtContract(o.contract_start, o.contract_end)
+                            ? `<span><span class="meta-lbl">Contract</span>${fmtContract(o.contract_start, o.contract_end)}</span>`
+                            : ""}
                     </div>
+                    ${o.stage ? `<div class="card-tags">${
+                        o.stage.split(",").filter(Boolean)
+                            .map(s => `<span>${esc(s.trim())}</span>`).join("")
+                    }</div>` : ""}
+                    <div class="card-desc">${esc(o.description || "")}</div>
+                    ${o.notes ? `<div class="triage-card-notes">${esc(o.notes)}</div>` : ""}
                 </div>`).join("");
 
             return `
@@ -956,9 +1206,15 @@
                     <span class="batch-toggle-icon">${toggleIcon}</span>
                     ${idx === 0 ? `<span class="triage-badge">Latest</span>` : ""}
                     <span class="triage-session-label">${esc(displayLabel)}</span>
-                    <span class="triage-session-count">
-                        ${count} opportunit${count !== 1 ? "ies" : "y"}
-                    </span>
+                    <span class="triage-session-count">${count} opportunit${count !== 1 ? "ies" : "y"}</span>
+                    <button class="view-session-btn"
+                        onclick="event.stopPropagation(); openFullscreen('${esc(sid)}', 0)">
+                        Full Screen
+                    </button>
+                    <button class="delete-session-btn"
+                        onclick="event.stopPropagation(); deleteTriageSession('${esc(sid)}', '${esc(displayLabel)}')">
+                        Delete
+                    </button>
                 </div>
                 <div class="triage-session-body">
                     ${cards}
@@ -1005,12 +1261,27 @@
         if (!iso) return "—";
         const d = new Date(iso);
         if (isNaN(d.getTime())) return (iso || "").substring(0, 10) || "—";
-        const now  = new Date();
         const day  = d.getDate();
         const mon  = d.toLocaleString("en-GB", { month: "short" });
+        const yr   = d.getFullYear();
         const time = d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false });
-        const yr   = d.getFullYear() !== now.getFullYear() ? ` '${String(d.getFullYear()).slice(2)}` : "";
-        return `${day} ${mon}${yr} ${time}`;
+        return `${day} ${mon} ${yr}, ${time}`;
+    }
+
+    function fmtDateOnly(iso) {
+        if (!iso) return "";
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return (iso || "").substring(0, 10) || "";
+        return `${d.getDate()} ${d.toLocaleString("en-GB", { month: "short" })} ${d.getFullYear()}`;
+    }
+
+    function fmtContract(start, end) {
+        if (!start && !end) return "";
+        const s = fmtDateOnly(start);
+        const e = fmtDateOnly(end);
+        if (s && e) return `${s} – ${e}`;
+        if (s)      return `From ${s}`;
+        return `To ${e}`;
     }
 
     function buildCpvCell(cpvsStr) {

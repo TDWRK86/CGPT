@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Query, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
@@ -13,6 +13,8 @@ from app.scraper.find_tender import (
     _load_batches,
     load_triage,
     save_triage_session,
+    delete_triage_session,
+    update_triage_session_opportunities,
 )
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -36,8 +38,13 @@ class TriageOpportunity(BaseModel):
     source_url: str | None = None
     score: int = 0
     notes: str = ""
+    contract_start: str = ""
+    contract_end: str = ""
 
 class TriageSessionRequest(BaseModel):
+    opportunities: list[TriageOpportunity]
+
+class TriagePatchRequest(BaseModel):
     opportunities: list[TriageOpportunity]
 
 
@@ -138,3 +145,22 @@ def post_triage(body: TriageSessionRequest):
     opps = [o.model_dump() for o in body.opportunities]
     session = save_triage_session(opps)
     return JSONResponse(session, status_code=201)
+
+
+@app.patch("/triage/{session_id}", status_code=200)
+def patch_triage(session_id: str, body: TriagePatchRequest):
+    """Update the opportunities (e.g. notes) on an existing triage session."""
+    opps = [o.model_dump() for o in body.opportunities]
+    found = update_triage_session_opportunities(session_id, opps)
+    if not found:
+        return JSONResponse({"error": "Session not found"}, status_code=404)
+    return JSONResponse({"ok": True})
+
+
+@app.delete("/triage/{session_id}", status_code=204)
+def delete_triage(session_id: str):
+    """Delete a triage session by ID."""
+    found = delete_triage_session(session_id)
+    if not found:
+        return JSONResponse({"error": "Session not found"}, status_code=404)
+    return Response(status_code=204)

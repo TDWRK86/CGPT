@@ -82,7 +82,9 @@
           "description": "Replace MF ceilings to 2no mid rise blocks - Shaftoe and Ewart Court",
           "source_url": "https://www.find-tender.service.gov.uk/Notice/033795-2026",
           "score": 0,
-          "notes": ""
+          "notes": "",
+          "contract_start": "",
+          "contract_end": ""
         },
         {
           "id": "033794-2026",
@@ -95,7 +97,9 @@
           "description": "The commissioning of a community\u2011based Children and Young People (CYP) Navigator Service operating across Leicester, Leicestershire and Rutland. The service will provide proactive, relationship\u2011based support to children and young people aged 11-25 (with a priority focus on 14-19 year olds) who are at risk of, or involved in, violence and associated harm.\nThe service will deliver in\u2011reach and follow\u2011up support within police custody settings (Keyham Lane and Euston Street), A&E departments (Leicester Royal Infirmary), and through agreed community referral pathways. Provision includes mentoring, trauma\u2011informed engagement, evidence\u2011based interventions (including social skills training), safeguarding, partnership working, and onward referral to education, health and community services.\nThe contract will be awarded for an initial period of 12 months with options to extend for up to a further 21 months, subject to funding and satisfactory performance. The maximum total contract value is \u00a3805,000 (excluding VAT), inclusive of all extension options. The services must be delivered in accordance with the approved specification, performance framework, and safeguarding requirements.",
           "source_url": "https://www.find-tender.service.gov.uk/Notice/033794-2026",
           "score": 0,
-          "notes": ""
+          "notes": "test",
+          "contract_start": "",
+          "contract_end": ""
         }
       ]
     }

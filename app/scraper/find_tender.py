@@ -19,8 +19,8 @@ TRIAGE_PATH  = DATA_DIR / "triage.json"
 
 CSV_FIELDS = [
     "id", "title", "buyer", "value", "cpvs", "stage",
-    "published_date", "date_modified", "description", "source", "source_url",
-    "batch_id",
+    "published_date", "date_modified", "contract_start", "contract_end",
+    "description", "source", "source_url", "batch_id",
 ]
 
 # ---------------------------
@@ -62,6 +62,37 @@ def load_triage() -> dict:
         return {"sessions": []}
     with open(TRIAGE_PATH, encoding="utf-8") as f:
         return json.load(f)
+
+
+def update_triage_session_opportunities(session_id: str, opportunities: list[dict]) -> bool:
+    """Replace the opportunities list on an existing triage session (for note edits)."""
+    _ensure_data_dir()
+    state = load_triage()
+    for session in state.get("sessions", []):
+        if session["session_id"] == session_id:
+            session["opportunities"] = opportunities
+            tmp = TRIAGE_PATH.with_suffix(".tmp")
+            with open(tmp, "w", encoding="utf-8") as f:
+                json.dump(state, f, indent=2)
+            tmp.replace(TRIAGE_PATH)
+            return True
+    return False
+
+
+def delete_triage_session(session_id: str) -> bool:
+    """Remove a triage session by ID. Returns True if found and deleted."""
+    _ensure_data_dir()
+    state = load_triage()
+    sessions = state.get("sessions", [])
+    new_sessions = [s for s in sessions if s["session_id"] != session_id]
+    if len(new_sessions) == len(sessions):
+        return False
+    state["sessions"] = new_sessions
+    tmp = TRIAGE_PATH.with_suffix(".tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(state, f, indent=2)
+    tmp.replace(TRIAGE_PATH)
+    return True
 
 
 def save_triage_session(opportunities: list[dict]) -> dict:
@@ -201,6 +232,8 @@ def normalise_opportunity(release):
         "stage": ", ".join(tags),
         "published_date": release.get("date", ""),
         "date_modified": tender.get("dateModified") or "",
+        "contract_start": (tender.get("contractPeriod") or {}).get("startDate") or "",
+        "contract_end":   (tender.get("contractPeriod") or {}).get("endDate")   or "",
         "description": description,
         "source": "Find a Tender",
         "source_url": source_url,
@@ -225,7 +258,8 @@ def _migrate_csv_if_needed() -> None:
     with open(CSV_PATH, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         fields = reader.fieldnames or []
-        if "batch_id" in fields and "date_modified" in fields:
+        required = {"batch_id", "date_modified", "contract_start", "contract_end"}
+        if required.issubset(set(fields)):
             return  # already fully migrated
         rows = list(reader)
 
@@ -236,6 +270,8 @@ def _migrate_csv_if_needed() -> None:
         for row in rows:
             row.setdefault("batch_id", "")
             row.setdefault("date_modified", "")
+            row.setdefault("contract_start", "")
+            row.setdefault("contract_end", "")
             writer.writerow(row)
     tmp.replace(CSV_PATH)
 
