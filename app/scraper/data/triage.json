@@ -1,0 +1,103 @@
+{
+  "sessions": [
+    {
+      "session_id": "triage_20260414_151740",
+      "label": "14 Apr 2026, 15:17",
+      "created_at": "2026-04-14T15:17:40.314567+01:00",
+      "opportunities": [
+        {
+          "id": "033795-2026",
+          "title": "Replacement of the MF Ceilings at Shaftoe and Ewart",
+          "buyer": "Newcastle City Council",
+          "value": null,
+          "cpvs": "",
+          "stage": "award, contract",
+          "published_date": "2026-04-14",
+          "description": "Replace MF ceilings to 2no mid rise blocks - Shaftoe and Ewart Court",
+          "source_url": "https://www.find-tender.service.gov.uk/Notice/033795-2026",
+          "score": 0,
+          "notes": ""
+        },
+        {
+          "id": "033794-2026",
+          "title": "Violence Reduction Network: Children and Young Person Navigator Service",
+          "buyer": "The Police and Crime Commissioner for Leicestershire",
+          "value": null,
+          "cpvs": "85320000",
+          "stage": "tenderUpdate",
+          "published_date": "2026-04-14",
+          "description": "The commissioning of a community\u2011based Children and Young People (CYP) Navigator Service operating across Leicester, Leicestershire and Rutland. The service will provide proactive, relationship\u2011based support to children and young people aged 11-25 (with a priority focus on 14-19 year olds) who are at risk of, or involved in, violence and associated harm.\nThe service will deliver in\u2011reach and follow\u2011up support within police custody settings (Keyham Lane and Euston Street), A&E departments (Leicester Royal Infirmary), and through agreed community referral pathways. Provision includes mentoring, trauma\u2011informed engagement, evidence\u2011based interventions (including social skills training), safeguarding, partnership working, and onward referral to education, health and community services.\nThe contract will be awarded for an initial period of 12 months with options to extend for up to a further 21 months, subject to funding and satisfactory performance. The maximum total contract value is \u00a3805,000 (excluding VAT), inclusive of all extension options. The services must be delivered in accordance with the approved specification, performance framework, and safeguarding requirements.",
+          "source_url": "https://www.find-tender.service.gov.uk/Notice/033794-2026",
+          "score": 0,
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "session_id": "triage_20260414_152100",
+      "label": "14 Apr 2026, 15:21",
+      "created_at": "2026-04-14T15:21:00.793768+01:00",
+      "opportunities": [
+        {
+          "id": "033792-2026",
+          "title": "SP06032/SCHOOL TRANSPORT/REQUEST FOR QUOTATION/OUT OF COUNTY/4 SEATS",
+          "buyer": "The North Yorkshire Council",
+          "value": null,
+          "cpvs": "",
+          "stage": "award, contract",
+          "published_date": "2026-04-14",
+          "description": "School transport for contract SP06032, Catterick to The William Henry Smith School, 4 seats, March 2026 \u2013 July 2026",
+          "source_url": "https://www.find-tender.service.gov.uk/Notice/033792-2026",
+          "score": 0,
+          "notes": ""
+        },
+        {
+          "id": "033793-2026",
+          "title": "In-Vitro Diagnostics, Point of Care Testing & Pathology Services",
+          "buyer": "SUPPLY CHAIN COORDINATION LIMITED",
+          "value": 20000000000.0,
+          "cpvs": "85111800, 33127000, 33124100, 33124130, 33124131, 33140000, 33141500, 33141625, 33186200, 33192500, 33696000, 33696100, 33696200, 33696300, 33696500, 33698100, 33790000, 33793000, 33900000, 33910000, 33930000, 33931000, 33932000, 33933000, 33936000, 33937000, 33944000, 33945000, 33946000, 33947000, 38434000, 38434500, 38434510, 38434520, 38434530, 38434540, 38434550, 38434560, 38434570, 38434580, 38435000, 38436000, 38436150, 38436160, 38436170, 38436300, 38436310, 38436320, 38437000, 38437100, 38437110, 38437120, 38500000, 38520000, 38544000, 38540000, 38911000, 38912000, 38950000, 39180000, 39181000, 39711100, 42122500, 42513000, 42513100, 42513200, 45215146, 48180000, 71900000, 73111000, 85111810, 85111820, 85145000",
+          "stage": "planning",
+          "published_date": "2026-04-14",
+          "description": "NHS Supply Chain intends to launch a National Framework Agreement for the provision of In-Vitro Diagnostic Devices, Point of Care Testing Products & Related Pathology Services, this will include:\n- Pathology Managed Services\n- Reagent Rental Agreements\n- Pathology Maintenance Services\n- Pathology Software\n- Pathology Outsourced Services (Referral Testing Services)\n- Core Laboratory Equipment, Instruments & Consumables, to cover all pathology disciplines such as but not limited to Biochemistry, Microbiology, Immunology, Cellular Pathology, Virology, Haematology, Genomics & Molecular Testing and Reproductive Sciences\n- Point of Care Testing\n- Specimen Collection\n- Specimen Storage",
+          "source_url": "https://www.find-tender.service.gov.uk/Notice/033793-2026",
+          "score": 0,
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "session_id": "triage_20260414_173651",
+      "label": "14 Apr 2026, 17:36",
+      "created_at": "2026-04-14T17:36:51.766135+01:00",
+      "opportunities": [
+        {
+          "id": "033795-2026",
+          "title": "Replacement of the MF Ceilings at Shaftoe and Ewart",
+          "buyer": "Newcastle City Council",
+          "value": null,
+          "cpvs": "",
+          "stage": "award, contract",
+          "published_date": "2026-04-14",
+          "description": "Replace MF ceilings to 2no mid rise blocks - Shaftoe and Ewart Court",
+          "source_url": "https://www.find-tender.service.gov.uk/Notice/033795-2026",
+          "score": 0,
+          "notes": ""
+        },
+        {
+          "id": "033794-2026",
+          "title": "Violence Reduction Network: Children and Young Person Navigator Service",
+          "buyer": "The Police and Crime Commissioner for Leicestershire",
+          "value": null,
+          "cpvs": "85320000",
+          "stage": "tenderUpdate",
+          "published_date": "2026-04-14",
+          "description": "The commissioning of a community\u2011based Children and Young People (CYP) Navigator Service operating across Leicester, Leicestershire and Rutland. The service will provide proactive, relationship\u2011based support to children and young people aged 11-25 (with a priority focus on 14-19 year olds) who are at risk of, or involved in, violence and associated harm.\nThe service will deliver in\u2011reach and follow\u2011up support within police custody settings (Keyham Lane and Euston Street), A&E departments (Leicester Royal Infirmary), and through agreed community referral pathways. Provision includes mentoring, trauma\u2011informed engagement, evidence\u2011based interventions (including social skills training), safeguarding, partnership working, and onward referral to education, health and community services.\nThe contract will be awarded for an initial period of 12 months with options to extend for up to a further 21 months, subject to funding and satisfactory performance. The maximum total contract value is \u00a3805,000 (excluding VAT), inclusive of all extension options. The services must be delivered in accordance with the approved specification, performance framework, and safeguarding requirements.",
+          "source_url": "https://www.find-tender.service.gov.uk/Notice/033794-2026",
+          "score": 0,
+          "notes": ""
+        }
+      ]
+    }
+  ]
+}

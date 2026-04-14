@@ -26,7 +26,6 @@
             flex-shrink: 0;
         }
         header h1 { font-size: 1.1rem; font-weight: 600; }
-
         .load-btn {
             background: #e8a020;
             color: white;
@@ -40,7 +39,6 @@
         }
         .load-btn:hover { background: #cf8b18; }
         .load-btn:disabled { background: #888; cursor: not-allowed; }
-
         #load-status { font-size: 0.78rem; color: #b8d0ec; margin-left: 10px; }
 
         /* ---- TABS ---- */
@@ -84,7 +82,6 @@
 
         /* ---- OPPORTUNITIES LAYOUT ---- */
         #panel-opps { flex-direction: row; }
-
         .sidebar {
             width: 260px;
             flex-shrink: 0;
@@ -94,7 +91,6 @@
             overflow-y: auto;
         }
         .sidebar h2 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: .8px; color: #999; margin-bottom: 14px; }
-
         .filter-group { margin-bottom: 16px; }
         .filter-group label { display: block; font-size: 0.78rem; font-weight: 600; color: #444; margin-bottom: 4px; }
         .filter-group input[type="text"],
@@ -117,7 +113,6 @@
         .clear-btn:hover { background: #f0f3f7; }
 
         .content { flex: 1; overflow: auto; padding: 18px 22px; display: flex; flex-direction: column; }
-
         .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-shrink: 0; }
         #result-count { font-size: 0.8rem; color: #666; }
         .sort-select { padding: 5px 8px; border: 1px solid #ccd3de; border-radius: 4px; font-size: 0.78rem; color: #444; outline: none; cursor: pointer; }
@@ -133,6 +128,15 @@
         tbody tr.selected-row { background: #fef3e0 !important; }
         td { padding: 8px 10px; vertical-align: top; border-bottom: 1px solid #eaeef4; }
         td.desc { max-width: 420px; color: #444; line-height: 1.4; vertical-align: top; }
+        td.value { white-space: nowrap; }
+        td.stage span { display: inline-block; background: #dde8f5; color: #1a3a5c; border-radius: 3px; padding: 1px 5px; font-size: 0.72rem; margin: 1px 2px 1px 0; }
+        td.cpv { color: #777; font-size: 0.73rem; width: 155px; min-width: 130px; vertical-align: top; }
+        .cpv-scroll { max-height: 68px; overflow-y: auto; line-height: 1.7; }
+        td.date-cell { white-space: nowrap; font-size: 0.76rem; vertical-align: top; }
+        .date-modified { color: #888; font-size: 0.71rem; margin-top: 2px; }
+        td:first-child { text-align: center; }
+
+        /* ---- DESCRIPTION CLAMP ---- */
         .desc-clamp {
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -140,101 +144,37 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-        .desc-clamp.expanded {
-            display: block;
-            overflow: visible;
-            -webkit-line-clamp: unset;
-            line-clamp: unset;
-        }
+        .desc-clamp.expanded { display: block; overflow: visible; -webkit-line-clamp: unset; line-clamp: unset; }
         .read-more-btn {
-            background: none;
-            border: none;
-            color: #1a3a5c;
-            font-size: 0.72rem;
-            cursor: pointer;
-            padding: 2px 0 0;
-            text-decoration: underline;
-            display: block;
+            background: none; border: none; color: #1a3a5c;
+            font-size: 0.72rem; cursor: pointer; padding: 2px 0 0;
+            text-decoration: underline; display: block;
         }
         .read-more-btn:hover { color: #e8a020; }
-        td.value { white-space: nowrap; }
-        td.stage span { display: inline-block; background: #dde8f5; color: #1a3a5c; border-radius: 3px; padding: 1px 5px; font-size: 0.72rem; margin: 1px 2px 1px 0; }
-        td.cpv { color: #777; font-size: 0.73rem; }
-        td:first-child { text-align: center; }
 
-        /* ---- BATCH SECTION HEADERS ---- */
-        tbody.batch-group tr.batch-section-header { cursor: pointer; }
-        tbody.batch-group tr.batch-section-header td { padding: 0; border: none; }
-        tbody.batch-group tr.batch-section-header:hover .batch-header-inner { filter: brightness(0.96); }
-
-        /* Collapsed: hide data rows */
-        tbody.batch-group.collapsed tr.batch-data-row { display: none; }
-
-        .batch-header-inner {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 7px 12px;
-            user-select: none;
-        }
-        .batch-meta-right {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .batch-count-text { font-size: 0.72rem; color: #999; }
-        .batch-toggle-icon { font-size: 0.65rem; color: #aaa; min-width: 8px; text-align: center; }
-        .batch-lbl { font-size: 0.78rem; font-weight: 600; color: #1a3a5c; }
-        .batch-lbl--muted { color: #777; font-weight: 500; }
-        .batch-last-seen-text {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: #856404;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Active batch header: blue */
-        tbody.batch-group--active tr.batch-section-header td {
-            background: #eaf3ff;
-            border-bottom: 1px solid #c7dff5;
-        }
-        /* New (not active) batch header: pale blue */
-        tbody.batch-group--new tr.batch-section-header td {
-            background: #f3f8ff;
-            border-bottom: 1px solid #daeaf7;
-        }
-        /* First old batch (last-seen boundary): amber */
-        tbody.batch-group--last-seen tr.batch-section-header td {
+        /* ---- LAST-LOADED DIVIDER ---- */
+        tr.divider-banner td {
             background: #fff3cd;
             border-top: 2px solid #ffc107;
-            border-bottom: 1px solid #ffe08a;
+            border-bottom: 2px solid #ffe08a;
+            padding: 7px 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #856404;
+            text-align: left;
+            cursor: default;
+            white-space: nowrap;
         }
-        tbody.batch-group--last-seen .batch-count-text,
-        tbody.batch-group--last-seen .batch-toggle-icon { color: #a07c10; }
-        /* Older batches: grey */
-        tbody.batch-group--old tr.batch-section-header td {
-            background: #f0f3f7;
-            border-bottom: 1px solid #dde3ec;
-        }
-
-        /* Active batch rows: very light blue tint */
-        tr.batch-data-row.row--active-batch { background: #f7fbff !important; }
-        tr.batch-data-row.row--active-batch:hover { background: #eef3fa !important; }
-        tr.batch-data-row.row--active-batch.selected-row { background: #fef3e0 !important; }
+        tr.row--active-batch { background: #f7fbff !important; }
+        tr.row--active-batch:hover { background: #eef3fa !important; }
+        tr.row--active-batch.selected-row { background: #fef3e0 !important; }
+        .batch-toggle-icon { font-size: 0.65rem; color: #aaa; min-width: 8px; text-align: center; }
 
         /* ---- SELECTION BAR ---- */
         .selection-bar {
-            background: #1a3a5c;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 18px;
-            border-radius: 6px;
-            margin-top: 12px;
-            flex-shrink: 0;
+            background: #1a3a5c; color: white; display: flex;
+            align-items: center; justify-content: space-between;
+            padding: 10px 18px; border-radius: 6px; margin-top: 12px; flex-shrink: 0;
         }
         .selection-bar.hidden { display: none; }
         .selection-bar span { font-size: 0.85rem; }
@@ -242,59 +182,98 @@
         .review-btn:hover { background: #cf8b18; }
 
         /* ---- REVIEW PANEL ---- */
-        #panel-review { flex-direction: column; padding: 24px; overflow-y: auto; }
-
+        #panel-review { flex-direction: column; padding: 0; overflow: hidden; }
+        .review-panel-inner { flex: 1; overflow-y: auto; padding: 24px; }
         .review-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
         .review-header h2 { font-size: 1rem; font-weight: 600; color: #1a3a5c; }
         #review-count { font-size: 0.8rem; color: #888; }
-
         .review-empty { text-align: center; padding: 80px 20px; color: #aaa; font-size: 0.9rem; }
 
-        /* ---- REVIEW CARDS ---- */
+        /* ---- REVIEW CARDS (3-col grid: checkbox | main | actions) ---- */
         .review-card {
-            background: #fff;
-            border: 1px solid #dde3ec;
-            border-radius: 8px;
-            padding: 18px 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,.06);
-            display: grid;
-            grid-template-columns: 1fr 220px;
-            gap: 16px;
-            margin-bottom: 14px;
+            background: #fff; border: 1px solid #dde3ec; border-radius: 8px;
+            padding: 18px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+            display: grid; grid-template-columns: 28px 1fr 220px;
+            gap: 16px; margin-bottom: 14px;
         }
+        .card-select { display: flex; align-items: flex-start; padding-top: 3px; }
+        .card-select input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: #1a3a5c; }
         .card-title { font-size: 0.92rem; font-weight: 700; color: #1a3a5c; margin-bottom: 5px; }
         .card-meta { font-size: 0.77rem; color: #777; display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
         .card-desc { font-size: 0.8rem; color: #444; line-height: 1.5; margin-bottom: 8px; }
         .card-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
         .card-tags span { background: #dde8f5; color: #1a3a5c; border-radius: 3px; padding: 1px 6px; font-size: 0.72rem; }
-
         .card-actions { display: flex; flex-direction: column; gap: 12px; }
-
-        /* Stars */
         .star-row { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 2px; }
         .star-row input[type="radio"] { display: none; }
         .star-row label { font-size: 1.5rem; color: #d0d5de; cursor: pointer; transition: color .1s; line-height: 1; }
         .star-row label:hover,
         .star-row label:hover ~ label,
         .star-row input[type="radio"]:checked ~ label { color: #e8a020; }
-
         .notes-field {
-            width: 100%;
-            min-height: 80px;
-            padding: 7px 9px;
-            border: 1px solid #ccd3de;
-            border-radius: 4px;
-            font-size: 0.79rem;
-            font-family: inherit;
-            resize: vertical;
-            outline: none;
+            width: 100%; min-height: 80px; padding: 7px 9px;
+            border: 1px solid #ccd3de; border-radius: 4px;
+            font-size: 0.79rem; font-family: inherit; resize: vertical; outline: none;
         }
         .notes-field:focus { border-color: #1a3a5c; }
-
         .remove-btn { background: none; border: 1px solid #e0868a; color: #c0464c; border-radius: 4px; padding: 5px 12px; font-size: 0.76rem; cursor: pointer; align-self: flex-start; }
         .remove-btn:hover { background: #fdf0f0; }
 
-        /* ---- UTILS ---- */
+        /* ---- TRIAGE BAR (sticky top of review panel) ---- */
+        .triage-bar {
+            background: #1a3a5c; color: white; display: flex;
+            align-items: center; justify-content: space-between;
+            padding: 10px 24px; flex-shrink: 0;
+        }
+        .triage-bar.hidden { display: none; }
+        .triage-bar span { font-size: 0.85rem; }
+        .triage-submit-btn {
+            background: #27a050; color: white; border: none;
+            padding: 7px 18px; border-radius: 5px; font-size: 0.83rem; font-weight: 600; cursor: pointer;
+        }
+        .triage-submit-btn:hover { background: #1e8040; }
+        .triage-submit-btn:disabled { background: #888; cursor: not-allowed; }
+
+        /* ---- CLEAR REVIEW BUTTON ---- */
+        .clear-review-btn {
+            background: none; border: 1px solid #e0868a; color: #c0464c;
+            border-radius: 4px; padding: 4px 12px; font-size: 0.76rem; cursor: pointer;
+        }
+        .clear-review-btn:hover { background: #fdf0f0; }
+        .clear-review-btn.hidden { display: none; }
+
+        /* ---- TRIAGE PANEL ---- */
+        #panel-triage { flex-direction: column; padding: 24px; overflow-y: auto; }
+        .triage-session { margin-bottom: 20px; border: 1px solid #dde3ec; border-radius: 6px; overflow: hidden; }
+        .triage-session-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px; background: #f4f6f9;
+            border-bottom: 1px solid #dde3ec;
+            cursor: pointer; user-select: none;
+        }
+        .triage-session-header:hover { background: #eaeef4; }
+        .triage-session.collapsed .triage-session-header { border-bottom: none; }
+        .triage-session.collapsed .triage-session-body { display: none; }
+        .triage-session-body { padding: 14px; }
+        .triage-session-label { font-size: 0.9rem; font-weight: 700; color: #1a3a5c; }
+        .triage-session-count { font-size: 0.75rem; color: #999; margin-left: auto; }
+        .triage-badge {
+            background: #1a3a5c; color: white; font-size: 0.68rem; font-weight: 700;
+            border-radius: 10px; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .triage-card {
+            background: #fff; border: 1px solid #dde3ec; border-radius: 8px;
+            padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+            display: grid; grid-template-columns: 1fr 160px;
+            gap: 12px; margin-bottom: 10px; margin-top: 0;
+        }
+        .triage-card-score { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .star-display { font-size: 1.2rem; letter-spacing: 1px; }
+        .star-display .filled { color: #e8a020; }
+        .star-display .empty  { color: #d0d5de; }
+        .triage-card-notes { font-size: 0.78rem; color: #555; font-style: italic; text-align: right; max-width: 150px; word-wrap: break-word; }
+
+        /* ---- SHARED ---- */
         .batch-badge { border-radius: 3px; padding: 1px 6px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; }
         .batch-badge--new { background: #e8a020; color: white; }
         .empty-state { text-align: center; padding: 60px 20px; color: #aaa; font-size: 0.88rem; }
@@ -315,32 +294,30 @@
 
 <!-- TAB BAR -->
 <div class="tab-bar">
-    <div class="tab active" id="tab-opps" onclick="switchTab('opps')">
-        Opportunities
-    </div>
+    <div class="tab active" id="tab-opps" onclick="switchTab('opps')">Opportunities</div>
     <div class="tab" id="tab-review" onclick="switchTab('review')">
         Review
         <span class="tab-badge hidden" id="badge-review"></span>
+    </div>
+    <div class="tab" id="tab-triage" onclick="switchTab('triage')">
+        Morning Triage
+        <span class="tab-badge hidden" id="badge-triage"></span>
     </div>
 </div>
 
 <!-- ===== OPPORTUNITIES TAB ===== -->
 <div class="tab-panel active" id="panel-opps">
-
     <aside class="sidebar">
         <h2>Filters</h2>
-
         <div class="filter-group">
             <label>Keyword Search</label>
             <input type="text" id="f-keyword" placeholder="e.g. framework, Ministry of Defence" oninput="debouncedFetch()">
         </div>
-
         <div class="filter-group">
             <label>CPV Prefixes</label>
             <input type="text" id="f-cpv" placeholder="e.g. 30, 48, 72" oninput="debouncedFetch()">
             <div style="font-size:0.7rem;color:#aaa;margin-top:2px;">Comma-separated</div>
         </div>
-
         <div class="filter-group">
             <label>Contract Value (£)</label>
             <div class="row2">
@@ -348,17 +325,14 @@
                 <input type="number" id="f-max" placeholder="Max" oninput="debouncedFetch()">
             </div>
         </div>
-
         <div class="filter-group">
             <label>Stage / Tags</label>
             <div class="checkbox-group" id="stage-checkboxes"></div>
         </div>
-
         <div class="filter-group">
             <label>Buyer Name</label>
             <input type="text" id="f-buyer" placeholder="Search buyer…" oninput="debouncedFetch()">
         </div>
-
         <div class="filter-group">
             <label>Published Date</label>
             <div class="row2">
@@ -366,13 +340,15 @@
                 <input type="date" id="f-date-to" onchange="debouncedFetch()">
             </div>
         </div>
-
         <button class="clear-btn" onclick="clearFilters()">Clear all filters</button>
     </aside>
 
     <main class="content">
         <div class="toolbar">
-            <span id="result-count">—</span>
+            <div style="display:flex;flex-direction:column;gap:2px;">
+                <span id="result-count">—</span>
+                <span id="last-updated-text" style="font-size:0.72rem;color:#aaa;"></span>
+            </div>
             <select class="sort-select" id="sort-select" onchange="renderTable(currentData)">
                 <option value="date-desc">Newest first</option>
                 <option value="date-asc">Oldest first</option>
@@ -393,13 +369,38 @@
 
 <!-- ===== REVIEW TAB ===== -->
 <div class="tab-panel" id="panel-review">
-    <div style="width:100%;">
+    <!-- Sticky triage bar -->
+    <div class="triage-bar hidden" id="triage-bar">
+        <span id="triage-bar-label">0 selected for triage</span>
+        <button class="triage-submit-btn" id="triage-submit-btn" onclick="submitTriage()">
+            Add to Morning Triage →
+        </button>
+    </div>
+    <!-- Scrollable card area -->
+    <div class="review-panel-inner">
         <div class="review-header">
             <h2>Selected for Review</h2>
-            <span id="review-count"></span>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button class="clear-review-btn hidden" id="clear-review-btn" onclick="clearReview()">✕ Clear all</button>
+                <span id="review-count"></span>
+            </div>
         </div>
         <div id="review-container">
-            <div class="review-empty">No opportunities selected yet.<br>Go to the <strong>Opportunities</strong> tab and tick some checkboxes.</div>
+            <div class="review-empty">No opportunities selected yet.<br>
+                Go to the <strong>Opportunities</strong> tab and tick some checkboxes.</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== TRIAGE TAB ===== -->
+<div class="tab-panel" id="panel-triage">
+    <div style="width:100%;">
+        <div class="review-header">
+            <h2>Morning Triage Sessions</h2>
+            <span id="triage-count"></span>
+        </div>
+        <div id="triage-container">
+            <div class="review-empty">Loading…</div>
         </div>
     </div>
 </div>
@@ -408,54 +409,22 @@
     // =====================
     // STATE
     // =====================
-    const selected   = new Map();   // id → opportunity object
-    const reviewMeta = new Map();   // id → { score, notes }
+    const selected       = new Map();   // id → opportunity object
+    const reviewMeta     = new Map();   // id → { score, notes }
+    const triageSelected = new Set();   // ids checked in review tab for triage
 
-    let stagesPopulated  = false;
+    let stagesPopulated   = false;
     let debounceTimer;
-    let currentData      = [];
-    let batchMeta        = { batches: [], active_batch_id: null, last_seen_batch_id: null };
-    let prevActiveBatchId = null;   // detect when a new batch is created after Load
-
-    // Collapse state — persists across filter changes within the session
-    let collapsedBatches = new Set();   // batch IDs that are collapsed
-    let seenBatchIds     = new Set();   // initialised this session (for default state)
-
-    // Per-filter "last seen" tracking
-    let currentFilterKey      = "";
-    let currentFilterLastSeen = null;
+    let currentData       = [];
+    let batchMeta         = { batches: [], active_batch_id: null, last_seen_batch_id: null };
+    let triageSessions    = [];
+    let collapsedSessions = new Set();
 
     const KNOWN_STAGES = [
         "tender","tenderUpdate","preQualification",
         "planning","planningUpdate",
         "award","awardUpdate","contract","contractUpdate",
     ];
-
-    // =====================
-    // PER-FILTER TRACKING
-    // =====================
-    function getFilterKey() {
-        return JSON.stringify({
-            kw:     document.getElementById("f-keyword").value.trim(),
-            cpv:    document.getElementById("f-cpv").value.trim(),
-            min:    document.getElementById("f-min").value,
-            max:    document.getElementById("f-max").value,
-            stages: [...document.querySelectorAll("#stage-checkboxes input:checked")]
-                        .map(cb => cb.value).sort().join(","),
-            buyer:  document.getElementById("f-buyer").value.trim(),
-            df:     document.getElementById("f-date-from").value,
-            dt:     document.getElementById("f-date-to").value,
-        });
-    }
-
-    function getFilterLastSeen(key) {
-        // Per-filter localStorage entry, falling back to the global last-seen batch
-        return localStorage.getItem("fls:" + key) || batchMeta.last_seen_batch_id || null;
-    }
-
-    function setFilterLastSeen(key, batchId) {
-        if (batchId) localStorage.setItem("fls:" + key, batchId);
-    }
 
     // =====================
     // TABS
@@ -466,6 +435,7 @@
         document.getElementById("tab-" + name).classList.add("active");
         document.getElementById("panel-" + name).classList.add("active");
         if (name === "review") renderReview();
+        if (name === "triage") renderTriage();
     }
 
     // =====================
@@ -494,8 +464,6 @@
     // FETCH & RENDER
     // =====================
     async function fetchAndRender() {
-        currentFilterKey = getFilterKey();
-
         const params = new URLSearchParams();
         const kw   = document.getElementById("f-keyword").value.trim();
         if (kw)   params.set("keyword", kw);
@@ -525,23 +493,11 @@
             const data      = await oppResp.json();
             const batchData = await batchResp.json();
 
-            // If a new batch was just created, collapse the old active batch
-            if (prevActiveBatchId && batchData.active_batch_id !== prevActiveBatchId) {
-                collapsedBatches.add(prevActiveBatchId);
-            }
-            prevActiveBatchId = batchData.active_batch_id;
-
             batchMeta   = batchData;
             currentData = data;
 
-            // Compute per-filter last seen BEFORE rendering
-            currentFilterLastSeen = getFilterLastSeen(currentFilterKey);
-
             populateStages(data);
             renderTable(data);
-
-            // Record that this filter has now been seen up to the current active batch
-            setFilterLastSeen(currentFilterKey, batchMeta.active_batch_id);
         } catch {
             document.getElementById("table-container").innerHTML =
                 `<div class="empty-state">⚠ Error fetching data.</div>`;
@@ -556,25 +512,19 @@
         const copy = [...data];
         copy.sort((a, b) => {
             switch (order) {
-                case "date-asc":
-                    return (a.published_date || "").localeCompare(b.published_date || "");
-                case "date-desc":
-                    return (b.published_date || "").localeCompare(a.published_date || "");
-                case "value-desc":
-                    return (parseFloat(b.value) || 0) - (parseFloat(a.value) || 0);
-                case "value-asc":
-                    return (parseFloat(a.value) || 0) - (parseFloat(b.value) || 0);
-                case "title-asc":
-                    return (a.title || "").localeCompare(b.title || "");
-                default:
-                    return 0;
+                case "date-asc":    return (a.published_date || "").localeCompare(b.published_date || "");
+                case "date-desc":   return (b.published_date || "").localeCompare(a.published_date || "");
+                case "value-desc":  return (parseFloat(b.value) || 0) - (parseFloat(a.value) || 0);
+                case "value-asc":   return (parseFloat(a.value) || 0) - (parseFloat(b.value) || 0);
+                case "title-asc":   return (a.title || "").localeCompare(b.title || "");
+                default:            return 0;
             }
         });
         return copy;
     }
 
     // =====================
-    // RENDER TABLE (with collapsible batch groups)
+    // RENDER TABLE
     // =====================
     function renderTable(data) {
         data = sortData(data);
@@ -587,128 +537,76 @@
             return;
         }
 
-        const fmt          = v => { const n = parseFloat(v); return isNaN(n) ? "—" : "£" + n.toLocaleString("en-GB"); };
-        const activeBatchId  = batchMeta.active_batch_id  || null;
-        const filterLastSeen = currentFilterLastSeen;
+        const fmt             = v => { const n = parseFloat(v); return isNaN(n) ? "—" : "£" + n.toLocaleString("en-GB"); };
+        const activeBatchId   = batchMeta.active_batch_id   || null;
+        const lastSeenBatchId = batchMeta.last_seen_batch_id || null;
+        const lastSeenBatch   = (batchMeta.batches || []).find(b => b.batch_id === lastSeenBatchId);
+        const activeBatch     = (batchMeta.batches || []).find(b => b.batch_id === activeBatchId);
 
-        // Label lookup
-        const batchLabels = {};
-        (batchMeta.batches || []).forEach(b => { batchLabels[b.batch_id] = b.label; });
+        // Show "last updated" in toolbar
+        const updEl = document.getElementById("last-updated-text");
+        if (updEl && activeBatch) {
+            const d = new Date(activeBatch.created_at);
+            const dayShort = d.toLocaleDateString("en-GB", { weekday: "short" });
+            updEl.textContent = `List last updated ${dayShort}, ${activeBatch.label}`;
+        } else if (updEl) {
+            updEl.textContent = "";
+        }
 
-        // Group rows by batch_id, maintaining sort order
-        const groups = [];
-        let lastGroup = null;
-        data.forEach(o => {
-            const bid = o.batch_id || "";
-            if (!lastGroup || lastGroup.batchId !== bid) {
-                lastGroup = { batchId: bid, rows: [] };
-                groups.push(lastGroup);
-            }
-            lastGroup.rows.push(o);
-        });
+        // Two zones: new = has a batch_id strictly after last-seen, old = everything else
+        // Rows with empty batch_id are pre-batch legacy data — always treat as old
+        const isNew   = o => !!(lastSeenBatchId && o.batch_id && o.batch_id > lastSeenBatchId);
+        const newRows = data.filter(isNew);
+        const oldRows = data.filter(o => !isNew(o));
 
-        // Initialise default collapse state for batch groups new to this session.
-        // Active batch = expanded; everything else = collapsed.
-        groups.forEach(g => {
-            if (!seenBatchIds.has(g.batchId)) {
-                seenBatchIds.add(g.batchId);
-                if (g.batchId !== activeBatchId) {
-                    collapsedBatches.add(g.batchId);
-                }
-            }
-        });
-
-        // A batch is "new for this filter" if it arrived after filterLastSeen.
-        // An empty filterLastSeen means we have no prior record → treat active batch as new.
-        const isBatchNew = bid => !filterLastSeen || !bid || bid > filterLastSeen;
-
-        // The first "old" batch is where the amber "last seen" divider lives.
-        // Only shown when there IS a filterLastSeen value (i.e. this filter has been used before).
-        const firstOldGroup = filterLastSeen ? groups.find(g => !isBatchNew(g.batchId)) : null;
-
-        // Build tbody HTML for each group
-        const tbodies = groups.map(g => {
-            const isActive    = g.batchId === activeBatchId;
-            const isNew       = isBatchNew(g.batchId) && !isActive;   // "new but not the live batch"
-            const isLastSeen  = g === firstOldGroup;
-            const isCollapsed = collapsedBatches.has(g.batchId);
-            const count       = g.rows.length;
-            const label       = batchLabels[g.batchId] || g.batchId || "Previous data";
-            const toggleIcon  = isCollapsed ? "▶" : "▼";
-            const countText   = isCollapsed
-                ? `${count} hidden`
-                : `${count} result${count !== 1 ? "s" : ""}`;
-
-            // Determine tbody modifier class
-            let modifier;
-            if (isActive)   modifier = "batch-group--active";
-            else if (isNew) modifier = "batch-group--new";
-            else if (isLastSeen) modifier = "batch-group--last-seen";
-            else            modifier = "batch-group--old";
-
-            // Header inner content
-            let headerHtml;
-            if (isActive) {
-                headerHtml = `
-                    <span class="batch-badge batch-badge--new">NEW</span>
-                    <span class="batch-lbl">${esc(label)}</span>`;
-            } else if (isLastSeen) {
-                headerHtml = `
-                    <span class="batch-last-seen-text">▼ Last seen with this filter</span>
-                    <span class="batch-lbl batch-lbl--muted">&nbsp;·&nbsp; ${esc(label)}</span>`;
-            } else {
-                headerHtml = `<span class="batch-lbl batch-lbl--muted">${esc(label)}</span>`;
-            }
-
-            // Data rows
-            const dataRows = g.rows.map(o => {
-                const id = String(o.id);
-                const isChecked = selected.has(id);
-                const stages = (o.stage || "").split(",").filter(Boolean)
-                    .map(s => `<span>${esc(s.trim())}</span>`).join("");
-                const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(o))));
-                const rowClasses = [
-                    "batch-data-row",
-                    isChecked ? "selected-row" : "",
-                    isActive  ? "row--active-batch" : "",
-                ].filter(Boolean).join(" ");
-
-                return `
-                <tr class="${rowClasses}" id="row-${id}">
-                    <td><input type="checkbox" data-id="${id}" data-opp="${encoded}"
-                        ${isChecked ? "checked" : ""} onchange="toggleSelected(this)"></td>
-                    <td>${o.source_url
-                        ? `<a href="${esc(o.source_url)}" target="_blank" rel="noopener">${esc(o.title || "—")}</a>`
-                        : esc(o.title || "—")}</td>
-                    <td>${esc(o.buyer || "—")}</td>
-                    <td class="value">${fmt(o.value)}</td>
-                    <td class="stage">${stages}</td>
-                    <td class="cpv">${esc(o.cpvs || "—")}</td>
-                    <td class="desc">
-                        <div class="desc-clamp" id="dc-${id}">${esc(o.description || "")}</div>
-                        ${o.description ? `<button class="read-more-btn" onclick="toggleDesc('dc-${id}',this)">Read more</button>` : ""}
-                    </td>
-                    <td>${(o.published_date || "").substring(0, 10)}</td>
-                </tr>`;
-            }).join("");
+        const renderRow = o => {
+            const id = String(o.id);
+            const isChecked = selected.has(id);
+            const stages = (o.stage || "").split(",").filter(Boolean)
+                .map(s => `<span>${esc(s.trim())}</span>`).join("");
+            const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+            const rowClasses = [
+                isChecked                      ? "selected-row"      : "",
+                o.batch_id === activeBatchId   ? "row--active-batch" : "",
+            ].filter(Boolean).join(" ");
 
             return `
-            <tbody class="batch-group ${modifier}${isCollapsed ? " collapsed" : ""}"
-                   data-batch="${g.batchId}">
-                <tr class="batch-section-header" onclick="toggleBatch('${g.batchId}')">
-                    <td colspan="8">
-                        <div class="batch-header-inner">
-                            <span class="batch-toggle-icon">${toggleIcon}</span>
-                            ${headerHtml}
-                            <span class="batch-meta-right">
-                                <span class="batch-count-text">${countText}</span>
-                            </span>
-                        </div>
-                    </td>
-                </tr>
-                ${dataRows}
-            </tbody>`;
-        }).join("");
+            <tr class="${rowClasses}" id="row-${id}">
+                <td><input type="checkbox" data-id="${id}" data-opp="${encoded}"
+                    ${isChecked ? "checked" : ""} onchange="toggleSelected(this)"></td>
+                <td>${o.source_url
+                    ? `<a href="${esc(o.source_url)}" target="_blank" rel="noopener">${esc(o.title || "—")}</a>`
+                    : esc(o.title || "—")}</td>
+                <td>${esc(o.buyer || "—")}</td>
+                <td class="value">${fmt(o.value)}</td>
+                <td class="stage">${stages}</td>
+                <td class="cpv">${buildCpvCell(o.cpvs)}</td>
+                <td class="desc" style="min-width:320px;max-width:540px;">
+                    <div class="desc-clamp" id="dc-${id}">${esc(o.description || "")}</div>
+                    ${o.description ? `<button class="read-more-btn" onclick="toggleDesc('dc-${id}',this)">Read more</button>` : ""}
+                </td>
+                <td class="date-cell">
+                    <div>${fmtDate(o.published_date)}</div>
+                    ${o.date_modified && o.date_modified.substring(0,16) !== (o.published_date||"").substring(0,16)
+                        ? `<div class="date-modified">✏ ${fmtDate(o.date_modified)}</div>`
+                        : ""}
+                </td>
+            </tr>`;
+        };
+
+        // Divider banner — shown whenever there's a last-seen batch and old rows exist
+        let dividerHtml = "";
+        if (lastSeenBatch && oldRows.length > 0) {
+            const day   = new Date(lastSeenBatch.created_at).toLocaleDateString("en-GB", { weekday: "long" });
+            const label = `${day}, ${lastSeenBatch.label}`;
+            const prefix = newRows.length === 0
+                ? `Nothing new since`
+                : `↓ Last loaded`;
+            dividerHtml = `
+            <tr class="divider-banner">
+                <td colspan="8">${prefix} ${esc(label)} · ${oldRows.length} previous result${oldRows.length !== 1 ? "s" : ""} below</td>
+            </tr>`;
+        }
 
         document.getElementById("table-container").innerHTML = `
         <table>
@@ -716,10 +614,14 @@
                 <th></th><th>Title</th><th>Buyer</th><th>Value</th>
                 <th>Stage</th><th>CPVs</th><th>Description</th><th>Published</th>
             </tr></thead>
-            ${tbodies}
+            <tbody>
+                ${newRows.map(renderRow).join("")}
+                ${dividerHtml}
+                ${oldRows.map(renderRow).join("")}
+            </tbody>
         </table>`;
 
-        // Hide "Read more" buttons for descriptions that aren't actually clipped
+        // Hide "Read more" for descriptions that don't actually overflow
         document.querySelectorAll(".desc-clamp").forEach(el => {
             if (el.scrollHeight <= el.clientHeight) {
                 const btn = el.nextElementSibling;
@@ -734,41 +636,34 @@
     function toggleDesc(elemId, btn) {
         const el = document.getElementById(elemId);
         if (!el) return;
-        const expanded = el.classList.toggle("expanded");
-        btn.textContent = expanded ? "Read less" : "Read more";
+        btn.textContent = el.classList.toggle("expanded") ? "Read less" : "Read more";
     }
 
     // =====================
-    // TOGGLE BATCH COLLAPSE
+    // TOGGLE TRIAGE SESSION
     // =====================
-    function toggleBatch(batchId) {
-        const tbody  = document.querySelector(`tbody.batch-group[data-batch="${batchId}"]`);
-        if (!tbody) return;
-        const icon     = tbody.querySelector(".batch-toggle-icon");
-        const countEl  = tbody.querySelector(".batch-count-text");
-        const count    = tbody.querySelectorAll("tr.batch-data-row").length;
-
-        if (collapsedBatches.has(batchId)) {
-            collapsedBatches.delete(batchId);
-            tbody.classList.remove("collapsed");
-            if (icon)    icon.textContent    = "▼";
-            if (countEl) countEl.textContent = `${count} result${count !== 1 ? "s" : ""}`;
+    function toggleSession(sessionId) {
+        const sessionEl = document.querySelector(`.triage-session[data-session="${sessionId}"]`);
+        if (!sessionEl) return;
+        const icon = sessionEl.querySelector(".batch-toggle-icon");
+        if (collapsedSessions.has(sessionId)) {
+            collapsedSessions.delete(sessionId);
+            sessionEl.classList.remove("collapsed");
+            if (icon) icon.textContent = "▼";
         } else {
-            collapsedBatches.add(batchId);
-            tbody.classList.add("collapsed");
-            if (icon)    icon.textContent    = "▶";
-            if (countEl) countEl.textContent = `${count} hidden`;
+            collapsedSessions.add(sessionId);
+            sessionEl.classList.add("collapsed");
+            if (icon) icon.textContent = "▶";
         }
     }
 
     // =====================
-    // SELECTION
+    // SELECTION (main table)
     // =====================
     function toggleSelected(checkbox) {
         const id  = checkbox.dataset.id;
         const opp = JSON.parse(decodeURIComponent(escape(atob(checkbox.dataset.opp))));
         const row = document.getElementById("row-" + id);
-
         if (checkbox.checked) {
             selected.set(id, opp);
             if (!reviewMeta.has(id)) reviewMeta.set(id, { score: 0, notes: "" });
@@ -784,10 +679,8 @@
         const count = selected.size;
         const bar   = document.getElementById("selection-bar");
         const badge = document.getElementById("badge-review");
-
         document.getElementById("selection-label").textContent =
             `${count} opportunit${count === 1 ? "y" : "ies"} selected`;
-
         if (count > 0) {
             bar.classList.remove("hidden");
             badge.textContent = count;
@@ -799,18 +692,26 @@
     }
 
     // =====================
-    // REVIEW
+    // REVIEW TAB
     // =====================
     function renderReview() {
+        // Clear triage selections whenever review re-renders
+        triageSelected.clear();
+        updateTriageBar();
+
         const container = document.getElementById("review-container");
         const countEl   = document.getElementById("review-count");
 
+        const clearBtn = document.getElementById("clear-review-btn");
         if (selected.size === 0) {
-            container.innerHTML = `<div class="review-empty">No opportunities selected yet.<br>Go to the <strong>Opportunities</strong> tab and tick some checkboxes.</div>`;
+            container.innerHTML = `<div class="review-empty">No opportunities selected yet.<br>
+                Go to the <strong>Opportunities</strong> tab and tick some checkboxes.</div>`;
             countEl.textContent = "";
+            if (clearBtn) clearBtn.classList.add("hidden");
             return;
         }
 
+        if (clearBtn) clearBtn.classList.remove("hidden");
         countEl.textContent = `${selected.size} selected`;
         const fmt = v => { const n = parseFloat(v); return isNaN(n) ? "—" : "£" + n.toLocaleString("en-GB"); };
 
@@ -819,7 +720,6 @@
             const meta   = reviewMeta.get(id) || { score: 0, notes: "" };
             const stages = (o.stage || "").split(",").filter(Boolean)
                 .map(s => `<span>${esc(s.trim())}</span>`).join("");
-
             const stars = [5,4,3,2,1].map(n => `
                 <input type="radio" id="star-${id}-${n}" name="score-${id}" value="${n}"
                     ${meta.score === n ? "checked" : ""} onchange="setScore('${id}', ${n})">
@@ -828,12 +728,23 @@
 
             return `
             <div class="review-card" id="card-${id}">
+                <div class="card-select">
+                    <input type="checkbox" id="triage-cb-${id}"
+                        onchange="toggleTriageSelect('${id}', this.checked)">
+                </div>
                 <div class="card-main">
-                    <div class="card-title">${esc(o.title || "—")}</div>
+                    <div class="card-title">
+                        ${o.source_url
+                            ? `<a href="${esc(o.source_url)}" target="_blank" rel="noopener">${esc(o.title || "—")}</a>`
+                            : esc(o.title || "—")}
+                    </div>
                     <div class="card-meta">
                         <span>🏢 ${esc(o.buyer || "—")}</span>
                         <span>💰 ${fmt(o.value)}</span>
-                        <span>📅 ${(o.published_date || "").substring(0,10) || "—"}</span>
+                        <span>📅 ${fmtDate(o.published_date)}</span>
+                        ${o.date_modified && o.date_modified.substring(0,16) !== (o.published_date||"").substring(0,16)
+                            ? `<span style="color:#888;">✏ ${fmtDate(o.date_modified)}</span>`
+                            : ""}
                     </div>
                     ${stages ? `<div class="card-tags">${stages}</div>` : ""}
                     <div class="card-desc">${esc(o.description || "No description provided")}</div>
@@ -867,15 +778,195 @@
         reviewMeta.set(id, { ...meta, notes });
     }
 
+    function clearReview() {
+        if (!confirm(`Remove all ${selected.size} opportunit${selected.size === 1 ? "y" : "ies"} from review?`)) return;
+        selected.forEach((opp, id) => {
+            const cb = document.querySelector(`input[data-id="${id}"]`);
+            if (cb) cb.checked = false;
+            const row = document.getElementById("row-" + id);
+            if (row) row.classList.remove("selected-row");
+        });
+        selected.clear();
+        reviewMeta.clear();
+        triageSelected.clear();
+        updateSelectionBar();
+        updateTriageBar();
+        renderReview();
+    }
+
     function removeFromReview(id) {
         selected.delete(id);
         reviewMeta.delete(id);
+        triageSelected.delete(id);
         const cb = document.querySelector(`input[data-id="${id}"]`);
         if (cb) cb.checked = false;
         const row = document.getElementById("row-" + id);
         if (row) row.classList.remove("selected-row");
         updateSelectionBar();
+        updateTriageBar();
         renderReview();
+    }
+
+    // =====================
+    // TRIAGE SELECTION (review tab)
+    // =====================
+    function toggleTriageSelect(id, checked) {
+        if (checked) triageSelected.add(id);
+        else triageSelected.delete(id);
+        updateTriageBar();
+    }
+
+    function updateTriageBar() {
+        const bar   = document.getElementById("triage-bar");
+        const label = document.getElementById("triage-bar-label");
+        const count = triageSelected.size;
+        label.textContent = `${count} selected for triage`;
+        if (count > 0) bar.classList.remove("hidden");
+        else bar.classList.add("hidden");
+    }
+
+    async function submitTriage() {
+        if (triageSelected.size === 0) return;
+        const btn = document.getElementById("triage-submit-btn");
+        btn.disabled = true;
+        btn.textContent = "Saving…";
+
+        const opportunities = [...triageSelected].map(id => {
+            const opp  = selected.get(id);
+            const meta = reviewMeta.get(id) || { score: 0, notes: "" };
+            return {
+                id:             String(opp.id),
+                title:          opp.title          || "",
+                buyer:          opp.buyer          || "",
+                value:          parseFloat(opp.value) || null,
+                cpvs:           opp.cpvs           || "",
+                stage:          opp.stage          || "",
+                published_date: (opp.published_date || "").substring(0, 10),
+                description:    opp.description    || "",
+                source_url:     opp.source_url     || null,
+                score:          meta.score,
+                notes:          meta.notes,
+            };
+        });
+
+        try {
+            const resp = await fetch("/triage", {
+                method:  "POST",
+                headers: { "Content-Type": "application/json" },
+                body:    JSON.stringify({ opportunities }),
+            });
+            if (!resp.ok) throw new Error();
+            const session = await resp.json();
+            triageSessions.unshift(session);
+            updateTriageBadge();
+            triageSelected.clear();
+            updateTriageBar();
+            switchTab("triage");
+        } catch {
+            alert("Failed to save triage session. Please try again.");
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "Add to Morning Triage →";
+        }
+    }
+
+    // =====================
+    // TRIAGE TAB
+    // =====================
+    async function loadTriageSessions() {
+        try {
+            const resp = await fetch("/triage");
+            const data = await resp.json();
+            triageSessions = data.sessions || [];
+            updateTriageBadge();
+        } catch {
+            triageSessions = [];
+        }
+    }
+
+    function updateTriageBadge() {
+        const badge = document.getElementById("badge-triage");
+        if (triageSessions.length > 0) {
+            badge.textContent = triageSessions.length;
+            badge.classList.remove("hidden");
+        } else {
+            badge.classList.add("hidden");
+        }
+    }
+
+    function renderTriage() {
+        const container = document.getElementById("triage-container");
+        const countEl   = document.getElementById("triage-count");
+
+        if (!triageSessions.length) {
+            container.innerHTML = `<div class="review-empty">No triage sessions yet.<br>
+                Select cards in the <strong>Review</strong> tab, then click
+                <em>Add to Morning Triage</em>.</div>`;
+            countEl.textContent = "";
+            return;
+        }
+
+        countEl.textContent = `${triageSessions.length} session${triageSessions.length !== 1 ? "s" : ""}`;
+        const fmt = v => { const n = parseFloat(v); return isNaN(n) ? "—" : "£" + n.toLocaleString("en-GB"); };
+
+        function starHtml(score) {
+            return [1,2,3,4,5].map(n =>
+                `<span class="${n <= score ? "filled" : "empty"}">★</span>`
+            ).join("");
+        }
+
+        const html = triageSessions.map((session, idx) => {
+            const sid = session.session_id;
+            const isCollapsed = collapsedSessions.has(sid);
+            const toggleIcon  = isCollapsed ? "▶" : "▼";
+            const count = session.opportunities.length;
+            const dayOfWeek = session.created_at
+                ? new Date(session.created_at).toLocaleDateString("en-GB", { weekday: "long" })
+                : "";
+            const displayLabel = dayOfWeek ? `${dayOfWeek}, ${session.label}` : session.label;
+
+            const cards = session.opportunities.map(o => `
+                <div class="triage-card">
+                    <div class="card-main">
+                        <div class="card-title">
+                            ${o.source_url
+                                ? `<a href="${esc(o.source_url)}" target="_blank" rel="noopener">${esc(o.title || "—")}</a>`
+                                : esc(o.title || "—")}
+                        </div>
+                        <div class="card-meta">
+                            <span>🏢 ${esc(o.buyer || "—")}</span>
+                            <span>💰 ${fmt(o.value)}</span>
+                            <span>📅 ${esc(o.published_date || "—")}</span>
+                        </div>
+                        ${o.stage ? `<div class="card-tags">${
+                            o.stage.split(",").filter(Boolean)
+                                .map(s => `<span>${esc(s.trim())}</span>`).join("")
+                        }</div>` : ""}
+                        <div class="card-desc">${esc(o.description || "")}</div>
+                    </div>
+                    <div class="triage-card-score">
+                        <div class="star-display">${starHtml(o.score || 0)}</div>
+                        ${o.notes ? `<div class="triage-card-notes">${esc(o.notes)}</div>` : ""}
+                    </div>
+                </div>`).join("");
+
+            return `
+            <div class="triage-session${isCollapsed ? " collapsed" : ""}" data-session="${esc(sid)}">
+                <div class="triage-session-header" onclick="toggleSession('${esc(sid)}')">
+                    <span class="batch-toggle-icon">${toggleIcon}</span>
+                    ${idx === 0 ? `<span class="triage-badge">Latest</span>` : ""}
+                    <span class="triage-session-label">${esc(displayLabel)}</span>
+                    <span class="triage-session-count">
+                        ${count} opportunit${count !== 1 ? "ies" : "y"}
+                    </span>
+                </div>
+                <div class="triage-session-body">
+                    ${cards}
+                </div>
+            </div>`;
+        }).join("");
+
+        container.innerHTML = html;
     }
 
     // =====================
@@ -910,8 +1001,31 @@
             .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
     }
 
-    // Auto-load whatever is in the CSV on page open
+    function fmtDate(iso) {
+        if (!iso) return "—";
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return (iso || "").substring(0, 10) || "—";
+        const now  = new Date();
+        const day  = d.getDate();
+        const mon  = d.toLocaleString("en-GB", { month: "short" });
+        const time = d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false });
+        const yr   = d.getFullYear() !== now.getFullYear() ? ` '${String(d.getFullYear()).slice(2)}` : "";
+        return `${day} ${mon}${yr} ${time}`;
+    }
+
+    function buildCpvCell(cpvsStr) {
+        const cpvs = (cpvsStr || "").split(",").map(c => c.trim()).filter(Boolean);
+        if (!cpvs.length) return "—";
+        const items = cpvs.map(c => esc(c)).join("<br>");
+        if (cpvs.length <= 3) return items;
+        return `<div class="cpv-scroll">${items}</div>`;
+    }
+
+    // =====================
+    // INIT
+    // =====================
     fetchAndRender();
+    loadTriageSessions();
 </script>
 </body>
 </html>

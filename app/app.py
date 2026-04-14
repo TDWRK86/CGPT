@@ -4,12 +4,15 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 from typing import Optional
+from pydantic import BaseModel
 
 from app.scraper.find_tender import (
     load_findtender_opps,
     load_csv,
     filter_opportunities,
     _load_batches,
+    load_triage,
+    save_triage_session,
 )
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -18,6 +21,24 @@ app = FastAPI()
 
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
+
+
+# ---- Triage request model ----
+class TriageOpportunity(BaseModel):
+    id: str
+    title: str = ""
+    buyer: str = ""
+    value: float | None = None
+    cpvs: str = ""
+    stage: str = ""
+    published_date: str = ""
+    description: str = ""
+    source_url: str | None = None
+    score: int = 0
+    notes: str = ""
+
+class TriageSessionRequest(BaseModel):
+    opportunities: list[TriageOpportunity]
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -48,9 +69,7 @@ def load_opportunities():
 
 @app.get("/batches")
 def get_batches():
-    """
-    Return batch metadata in reverse-chronological order.
-    """
+    """Return batch metadata in reverse-chronological order."""
     state = _load_batches()
     batches = sorted(
         state.get("batches", []),
@@ -66,22 +85,17 @@ def get_batches():
 
 @app.get("/opportunities")
 def get_opportunities(
-    cpv_prefixes: Optional[str] = Query(None, description="Comma-separated CPV prefixes, e.g. '30,48,72'"),
+    cpv_prefixes: Optional[str] = Query(None),
     min_value: Optional[float] = Query(None),
     max_value: Optional[float] = Query(None),
-    stages: Optional[str] = Query(None, description="Comma-separated stage tags"),
+    stages: Optional[str] = Query(None),
     buyer: Optional[str] = Query(None),
-    date_from: Optional[str] = Query(None, description="YYYY-MM-DD"),
-    date_to: Optional[str] = Query(None, description="YYYY-MM-DD"),
-    keyword: Optional[str] = Query(None, description="Free-text search across title, description, and buyer"),
+    date_from: Optional[str] = Query(None),
+    date_to: Optional[str] = Query(None),
+    keyword: Optional[str] = Query(None),
 ):
-    """
-    Read all opportunities from the CSV and return a filtered JSON list.
-    All filter params are optional — omit to return everything.
-    """
     all_opps = load_csv()
-
-    cpv_list = [p.strip() for p in cpv_prefixes.split(",") if p.strip()] if cpv_prefixes else None
+    cpv_list   = [p.strip() for p in cpv_prefixes.split(",") if p.strip()] if cpv_prefixes else None
     stage_list = [s.strip() for s in stages.split(",") if s.strip()] if stages else None
 
     filtered = filter_opportunities(
@@ -101,5 +115,26 @@ def get_opportunities(
         key=lambda o: o.get("published_date") or "",
         reverse=True,
     )
-
     return JSONResponse(sorted_filtered)
+
+
+@app.get("/triage")
+def get_triage():
+    """Return all triage sessions, most recent first."""
+    state = load_triage()
+    sessions = sorted(
+        state.get("sessions", []),
+        key=lambda s: s["session_id"],
+        reverse=True,
+    )
+    return JSONResponse({"sessions": sessions})
+
+
+@app.post("/triage", status_code=201)
+def post_triage(body: TriageSessionRequest):
+    """Save a new triage session from the current review selections."""
+    if not body.opportunities:
+        return JSONResponse({"error": "No opportunities provided"}, status_code=422)
+    opps = [o.model_dump() for o in body.opportunities]
+    session = save_triage_session(opps)
+    return JSONResponse(session, status_code=201)

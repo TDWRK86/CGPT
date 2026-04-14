@@ -15,10 +15,11 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 CSV_PATH = DATA_DIR / "opportunities.csv"
 BATCHES_PATH = DATA_DIR / "batches.json"
+TRIAGE_PATH  = DATA_DIR / "triage.json"
 
 CSV_FIELDS = [
     "id", "title", "buyer", "value", "cpvs", "stage",
-    "published_date", "description", "source", "source_url",
+    "published_date", "date_modified", "description", "source", "source_url",
     "batch_id",
 ]
 
@@ -53,6 +54,38 @@ def _save_batches(state: dict) -> None:
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(state, f, indent=2)
     tmp.replace(BATCHES_PATH)
+
+
+def load_triage() -> dict:
+    """Read triage.json. Returns {'sessions': []} if missing."""
+    if not TRIAGE_PATH.exists():
+        return {"sessions": []}
+    with open(TRIAGE_PATH, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_triage_session(opportunities: list[dict]) -> dict:
+    """
+    Append a new triage session to triage.json and return it.
+    Each opportunity dict should include 'score' and 'notes' from the review step.
+    """
+    _ensure_data_dir()
+    state = load_triage()
+
+    now = datetime.now(timezone.utc).astimezone()
+    session = {
+        "session_id": "triage_" + now.strftime("%Y%m%d_%H%M%S"),
+        "label": f"{now.day} {now.strftime('%b %Y')}, {now.strftime('%H:%M')}",
+        "created_at": now.isoformat(),
+        "opportunities": opportunities,
+    }
+
+    state["sessions"].append(session)
+    tmp = TRIAGE_PATH.with_suffix(".tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(state, f, indent=2)
+    tmp.replace(TRIAGE_PATH)
+    return session
 
 
 def _get_or_create_batch() -> str:
@@ -167,6 +200,7 @@ def normalise_opportunity(release):
         "cpvs": ", ".join(all_cpvs),
         "stage": ", ".join(tags),
         "published_date": release.get("date", ""),
+        "date_modified": tender.get("dateModified") or "",
         "description": description,
         "source": "Find a Tender",
         "source_url": source_url,
@@ -190,8 +224,9 @@ def _migrate_csv_if_needed() -> None:
         return
     with open(CSV_PATH, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
-        if "batch_id" in (reader.fieldnames or []):
-            return  # already migrated
+        fields = reader.fieldnames or []
+        if "batch_id" in fields and "date_modified" in fields:
+            return  # already fully migrated
         rows = list(reader)
 
     tmp = CSV_PATH.with_suffix(".migration.tmp")
@@ -200,6 +235,7 @@ def _migrate_csv_if_needed() -> None:
         writer.writeheader()
         for row in rows:
             row.setdefault("batch_id", "")
+            row.setdefault("date_modified", "")
             writer.writerow(row)
     tmp.replace(CSV_PATH)
 
