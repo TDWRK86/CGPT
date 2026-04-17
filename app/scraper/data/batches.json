@@ -34,9 +34,21 @@
       "batch_id": "batch_20260414_175116",
       "label": "14 Apr 2026, 17:51",
       "created_at": "2026-04-14T17:51:16.743487+01:00",
+      "sealed": true
+    },
+    {
+      "batch_id": "batch_20260417_095658",
+      "label": "17 Apr 2026, 09:56",
+      "created_at": "2026-04-17T09:56:58.097390+01:00",
+      "sealed": true
+    },
+    {
+      "batch_id": "batch_20260417_100604",
+      "label": "17 Apr 2026, 10:06",
+      "created_at": "2026-04-17T10:06:04.282706+01:00",
       "sealed": false
     }
   ],
-  "active_batch_id": "batch_20260414_175116",
-  "last_seen_batch_id": "batch_20260414_141810"
+  "active_batch_id": "batch_20260417_100604",
+  "last_seen_batch_id": "batch_20260417_095658"
 }

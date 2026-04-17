@@ -4,7 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tender Intake PoC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: "GT Standard Extended";
+            src: url("/static/GT-Standard-L-Extended-Bold.otf") format("opentype");
+            font-weight: 700;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: "GT Standard Extended";
+            src: url("/static/GT-Standard-L-Extended-Medium.otf") format("opentype");
+            font-weight: 500;
+            font-style: normal;
+        }
         /* Fluid base: 16 px floor (never shrinks below normal), scales up
            to 18 px on wide screens like 1920×1200.
            All rem-based sizes grow proportionally on large displays. */
@@ -13,7 +28,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: "Inter", sans-serif;
             background: #f4f6f9;
             color: #222;
             min-height: 100vh;
@@ -35,7 +50,7 @@
         }
         header h1 { font-size: 1.1rem; font-weight: 600; }
         .load-btn {
-            background: #e8a020;
+            background: #f07232;
             color: white;
             border: none;
             padding: 8px 18px;
@@ -45,7 +60,7 @@
             cursor: pointer;
             transition: background .15s;
         }
-        .load-btn:hover { background: #cf8b18; }
+        .load-btn:hover { background: #d9612a; }
         .load-btn:disabled { background: #888; cursor: not-allowed; }
         #load-status { font-size: 0.78rem; color: #b8d0ec; margin-left: 10px; }
 
@@ -74,7 +89,7 @@
         .tab:hover { color: #1a3a5c; }
         .tab.active { color: #1a3a5c; border-bottom-color: #1a3a5c; }
         .tab-badge {
-            background: #e8a020;
+            background: #f07232;
             color: white;
             font-size: 0.7rem;
             font-weight: 700;
@@ -92,38 +107,38 @@
         /* ---- OPPORTUNITIES LAYOUT ---- */
         #panel-opps { flex-direction: row; }
         .sidebar {
-            width: 270px;
+            width: 210px;
             flex-shrink: 0;
             background: #fff;
             border-right: 1px solid #dde3ec;
-            padding: 18px 14px;
+            padding: 12px 10px;
             overflow-y: auto;
         }
-        .sidebar h2 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: #999; margin-bottom: 14px; }
-        .filter-group { margin-bottom: 16px; }
-        .filter-group label { display: block; font-size: 0.78rem; font-weight: 600; color: #444; margin-bottom: 4px; }
+        .sidebar h2 { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: #999; margin-bottom: 10px; }
+        .filter-group { margin-bottom: 10px; }
+        .filter-group label { display: block; font-size: 0.72rem; font-weight: 600; color: #444; margin-bottom: 3px; }
         .filter-group input[type="text"],
         .filter-group input[type="number"],
         .filter-group input[type="date"],
         .filter-group select {
             width: 100%;
-            padding: 6px 8px;
+            padding: 4px 6px;
             border: 1px solid #ccd3de;
             border-radius: 4px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             outline: none;
             transition: border-color .15s;
         }
         .filter-group input:focus,
         .filter-group select:focus { border-color: #1a3a5c; }
-        .row2 { display: flex; gap: 6px; }
+        .row2 { display: flex; gap: 4px; }
         .row2 input { width: 50%; }
-        .checkbox-group { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
-        .checkbox-group label { font-weight: 400; font-size: 0.79rem; display: flex; align-items: center; gap: 6px; cursor: pointer; }
-        .clear-btn { width: 100%; padding: 7px; background: none; border: 1px solid #ccd3de; border-radius: 4px; font-size: 0.78rem; color: #555; cursor: pointer; margin-top: 2px; }
+        .checkbox-group { display: flex; flex-direction: column; gap: 3px; margin-top: 3px; }
+        .checkbox-group label { font-weight: 400; font-size: 0.72rem; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .clear-btn { width: 100%; padding: 5px; background: none; border: 1px solid #ccd3de; border-radius: 4px; font-size: 0.72rem; color: #555; cursor: pointer; margin-top: 2px; }
         .clear-btn:hover { background: #f0f3f7; }
 
-        .content { flex: 1; overflow: auto; padding: 1.125rem 1.375rem; display: flex; flex-direction: column; min-width: 0; }
+        .content { flex: 1; overflow: auto; padding: 0.875rem 1rem; display: flex; flex-direction: column; min-width: 0; }
         .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-shrink: 0; }
         #result-count { font-size: 0.8rem; color: #666; }
         .sort-select { padding: 5px 8px; border: 1px solid #ccd3de; border-radius: 4px; font-size: 0.78rem; color: #444; outline: none; cursor: pointer; }
@@ -131,19 +146,29 @@
 
         /* ---- TABLE ---- */
         #table-container { flex: 1; overflow-x: auto; min-width: 0; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
-        thead th { background: #1a3a5c; color: #fff; text-align: left; padding: 9px 10px; font-weight: 600; white-space: nowrap; }
-        thead th:first-child { width: 36px; text-align: center; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.77rem; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+        thead th { background: #1a3a5c; color: #fff; text-align: left; padding: 7px 8px; font-weight: 600; white-space: nowrap; position: relative; }
+        .col-resize-handle {
+            position: absolute; right: 0; top: 0; bottom: 0; width: 6px;
+            cursor: col-resize; user-select: none;
+        }
+        .col-resize-handle:hover { background: rgba(255,255,255,.25); }
+        .reset-cols-btn {
+            background: none; border: 1px solid #ccd3de; border-radius: 4px;
+            padding: 4px 10px; font-size: 0.74rem; color: #666; cursor: pointer;
+        }
+        .reset-cols-btn:hover { background: #f0f3f7; }
+        thead th:first-child { width: 32px; text-align: center; }
         tbody tr:nth-child(even) { background: #f8fafc; }
         tbody tr:hover { background: #eef3fa; }
         tbody tr.selected-row { background: #fef3e0 !important; }
-        td { padding: 8px 10px; vertical-align: top; border-bottom: 1px solid #eaeef4; }
-        td.desc { max-width: 420px; color: #444; line-height: 1.4; vertical-align: top; }
-        td.value { white-space: nowrap; }
-        td.stage span { display: inline-block; background: #dde8f5; color: #1a3a5c; border-radius: 3px; padding: 1px 5px; font-size: 0.72rem; margin: 1px 2px 1px 0; }
-        td.cpv { color: #777; font-size: 0.73rem; width: 155px; min-width: 130px; vertical-align: top; }
+        td { padding: 6px 8px; vertical-align: top; border-bottom: 1px solid #eaeef4; }
+        td.desc { max-width: 220px; color: #444; line-height: 1.4; vertical-align: top; }
+        td.value { white-space: nowrap; width: 75px; }
+        td.stage span { display: inline-block; background: #dde8f5; color: #1a3a5c; border-radius: 3px; padding: 1px 4px; font-size: 0.7rem; margin: 1px 2px 1px 0; }
+        td.cpv { color: #777; font-size: 0.7rem; width: 110px; min-width: 90px; vertical-align: top; }
         .cpv-scroll { max-height: 68px; overflow-y: auto; line-height: 1.7; }
-        td.date-cell { white-space: nowrap; font-size: 0.76rem; vertical-align: top; }
+        td.date-cell { font-size: 0.73rem; vertical-align: top; min-width: 110px; max-width: 140px; }
         .date-modified { color: #888; font-size: 0.71rem; margin-top: 2px; }
         .meta-lbl { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #aaa; margin-right: 3px; }
         td:first-child { text-align: center; }
@@ -162,7 +187,7 @@
             font-size: 0.72rem; cursor: pointer; padding: 2px 0 0;
             text-decoration: underline; display: block;
         }
-        .read-more-btn:hover { color: #e8a020; }
+        .read-more-btn:hover { color: #f07232; }
 
         /* ---- LAST-LOADED DIVIDER ---- */
         tr.divider-banner td {
@@ -207,8 +232,8 @@
         }
         .selection-bar.hidden { display: none; }
         .selection-bar span { font-size: 0.85rem; }
-        .review-btn { background: #e8a020; color: white; border: none; padding: 7px 18px; border-radius: 5px; font-size: 0.83rem; font-weight: 600; cursor: pointer; }
-        .review-btn:hover { background: #cf8b18; }
+        .review-btn { background: #f07232; color: white; border: none; padding: 7px 18px; border-radius: 5px; font-size: 0.83rem; font-weight: 600; cursor: pointer; }
+        .review-btn:hover { background: #d9612a; }
 
         /* ---- REVIEW PANEL ---- */
         #panel-review { flex-direction: column; padding: 0; overflow: hidden; }
@@ -238,7 +263,7 @@
         .star-row label { font-size: 1.5rem; color: #d0d5de; cursor: pointer; transition: color .1s; line-height: 1; }
         .star-row label:hover,
         .star-row label:hover ~ label,
-        .star-row input[type="radio"]:checked ~ label { color: #e8a020; }
+        .star-row input[type="radio"]:checked ~ label { color: #f07232; }
         .notes-field {
             width: 100%; min-height: 80px; padding: 7px 9px;
             border: 1px solid #ccd3de; border-radius: 4px;
@@ -376,7 +401,13 @@
 
         /* ---- SHARED ---- */
         .batch-badge { border-radius: 3px; padding: 1px 6px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; }
-        .batch-badge--new { background: #e8a020; color: white; }
+        td.fw-cell { width: 44px; min-width: 44px; text-align: center; vertical-align: top; padding: 6px 4px; }
+        td.term-cell { width: 48px; min-width: 48px; text-align: center; vertical-align: top; font-size: 0.73rem; color: #555; white-space: nowrap; }
+        .fw-badge { display: inline-block; border-radius: 3px; padding: 1px 4px; font-size: 0.65rem; font-weight: 700; line-height: 1.4; }
+        .fw-badge--fa  { background: #dde8f5; color: #1a3a5c; }
+        .fw-badge--dps { background: #fff0e0; color: #a05000; }
+        .fw-badge--fa-dps { display: flex; flex-direction: column; gap: 2px; align-items: center; }
+        .batch-badge--new { background: #f07232; color: white; }
         .empty-state { text-align: center; padding: 60px 20px; color: #aaa; font-size: 0.88rem; }
         .spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid #ccd3de; border-top-color: #1a3a5c; border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; margin-right: 5px; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -399,13 +430,64 @@
                 gap: 10px;
             }
         }
+
+        /* ---- TYPOGRAPHY ---- */
+
+        /* GT Standard Extended — static titling only */
+        header h1,
+        .review-header h2 {
+            font-family: "GT Standard Extended", sans-serif;
+            font-weight: 700;
+        }
+
+        /* Inter Bold — dynamic opportunity titling */
+        .card-title,
+        .fs-title {
+            font-family: "Inter", sans-serif;
+            font-weight: 700;
+        }
+
+        .triage-session-label,
+        .sidebar h2,
+        .triage-bar span,
+        .fs-notes-label {
+            font-family: "GT Standard Extended", sans-serif;
+            font-weight: 500;
+        }
+
+        /* Inter weight assignments */
+        .tab           { font-weight: 600; }
+        thead th       { font-weight: 600; }
+        .load-btn,
+        .review-btn,
+        .triage-submit-btn,
+        .card-view-btn,
+        .view-session-btn,
+        .source-pill   { font-weight: 600; }
+        .filter-group label { font-weight: 600; }
+
+        .card-desc,
+        .triage-card-notes,
+        .fs-description { font-weight: 400; }
+
+        .meta-lbl,
+        .date-modified,
+        .triage-session-count,
+        #load-status,
+        #result-count,
+        .fs-cpvs        { font-weight: 300; }
     </style>
 </head>
 <body>
 
 <!-- HEADER -->
 <header>
-    <h1>📋 Tender Intake — Proof of Concept</h1>
+    <div style="display:flex;align-items:center;gap:14px;">
+        <div style="background:white;border-radius:5px;padding:5px 10px;line-height:0;flex-shrink:0;">
+            <img src="/static/DXC-Full-Color.png" alt="DXC" style="height:30px;display:block;">
+        </div>
+        <h1>Tender Intake — Proof of Concept</h1>
+    </div>
     <div style="display:flex;align-items:center;gap:10px;">
         <button class="load-btn" id="loadBtn" onclick="loadOpportunities()">Load today's opportunities</button>
         <span id="load-status"></span>
@@ -463,7 +545,12 @@
                     <input type="date" id="f-date-to" onchange="debouncedFetch()">
                 </div>
             </div>
+            <div class="filter-group">
+                <label style="font-weight:400;"><input type="checkbox" id="f-framework-only" onchange="debouncedFetch()" style="margin-right:5px;">Framework / DPS only</label>
+            </div>
             <button class="clear-btn" onclick="clearFilters()">Clear all filters</button>
+            <button class="clear-btn" id="backfill-btn" onclick="backfillContractMonths()" style="margin-top:6px;">Backfill contract lengths</button>
+            <span id="backfill-status" style="font-size:0.68rem;color:#888;display:block;margin-top:4px;"></span>
         </div>
 
         <!-- ── Contracts Finder Filters ── -->
@@ -578,13 +665,16 @@
                 <span id="result-count">—</span>
                 <span id="last-updated-text" style="font-size:0.72rem;color:#aaa;"></span>
             </div>
-            <select class="sort-select" id="sort-select" onchange="renderTable(currentData)">
-                <option value="date-desc">Newest first</option>
-                <option value="date-asc">Oldest first</option>
-                <option value="value-desc">Value: high to low</option>
-                <option value="value-asc">Value: low to high</option>
-                <option value="title-asc">Title: A → Z</option>
-            </select>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <button class="reset-cols-btn hidden" id="reset-cols-btn" onclick="resetColWidths()">Reset columns</button>
+                <select class="sort-select" id="sort-select" onchange="renderTable(currentData)">
+                    <option value="date-desc">Newest first</option>
+                    <option value="date-asc">Oldest first</option>
+                    <option value="value-desc">Value: high to low</option>
+                    <option value="value-asc">Value: low to high</option>
+                    <option value="title-asc">Title: A → Z</option>
+                </select>
+            </div>
         </div>
         <div id="table-container">
             <div class="empty-state">Click <strong>Load today's opportunities</strong> to fetch data.</div>
@@ -778,6 +868,23 @@
         await fetchAndRender();
     }
 
+    async function backfillContractMonths() {
+        const btn    = document.getElementById("backfill-btn");
+        const status = document.getElementById("backfill-status");
+        btn.disabled = true;
+        status.textContent = "Fetching from API — may take a minute…";
+        try {
+            const resp = await fetch("/backfill/contract-months", { method: "POST" });
+            const data = await resp.json();
+            status.textContent = `✓ Updated ${data.updated} record(s)`;
+            if (data.updated > 0) await fetchAndRender();
+        } catch {
+            status.textContent = "⚠ Backfill failed";
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
     // =====================
     // FILTER PARAM BUILDERS
     // =====================
@@ -799,6 +906,7 @@
         if (df) p.set("date_from", df);
         const dt = document.getElementById("f-date-to").value;
         if (dt) p.set("date_to", dt);
+        if (document.getElementById("f-framework-only")?.checked) p.set("framework_only", "true");
         return p;
     }
 
@@ -1016,8 +1124,9 @@
                 <td>${esc(o.buyer || "—")}</td>
                 <td class="value">${fmt(o.value)}</td>
                 <td class="stage">${stages}</td>
+                <td class="fw-cell">${buildFwCell(o.framework)}</td>
                 <td class="cpv">${buildCpvCell(o.cpvs)}</td>
-                <td class="desc" style="min-width:320px;max-width:540px;">
+                <td class="desc" style="min-width:120px;max-width:220px;">
                     <div class="desc-clamp" id="dc-${id}">${esc(o.description || "")}</div>
                     ${o.description ? `<button class="read-more-btn" onclick="toggleDesc('dc-${id}',this)">Read more</button>` : ""}
                 </td>
@@ -1030,6 +1139,7 @@
                         ? `<div style="margin-top:2px;"><span class="meta-lbl">Contract</span>${fmtContract(o.contract_start, o.contract_end)}</div>`
                         : ""}
                 </td>
+                <td class="term-cell">${contractMonths(o.contract_months, o.contract_start, o.contract_end)}</td>
             </tr>`;
         };
 
@@ -1049,7 +1159,7 @@
                 : "";
             dividerHtml = `
             <tr class="divider-banner">
-                <td colspan="8"><div class="divider-inner"><span>${leftText}</span>${btn}</div></td>
+                <td colspan="10"><div class="divider-inner"><span>${leftText}</span>${btn}</div></td>
             </tr>`;
         }
 
@@ -1057,7 +1167,7 @@
         <table>
             <thead><tr>
                 <th></th><th>Title</th><th>Buyer</th><th>Value</th>
-                <th>Stage</th><th>CPVs</th><th>Description</th><th>Dates</th>
+                <th>Stage</th><th>FW</th><th>CPVs</th><th>Description</th><th>Dates</th><th>Term</th>
             </tr></thead>
             <tbody>
                 ${newRows.map(o => renderRow(o, false)).join("")}
@@ -1073,6 +1183,8 @@
                 if (btn && btn.classList.contains("read-more-btn")) btn.style.display = "none";
             }
         });
+
+        initResizableColumns();
     }
 
     // =====================
@@ -1609,6 +1721,8 @@
         ["f-keyword","f-cpv","f-min","f-max","f-buyer","f-date-from","f-date-to"]
             .forEach(id => document.getElementById(id).value = "");
         document.querySelectorAll("#stage-checkboxes input").forEach(cb => cb.checked = false);
+        const fwCb = document.getElementById("f-framework-only");
+        if (fwCb) fwCb.checked = false;
         fetchAndRender();
     }
 
@@ -1650,12 +1764,94 @@
         return `To ${e}`;
     }
 
+    function contractMonths(months, start, end) {
+        const m = parseInt(months);
+        if (!isNaN(m) && m > 0) return m + " mo";
+        if (!start || !end) return "—";
+        const s = new Date(start), e = new Date(end);
+        if (isNaN(s) || isNaN(e)) return "—";
+        const calc = (e.getFullYear() - s.getFullYear()) * 12 + (e.getMonth() - s.getMonth());
+        return calc > 0 ? calc + " mo" : "—";
+    }
+
     function buildCpvCell(cpvsStr) {
         const cpvs = (cpvsStr || "").split(",").map(c => c.trim()).filter(Boolean);
         if (!cpvs.length) return "—";
         const items = cpvs.map(c => esc(c)).join("<br>");
         if (cpvs.length <= 3) return items;
         return `<div class="cpv-scroll">${items}</div>`;
+    }
+
+    function buildFwCell(fw) {
+        const parts = (fw || "").split(",").map(s => s.trim()).filter(Boolean);
+        if (!parts.length) return "";
+        return parts.map(p => {
+            const cls = p === "FA" ? "fw-badge--fa" : "fw-badge--dps";
+            return `<span class="fw-badge ${cls}">${esc(p)}</span>`;
+        }).join("<br>");
+    }
+
+    // =====================
+    // RESIZABLE COLUMNS
+    // =====================
+    const colWidths = {};
+
+    function initResizableColumns() {
+        const table = document.querySelector("#table-container table");
+        if (!table) return;
+        const ths = [...table.querySelectorAll("thead th")];
+
+        // Re-apply stored widths and fix layout so they hold
+        if (Object.keys(colWidths).length) {
+            ths.forEach((th, i) => { if (colWidths[i] !== undefined) th.style.width = colWidths[i] + "px"; });
+            table.style.tableLayout = "fixed";
+        }
+
+        ths.forEach((th, i) => {
+            if (i === 0) return; // skip checkbox
+            if (th.querySelector(".col-resize-handle")) return;
+            const handle = document.createElement("div");
+            handle.className = "col-resize-handle";
+            th.appendChild(handle);
+
+            handle.addEventListener("mousedown", e => {
+                e.preventDefault();
+                // Snapshot all widths the first time a column is dragged
+                if (table.style.tableLayout !== "fixed") {
+                    ths.forEach((t, idx) => { const w = t.offsetWidth; t.style.width = w + "px"; colWidths[idx] = w; });
+                    table.style.tableLayout = "fixed";
+                }
+                const startX  = e.pageX;
+                const startW  = th.offsetWidth;
+                document.body.style.cursor     = "col-resize";
+                document.body.style.userSelect = "none";
+
+                const onMove = e => {
+                    const w = Math.max(50, startW + e.pageX - startX);
+                    th.style.width = w + "px";
+                    colWidths[i]   = w;
+                    document.getElementById("reset-cols-btn").classList.remove("hidden");
+                };
+                const onUp = () => {
+                    document.removeEventListener("mousemove", onMove);
+                    document.removeEventListener("mouseup",   onUp);
+                    document.body.style.cursor     = "";
+                    document.body.style.userSelect = "";
+                };
+                document.addEventListener("mousemove", onMove);
+                document.addEventListener("mouseup",   onUp);
+            });
+        });
+    }
+
+    function resetColWidths() {
+        Object.keys(colWidths).forEach(k => delete colWidths[k]);
+        const table = document.querySelector("#table-container table");
+        if (table) {
+            table.style.tableLayout = "";
+            [...table.querySelectorAll("thead th")].forEach(th => th.style.width = "");
+        }
+        document.getElementById("reset-cols-btn").classList.add("hidden");
     }
 
     // =====================

@@ -2,7 +2,7 @@ import requests
 import urllib3
 from datetime import datetime, timedelta, timezone
 
-from app.scraper.find_tender import extract_all_cpvs
+from app.scraper.find_tender import extract_all_cpvs, extract_contract_months
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -37,21 +37,30 @@ def normalise_cf_opportunity(release: dict) -> dict:
         if cf_guid else None
     )
 
+    techniques = tender.get("techniques") or {}
+    fw_parts = []
+    if techniques.get("hasFrameworkAgreement"):
+        fw_parts.append("FA")
+    if techniques.get("hasDynamicPurchasingSystem"):
+        fw_parts.append("DPS")
+
     return {
-        "id":             release_id,
-        "title":          tender.get("title", "N/A"),
-        "buyer":          buyer,
-        "value":          tender.get("value", {}).get("amount"),
-        "cpvs":           ", ".join(all_cpvs),
-        "stage":          ", ".join(tags),
-        "published_date": release.get("date", ""),
-        "date_modified":  tender.get("dateModified") or "",
-        "contract_start": (tender.get("contractPeriod") or {}).get("startDate") or "",
-        "contract_end":   (tender.get("contractPeriod") or {}).get("endDate")   or "",
-        "description":    description,
-        "source":         "Contracts Finder",
-        "source_url":     source_url,
-        "batch_id":       "",
+        "id":              release_id,
+        "title":           tender.get("title", "N/A"),
+        "buyer":           buyer,
+        "value":           tender.get("value", {}).get("amount"),
+        "cpvs":            ", ".join(all_cpvs),
+        "stage":           ", ".join(tags),
+        "published_date":  release.get("date", ""),
+        "date_modified":   tender.get("dateModified") or "",
+        "contract_start":  (tender.get("contractPeriod") or {}).get("startDate") or "",
+        "contract_end":    (tender.get("contractPeriod") or {}).get("endDate")   or "",
+        "contract_months": extract_contract_months(release),
+        "framework":       ", ".join(fw_parts),
+        "description":     description,
+        "source":          "Contracts Finder",
+        "source_url":      source_url,
+        "batch_id":        "",
     }
 
 

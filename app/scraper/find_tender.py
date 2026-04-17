@@ -20,7 +20,7 @@ TRIAGE_PATH  = DATA_DIR / "triage.json"
 CSV_FIELDS = [
     "id", "title", "buyer", "value", "cpvs", "stage",
     "published_date", "date_modified", "contract_start", "contract_end",
-    "description", "source", "source_url", "batch_id",
+    "contract_months", "framework", "description", "source", "source_url", "batch_id",
 ]
 
 # ---------------------------
@@ -175,6 +175,49 @@ def _get_or_create_batch() -> str:
 # ---------------------------
 # HELPERS
 # ---------------------------
+def extract_contract_months(release: dict) -> str:
+    """
+    Extract contract length in whole months from an OCDS release.
+    Checks tender.contractPeriod first, then the longest lot contractPeriod.
+    Returns a string integer e.g. "24", or "" if no data found.
+    """
+    tender = release.get("tender", {})
+    days: int | None = None
+
+    def _days_from_cp(cp: dict) -> int | None:
+        if cp.get("durationInDays"):
+            return int(cp["durationInDays"])
+        s, e = cp.get("startDate"), cp.get("endDate")
+        if s and e:
+            try:
+                from datetime import date as _date
+                sd = _date.fromisoformat(str(s)[:10])
+                ed = _date.fromisoformat(str(e)[:10])
+                return (ed - sd).days
+            except Exception:
+                pass
+        return None
+
+    # 1. Tender-level contractPeriod
+    cp = tender.get("contractPeriod") or {}
+    days = _days_from_cp(cp)
+
+    # 2. Lot-level contractPeriod — take the maximum across lots
+    if days is None:
+        lot_days = [
+            _days_from_cp(lot.get("contractPeriod") or {})
+            for lot in tender.get("lots", [])
+        ]
+        lot_days = [d for d in lot_days if d is not None]
+        if lot_days:
+            days = max(lot_days)
+
+    if not days:
+        return ""
+    months = round(days / 30.44)
+    return str(months) if months > 0 else ""
+
+
 def extract_all_cpvs(release):
     """Return every unique CPV code found anywhere in a release."""
     tender = release.get("tender", {})
@@ -223,6 +266,15 @@ def normalise_opportunity(release):
         else None
     )
 
+    # Framework / DPS detection via OCDS techniques extension
+    techniques = tender.get("techniques") or {}
+    fw_parts = []
+    if techniques.get("hasFrameworkAgreement"):
+        fw_parts.append("FA")
+    if techniques.get("hasDynamicPurchasingSystem"):
+        fw_parts.append("DPS")
+    framework = ", ".join(fw_parts)
+
     return {
         "id": release_id,
         "title": tender.get("title", "N/A"),
@@ -234,6 +286,8 @@ def normalise_opportunity(release):
         "date_modified": tender.get("dateModified") or "",
         "contract_start": (tender.get("contractPeriod") or {}).get("startDate") or "",
         "contract_end":   (tender.get("contractPeriod") or {}).get("endDate")   or "",
+        "contract_months": extract_contract_months(release),
+        "framework": framework,
         "description": description,
         "source": "Find a Tender",
         "source_url": source_url,
@@ -258,7 +312,7 @@ def _migrate_csv_if_needed() -> None:
     with open(CSV_PATH, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         fields = reader.fieldnames or []
-        required = {"batch_id", "date_modified", "contract_start", "contract_end"}
+        required = {"batch_id", "date_modified", "contract_start", "contract_end", "framework", "contract_months"}
         if required.issubset(set(fields)):
             return  # already fully migrated
         rows = list(reader)
@@ -272,6 +326,8 @@ def _migrate_csv_if_needed() -> None:
             row.setdefault("date_modified", "")
             row.setdefault("contract_start", "")
             row.setdefault("contract_end", "")
+            row.setdefault("contract_months", "")
+            row.setdefault("framework", "")
             writer.writerow(row)
     tmp.replace(CSV_PATH)
 
@@ -372,6 +428,49 @@ def load_findtender_opps() -> tuple[int, int, str]:
     return len(all_opps), new_saved, batch_id
 
 
+def backfill_contract_months() -> int:
+    """
+    For any FaT CSV row with an empty contract_months, re-fetch the OCDS release
+    from the API and compute the value. Rewrites the CSV if any rows were updated.
+    Returns the number of rows updated.
+    """
+    rows = load_csv()
+    missing = [r for r in rows if not (r.get("contract_months") or "").strip()
+               and r.get("source") == "Find a Tender"
+               and r.get("id")]
+    if not missing:
+        return 0
+
+    fat_url = "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages"
+    updated = 0
+    for row in missing:
+        nid = row["id"]
+        try:
+            resp = requests.get(f"{fat_url}/{nid}", verify=False, timeout=15)
+            if not resp.ok:
+                continue
+            data = resp.json()
+            releases = data.get("releases", [])
+            if not releases:
+                continue
+            months = extract_contract_months(releases[0])
+            if months:
+                row["contract_months"] = months
+                updated += 1
+        except Exception:
+            continue
+
+    if updated:
+        tmp = CSV_PATH.with_suffix(".tmp")
+        with open(tmp, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=CSV_FIELDS, extrasaction="ignore")
+            writer.writeheader()
+            writer.writerows(rows)
+        tmp.replace(CSV_PATH)
+
+    return updated
+
+
 # ---------------------------
 # FILTER (operates on CSV rows)
 # ---------------------------
@@ -386,6 +485,7 @@ def filter_opportunities(
     date_from: str | None = None,
     date_to: str | None = None,
     keyword: str | None = None,
+    framework_only: bool = False,
 ) -> list[dict]:
     """
     Filter a list of opportunity dicts (as returned by load_csv()).
@@ -458,6 +558,10 @@ def filter_opportunities(
             ]).lower()
             if needle not in haystack:
                 continue
+
+        # --- framework filter ---
+        if framework_only and not (opp.get("framework") or "").strip():
+            continue
 
         results.append(opp)
 

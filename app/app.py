@@ -21,6 +21,7 @@ from app.scraper.find_tender import (
     save_to_source_csv,
     _load_source_batches,
     _get_or_create_source_batch,
+    backfill_contract_months,
 )
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -67,6 +68,13 @@ def home(request: Request):
 # FIND A TENDER
 # -----------------------------------------------------------------------
 
+@app.post("/backfill/contract-months")
+def backfill_months():
+    """Re-fetch contract months for FaT rows where the field is empty."""
+    updated = backfill_contract_months()
+    return JSONResponse({"updated": updated})
+
+
 @app.post("/load")
 def load_opportunities():
     """Fetch today's + yesterday's FaT opportunities, append new records to CSV."""
@@ -101,6 +109,7 @@ def get_opportunities(
     date_from: Optional[str] = Query(None),
     date_to: Optional[str] = Query(None),
     keyword: Optional[str] = Query(None),
+    framework_only: Optional[bool] = Query(None),
 ):
     all_opps  = load_csv()
     cpv_list  = [p.strip() for p in cpv_prefixes.split(",") if p.strip()] if cpv_prefixes else None
@@ -115,6 +124,7 @@ def get_opportunities(
         date_from=date_from,
         date_to=date_to,
         keyword=keyword,
+        framework_only=bool(framework_only),
     )
     return JSONResponse(sorted(filtered, key=lambda o: o.get("published_date") or "", reverse=True))
 
