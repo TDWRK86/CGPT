@@ -20,7 +20,8 @@ TRIAGE_PATH  = DATA_DIR / "triage.json"
 CSV_FIELDS = [
     "id", "title", "buyer", "value", "cpvs", "stage",
     "published_date", "date_modified", "contract_start", "contract_end",
-    "contract_months", "framework", "description", "source", "source_url", "batch_id",
+    "contract_months", "framework", "awarded_supplier",
+    "description", "source", "source_url", "batch_id",
 ]
 
 # ---------------------------
@@ -218,6 +219,33 @@ def extract_contract_months(release: dict) -> str:
     return str(months) if months > 0 else ""
 
 
+def extract_awarded_suppliers(release: dict) -> str:
+    """
+    Return a comma-separated string of awarded supplier names from a release.
+    Pulls from release.awards[].suppliers[].name; falls back to parties with
+    role 'supplier' if no awards block is present.
+    """
+    seen: set[str] = set()
+    names: list[str] = []
+
+    for award in release.get("awards", []):
+        for sup in award.get("suppliers", []):
+            name = (sup.get("name") or "").strip()
+            if name and name not in seen:
+                seen.add(name)
+                names.append(name)
+
+    if not names:
+        for party in release.get("parties", []):
+            if "supplier" in party.get("roles", []):
+                name = (party.get("name") or "").strip()
+                if name and name not in seen:
+                    seen.add(name)
+                    names.append(name)
+
+    return ", ".join(names)
+
+
 def extract_all_cpvs(release):
     """Return every unique CPV code found anywhere in a release."""
     tender = release.get("tender", {})
@@ -288,6 +316,7 @@ def normalise_opportunity(release):
         "contract_end":   (tender.get("contractPeriod") or {}).get("endDate")   or "",
         "contract_months": extract_contract_months(release),
         "framework": framework,
+        "awarded_supplier": extract_awarded_suppliers(release),
         "description": description,
         "source": "Find a Tender",
         "source_url": source_url,
@@ -312,7 +341,7 @@ def _migrate_csv_if_needed() -> None:
     with open(CSV_PATH, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         fields = reader.fieldnames or []
-        required = {"batch_id", "date_modified", "contract_start", "contract_end", "framework", "contract_months"}
+        required = {"batch_id", "date_modified", "contract_start", "contract_end", "framework", "contract_months", "awarded_supplier"}
         if required.issubset(set(fields)):
             return  # already fully migrated
         rows = list(reader)
@@ -328,6 +357,7 @@ def _migrate_csv_if_needed() -> None:
             row.setdefault("contract_end", "")
             row.setdefault("contract_months", "")
             row.setdefault("framework", "")
+            row.setdefault("awarded_supplier", "")
             writer.writerow(row)
     tmp.replace(CSV_PATH)
 
@@ -426,6 +456,54 @@ def load_findtender_opps() -> tuple[int, int, str]:
 
     new_saved = save_to_csv(all_opps, batch_id)
     return len(all_opps), new_saved, batch_id
+
+
+def backfill_awarded_suppliers() -> int:
+    """
+    For any FaT CSV row with an empty awarded_supplier where the stage is an
+    award/contract notice, re-fetch the OCDS release and extract the supplier name.
+    Rewrites the CSV if any rows were updated. Returns the number of rows updated.
+    """
+    rows = load_csv()
+    award_stages = {"award", "awardUpdate", "contract", "contractUpdate"}
+    missing = [
+        r for r in rows
+        if not (r.get("awarded_supplier") or "").strip()
+        and r.get("source") == "Find a Tender"
+        and r.get("id")
+        and any(s.strip() in award_stages for s in (r.get("stage") or "").split(","))
+    ]
+    if not missing:
+        return 0
+
+    fat_url = "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages"
+    updated = 0
+    for row in missing:
+        nid = row["id"]
+        try:
+            resp = requests.get(f"{fat_url}/{nid}", verify=False, timeout=15)
+            if not resp.ok:
+                continue
+            data = resp.json()
+            releases = data.get("releases", [])
+            if not releases:
+                continue
+            supplier = extract_awarded_suppliers(releases[0])
+            if supplier:
+                row["awarded_supplier"] = supplier
+                updated += 1
+        except Exception:
+            continue
+
+    if updated:
+        tmp = CSV_PATH.with_suffix(".tmp")
+        with open(tmp, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=CSV_FIELDS, extrasaction="ignore")
+            writer.writeheader()
+            writer.writerows(rows)
+        tmp.replace(CSV_PATH)
+
+    return updated
 
 
 def backfill_contract_months() -> int:

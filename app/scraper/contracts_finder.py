@@ -2,7 +2,7 @@ import requests
 import urllib3
 from datetime import datetime, timedelta, timezone
 
-from app.scraper.find_tender import extract_all_cpvs, extract_contract_months
+from app.scraper.find_tender import extract_all_cpvs, extract_awarded_suppliers, extract_contract_months
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -55,10 +55,11 @@ def normalise_cf_opportunity(release: dict) -> dict:
         "date_modified":   tender.get("dateModified") or "",
         "contract_start":  (tender.get("contractPeriod") or {}).get("startDate") or "",
         "contract_end":    (tender.get("contractPeriod") or {}).get("endDate")   or "",
-        "contract_months": extract_contract_months(release),
-        "framework":       ", ".join(fw_parts),
-        "description":     description,
-        "source":          "Contracts Finder",
+        "contract_months":   extract_contract_months(release),
+        "framework":         ", ".join(fw_parts),
+        "awarded_supplier":  extract_awarded_suppliers(release),
+        "description":       description,
+        "source":            "Contracts Finder",
         "source_url":      source_url,
         "batch_id":        "",
     }

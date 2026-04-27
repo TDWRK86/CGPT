@@ -22,6 +22,7 @@ from app.scraper.find_tender import (
     _load_source_batches,
     _get_or_create_source_batch,
     backfill_contract_months,
+    backfill_awarded_suppliers,
 )
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -72,6 +73,13 @@ def home(request: Request):
 def backfill_months():
     """Re-fetch contract months for FaT rows where the field is empty."""
     updated = backfill_contract_months()
+    return JSONResponse({"updated": updated})
+
+
+@app.post("/backfill/awarded-suppliers")
+def backfill_suppliers():
+    """Re-fetch awarded supplier names for FaT award/contract rows where the field is empty."""
+    updated = backfill_awarded_suppliers()
     return JSONResponse({"updated": updated})
 
 

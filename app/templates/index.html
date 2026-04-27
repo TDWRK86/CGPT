@@ -138,6 +138,46 @@
         .clear-btn { width: 100%; padding: 5px; background: none; border: 1px solid #ccd3de; border-radius: 4px; font-size: 0.72rem; color: #555; cursor: pointer; margin-top: 2px; }
         .clear-btn:hover { background: #f0f3f7; }
 
+        /* ---- SAVED SEARCHES ---- */
+        .ss-section { border: 1px solid #dde3ec; border-radius: 5px; margin-bottom: 10px; overflow: hidden; }
+        .ss-header {
+            display: flex; align-items: center; gap: 5px;
+            padding: 5px 8px; background: #f0f4fa; cursor: pointer;
+            font-size: 0.72rem; font-weight: 600; color: #444; user-select: none;
+        }
+        .ss-header:hover { background: #e5ecf7; }
+        .ss-badge {
+            background: #1a3a5c; color: white; font-size: 0.65rem; font-weight: 700;
+            border-radius: 8px; padding: 1px 5px; min-width: 16px; text-align: center; display: none;
+        }
+        .ss-caret { margin-left: auto; font-size: 0.65rem; color: #888; }
+        .ss-body { padding: 6px 8px; display: none; }
+        .ss-empty { font-size: 0.7rem; color: #aaa; padding: 2px 0 4px; }
+        .ss-item { display: flex; align-items: center; gap: 4px; padding: 3px 0; border-bottom: 1px solid #f0f0f0; }
+        .ss-item:last-child { border-bottom: none; }
+        .ss-name { font-size: 0.72rem; color: #333; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .ss-apply-btn {
+            background: #1a3a5c; color: white; border: none; border-radius: 3px;
+            padding: 2px 7px; font-size: 0.68rem; cursor: pointer; flex-shrink: 0;
+        }
+        .ss-apply-btn:hover { background: #122a47; }
+        .ss-del-btn {
+            background: none; border: none; color: #ccc; cursor: pointer;
+            font-size: 0.9rem; padding: 0 2px; line-height: 1; flex-shrink: 0;
+        }
+        .ss-del-btn:hover { color: #e04444; }
+        .ss-save-row { display: flex; gap: 4px; margin-top: 6px; }
+        .ss-name-input {
+            flex: 1; padding: 3px 6px; border: 1px solid #ccd3de;
+            border-radius: 4px; font-size: 0.72rem; outline: none; min-width: 0;
+        }
+        .ss-name-input:focus { border-color: #1a3a5c; }
+        .ss-save-btn {
+            background: #f07232; color: white; border: none; border-radius: 4px;
+            padding: 3px 8px; font-size: 0.72rem; font-weight: 600; cursor: pointer; flex-shrink: 0;
+        }
+        .ss-save-btn:hover { background: #d9612a; }
+
         .content { flex: 1; overflow: auto; padding: 0.875rem 1rem; display: flex; flex-direction: column; min-width: 0; }
         .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-shrink: 0; }
         #result-count { font-size: 0.8rem; color: #666; }
@@ -146,6 +186,15 @@
 
         /* ---- TABLE ---- */
         #table-container { flex: 1; overflow-x: auto; min-width: 0; }
+        #awards-table-container { flex: 1; overflow-x: auto; min-width: 0; }
+        .preset-banner {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #f0f4fa; border: 1px solid #dde3ec; border-radius: 6px;
+            padding: 8px 14px; margin-bottom: 10px; flex-shrink: 0; gap: 12px; flex-wrap: wrap;
+        }
+        .preset-banner-info strong { font-size: 0.82rem; color: #1a3a5c; display: block; }
+        .preset-banner-info span { font-size: 0.72rem; color: #888; margin-top: 2px; display: block; }
+        #awards-result-count { font-size: 0.8rem; color: #666; }
         table { width: 100%; border-collapse: collapse; font-size: 0.77rem; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
         thead th { background: #1a3a5c; color: #fff; text-align: left; padding: 7px 8px; font-weight: 600; white-space: nowrap; position: relative; }
         .col-resize-handle {
@@ -168,6 +217,7 @@
         td.stage span { display: inline-block; background: #dde8f5; color: #1a3a5c; border-radius: 3px; padding: 1px 4px; font-size: 0.7rem; margin: 1px 2px 1px 0; }
         td.cpv { color: #777; font-size: 0.7rem; width: 110px; min-width: 90px; vertical-align: top; }
         .cpv-scroll { max-height: 68px; overflow-y: auto; line-height: 1.7; }
+        td.supplier-cell { font-size: 0.75rem; vertical-align: top; min-width: 110px; max-width: 180px; color: #333; }
         td.date-cell { font-size: 0.73rem; vertical-align: top; min-width: 110px; max-width: 140px; }
         .date-modified { color: #888; font-size: 0.71rem; margin-top: 2px; }
         .meta-lbl { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #aaa; margin-right: 3px; }
@@ -505,6 +555,7 @@
         Morning Triage
         <span class="tab-badge hidden" id="badge-triage"></span>
     </div>
+    <div class="tab" id="tab-awards" onclick="switchTab('awards')">Awarded IT</div>
 </div>
 
 <!-- ===== OPPORTUNITIES TAB ===== -->
@@ -513,6 +564,21 @@
 
         <!-- ── Find a Tender Filters ── -->
         <div id="filters-fat" class="source-filters">
+            <div class="ss-section">
+                <div class="ss-header" onclick="toggleSavedSearches('fat')">
+                    <span>Saved Searches</span>
+                    <span class="ss-badge" id="ss-count-fat"></span>
+                    <span class="ss-caret" id="ss-caret-fat">▸</span>
+                </div>
+                <div class="ss-body" id="ss-body-fat">
+                    <div id="ss-list-fat"></div>
+                    <div class="ss-save-row">
+                        <input type="text" id="ss-name-fat" class="ss-name-input" placeholder="Name this search…"
+                               onkeydown="if(event.key==='Enter')saveCurrentSearch('fat')">
+                        <button class="ss-save-btn" onclick="saveCurrentSearch('fat')">Save</button>
+                    </div>
+                </div>
+            </div>
             <h2>Filters</h2>
             <div class="filter-group">
                 <label>Keyword Search</label>
@@ -551,10 +617,27 @@
             <button class="clear-btn" onclick="clearFilters()">Clear all filters</button>
             <button class="clear-btn" id="backfill-btn" onclick="backfillContractMonths()" style="margin-top:6px;">Backfill contract lengths</button>
             <span id="backfill-status" style="font-size:0.68rem;color:#888;display:block;margin-top:4px;"></span>
+            <button class="clear-btn" id="backfill-suppliers-btn" onclick="backfillSuppliers()" style="margin-top:6px;">Backfill awarded suppliers</button>
+            <span id="backfill-suppliers-status" style="font-size:0.68rem;color:#888;display:block;margin-top:4px;"></span>
         </div>
 
         <!-- ── Contracts Finder Filters ── -->
         <div id="filters-cf" class="source-filters" style="display:none">
+            <div class="ss-section">
+                <div class="ss-header" onclick="toggleSavedSearches('cf')">
+                    <span>Saved Searches</span>
+                    <span class="ss-badge" id="ss-count-cf"></span>
+                    <span class="ss-caret" id="ss-caret-cf">▸</span>
+                </div>
+                <div class="ss-body" id="ss-body-cf">
+                    <div id="ss-list-cf"></div>
+                    <div class="ss-save-row">
+                        <input type="text" id="ss-name-cf" class="ss-name-input" placeholder="Name this search…"
+                               onkeydown="if(event.key==='Enter')saveCurrentSearch('cf')">
+                        <button class="ss-save-btn" onclick="saveCurrentSearch('cf')">Save</button>
+                    </div>
+                </div>
+            </div>
             <h2>Filters</h2>
             <div class="filter-group">
                 <label>Keyword Search</label>
@@ -605,6 +688,21 @@
 
         <!-- ── Public Contracts Scotland Filters ── -->
         <div id="filters-pcs" class="source-filters" style="display:none">
+            <div class="ss-section">
+                <div class="ss-header" onclick="toggleSavedSearches('pcs')">
+                    <span>Saved Searches</span>
+                    <span class="ss-badge" id="ss-count-pcs"></span>
+                    <span class="ss-caret" id="ss-caret-pcs">▸</span>
+                </div>
+                <div class="ss-body" id="ss-body-pcs">
+                    <div id="ss-list-pcs"></div>
+                    <div class="ss-save-row">
+                        <input type="text" id="ss-name-pcs" class="ss-name-input" placeholder="Name this search…"
+                               onkeydown="if(event.key==='Enter')saveCurrentSearch('pcs')">
+                        <button class="ss-save-btn" onclick="saveCurrentSearch('pcs')">Save</button>
+                    </div>
+                </div>
+            </div>
             <h2>Filters</h2>
             <div class="filter-group">
                 <label>Keyword Search</label>
@@ -724,6 +822,32 @@
     </div>
 </div>
 
+<!-- ===== AWARDED IT TAB ===== -->
+<div class="tab-panel" id="panel-awards">
+    <div class="content">
+        <div class="preset-banner">
+            <div class="preset-banner-info">
+                <strong>Awarded Contracts — IT</strong>
+                <span>CPV prefixes: 72, 30, 48 &nbsp;·&nbsp; Stages: award, awardUpdate, contract, contractUpdate &nbsp;·&nbsp; Find a Tender</span>
+            </div>
+            <button class="load-btn" onclick="fetchAndRenderAwards()" style="flex-shrink:0;">Refresh</button>
+        </div>
+        <div class="toolbar">
+            <span id="awards-result-count">—</span>
+            <select class="sort-select" id="awards-sort-select" onchange="renderAwardsTable(awardsData)">
+                <option value="date-desc">Newest first</option>
+                <option value="date-asc">Oldest first</option>
+                <option value="value-desc">Value: high to low</option>
+                <option value="value-asc">Value: low to high</option>
+                <option value="title-asc">Title: A → Z</option>
+            </select>
+        </div>
+        <div id="awards-table-container">
+            <div class="empty-state">Click <strong>Refresh</strong> to load awarded IT contracts.</div>
+        </div>
+    </div>
+</div>
+
 <!-- FULLSCREEN OVERLAY -->
 <div id="fullscreen-overlay" class="hidden">
     <div class="fs-header">
@@ -751,6 +875,7 @@
     let debounceTimer;
     let currentData       = [];
     let batchMeta         = { batches: [], active_batch_id: null, last_seen_batch_id: null };
+    let awardsData        = [];
     let triageSessions    = [];
     let collapsedSessions = new Set();
 
@@ -777,6 +902,7 @@
         document.getElementById("panel-" + name).classList.add("active");
         if (name === "review") renderReview();
         if (name === "triage") renderTriage();
+        if (name === "awards") fetchAndRenderAwards();
     }
 
     // =====================
@@ -875,6 +1001,23 @@
         status.textContent = "Fetching from API — may take a minute…";
         try {
             const resp = await fetch("/backfill/contract-months", { method: "POST" });
+            const data = await resp.json();
+            status.textContent = `✓ Updated ${data.updated} record(s)`;
+            if (data.updated > 0) await fetchAndRender();
+        } catch {
+            status.textContent = "⚠ Backfill failed";
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    async function backfillSuppliers() {
+        const btn    = document.getElementById("backfill-suppliers-btn");
+        const status = document.getElementById("backfill-suppliers-status");
+        btn.disabled = true;
+        status.textContent = "Fetching from API — may take a minute…";
+        try {
+            const resp = await fetch("/backfill/awarded-suppliers", { method: "POST" });
             const data = await resp.json();
             status.textContent = `✓ Updated ${data.updated} record(s)`;
             if (data.updated > 0) await fetchAndRender();
@@ -1048,6 +1191,101 @@
     }
 
     // =====================
+    // AWARDED IT PRESET
+    // =====================
+    async function fetchAndRenderAwards() {
+        const params = new URLSearchParams();
+        params.set("cpv_prefixes", "72,30,48");
+        params.set("stages", "award,awardUpdate,contract,contractUpdate");
+
+        document.getElementById("awards-table-container").innerHTML =
+            `<div class="empty-state"><span class="spinner"></span>Fetching…</div>`;
+
+        try {
+            const resp = await fetch("/opportunities?" + params.toString());
+            const data = await resp.json();
+            awardsData = data;
+            renderAwardsTable(data);
+        } catch {
+            document.getElementById("awards-table-container").innerHTML =
+                `<div class="empty-state">⚠ Error fetching data.</div>`;
+        }
+    }
+
+    function renderAwardsTable(data) {
+        const order = document.getElementById("awards-sort-select").value;
+        const sorted = [...data].sort((a, b) => {
+            switch (order) {
+                case "date-asc":   return (a.published_date || "").localeCompare(b.published_date || "");
+                case "date-desc":  return (b.published_date || "").localeCompare(a.published_date || "");
+                case "value-desc": return (parseFloat(b.value) || 0) - (parseFloat(a.value) || 0);
+                case "value-asc":  return (parseFloat(a.value) || 0) - (parseFloat(b.value) || 0);
+                case "title-asc":  return (a.title || "").localeCompare(b.title || "");
+                default:           return 0;
+            }
+        });
+
+        document.getElementById("awards-result-count").textContent =
+            `${sorted.length} award${sorted.length === 1 ? "" : "s"}`;
+
+        if (!sorted.length) {
+            document.getElementById("awards-table-container").innerHTML =
+                `<div class="empty-state">No awarded contracts found for CPV prefixes 72, 30, 48.</div>`;
+            return;
+        }
+
+        const fmt = v => { const n = parseFloat(v); return isNaN(n) ? "—" : "£" + n.toLocaleString("en-GB"); };
+
+        const rows = sorted.map(o => {
+            const id = String(o.id);
+            const stages = (o.stage || "").split(",").filter(Boolean)
+                .map(s => `<span>${esc(s.trim())}</span>`).join("");
+            return `
+            <tr>
+                <td>${o.source_url
+                    ? `<a href="${esc(o.source_url)}" target="_blank" rel="noopener">${esc(o.title || "—")}</a>`
+                    : esc(o.title || "—")}</td>
+                <td>${esc(o.buyer || "—")}</td>
+                <td class="value">${fmt(o.value)}</td>
+                <td class="stage">${stages}</td>
+                <td class="fw-cell">${buildFwCell(o.framework)}</td>
+                <td class="cpv">${buildCpvCell(o.cpvs)}</td>
+                <td class="supplier-cell">${esc(o.awarded_supplier || "—")}</td>
+                <td class="desc" style="min-width:120px;max-width:220px;">
+                    <div class="desc-clamp" id="adc-${id}">${esc(o.description || "")}</div>
+                    ${o.description ? `<button class="read-more-btn" onclick="toggleDesc('adc-${id}',this)">Read more</button>` : ""}
+                </td>
+                <td class="date-cell">
+                    <div><span class="meta-lbl">Published</span>${fmtDate(o.published_date)}</div>
+                    ${o.date_modified && o.date_modified.substring(0,16) !== (o.published_date||"").substring(0,16)
+                        ? `<div class="date-modified"><span class="meta-lbl">Modified</span>${fmtDate(o.date_modified)}</div>`
+                        : ""}
+                    ${fmtContract(o.contract_start, o.contract_end)
+                        ? `<div style="margin-top:2px;"><span class="meta-lbl">Contract</span>${fmtContract(o.contract_start, o.contract_end)}</div>`
+                        : ""}
+                </td>
+                <td class="term-cell">${contractMonths(o.contract_months, o.contract_start, o.contract_end)}</td>
+            </tr>`;
+        }).join("");
+
+        document.getElementById("awards-table-container").innerHTML = `
+        <table>
+            <thead><tr>
+                <th>Title</th><th>Buyer</th><th>Value</th>
+                <th>Stage</th><th>FW</th><th>CPVs</th><th>Awarded Supplier</th><th>Description</th><th>Dates</th><th>Term</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+        </table>`;
+
+        document.querySelectorAll("#awards-table-container .desc-clamp").forEach(el => {
+            if (el.scrollHeight <= el.clientHeight) {
+                const btn = el.nextElementSibling;
+                if (btn && btn.classList.contains("read-more-btn")) btn.style.display = "none";
+            }
+        });
+    }
+
+    // =====================
     // SORT
     // =====================
     function sortData(data) {
@@ -1126,6 +1364,7 @@
                 <td class="stage">${stages}</td>
                 <td class="fw-cell">${buildFwCell(o.framework)}</td>
                 <td class="cpv">${buildCpvCell(o.cpvs)}</td>
+                <td class="supplier-cell">${esc(o.awarded_supplier || "—")}</td>
                 <td class="desc" style="min-width:120px;max-width:220px;">
                     <div class="desc-clamp" id="dc-${id}">${esc(o.description || "")}</div>
                     ${o.description ? `<button class="read-more-btn" onclick="toggleDesc('dc-${id}',this)">Read more</button>` : ""}
@@ -1159,7 +1398,7 @@
                 : "";
             dividerHtml = `
             <tr class="divider-banner">
-                <td colspan="10"><div class="divider-inner"><span>${leftText}</span>${btn}</div></td>
+                <td colspan="11"><div class="divider-inner"><span>${leftText}</span>${btn}</div></td>
             </tr>`;
         }
 
@@ -1167,7 +1406,7 @@
         <table>
             <thead><tr>
                 <th></th><th>Title</th><th>Buyer</th><th>Value</th>
-                <th>Stage</th><th>FW</th><th>CPVs</th><th>Description</th><th>Dates</th><th>Term</th>
+                <th>Stage</th><th>FW</th><th>CPVs</th><th>Awarded Supplier</th><th>Description</th><th>Dates</th><th>Term</th>
             </tr></thead>
             <tbody>
                 ${newRows.map(o => renderRow(o, false)).join("")}
@@ -1715,6 +1954,8 @@
                 `<label><input type="checkbox" value="${s}" onchange="debouncedFetch()"> ${s}</label>`
             ).join("");
         stagesPopulated = true;
+        // Apply any stages that were requested before checkboxes existed
+        if (_pendingFatStages) { _applyFatStages(_pendingFatStages); _pendingFatStages = null; }
     }
 
     function clearFilters() {
@@ -1855,10 +2096,181 @@
     }
 
     // =====================
+    // SAVED SEARCHES
+    // =====================
+    const SS_KEY = "tenderSavedSearches";
+    let _pendingFatStages = null;
+
+    function _ssLoad() {
+        try { return JSON.parse(localStorage.getItem(SS_KEY) || "{}"); } catch { return {}; }
+    }
+    function _ssSave(all) { localStorage.setItem(SS_KEY, JSON.stringify(all)); }
+    function ssGet(src)   { return (_ssLoad()[src] || []); }
+
+    function toggleSavedSearches(src) {
+        const body  = document.getElementById("ss-body-" + src);
+        const caret = document.getElementById("ss-caret-" + src);
+        const open  = body.style.display !== "block";
+        body.style.display = open ? "block" : "none";
+        caret.textContent  = open ? "▾" : "▸";
+    }
+
+    function captureParams(src) {
+        if (src === "fat") {
+            const stages = [...document.querySelectorAll("#stage-checkboxes input:checked")].map(c => c.value);
+            return {
+                keyword: document.getElementById("f-keyword").value,
+                cpv:     document.getElementById("f-cpv").value,
+                min:     document.getElementById("f-min").value,
+                max:     document.getElementById("f-max").value,
+                stages,
+                buyer:    document.getElementById("f-buyer").value,
+                dateFrom: document.getElementById("f-date-from").value,
+                dateTo:   document.getElementById("f-date-to").value,
+                frameworkOnly: document.getElementById("f-framework-only")?.checked || false,
+            };
+        }
+        if (src === "cf") {
+            const stages = ["planning","tender","award","contract"]
+                .filter(s => document.getElementById("cf-stage-" + s)?.checked);
+            return {
+                keyword: document.getElementById("cf-keyword").value,
+                cpv:     document.getElementById("cf-cpv").value,
+                min:     document.getElementById("cf-min").value,
+                max:     document.getElementById("cf-max").value,
+                stages,
+                buyer:    document.getElementById("cf-buyer").value,
+                dateFrom: document.getElementById("cf-date-from").value,
+                dateTo:   document.getElementById("cf-date-to").value,
+                daysBack: document.getElementById("cf-days-back").value,
+            };
+        }
+        if (src === "pcs") {
+            const stages = [1,4,5]
+                .filter(t => document.getElementById("pcs-type-" + t)?.checked)
+                .map(String);
+            return {
+                keyword: document.getElementById("pcs-keyword").value,
+                cpv:     document.getElementById("pcs-cpv").value,
+                min:     document.getElementById("pcs-min").value,
+                max:     document.getElementById("pcs-max").value,
+                stages,
+                buyer:    document.getElementById("pcs-buyer").value,
+                dateFrom: document.getElementById("pcs-date-from").value,
+                dateTo:   document.getElementById("pcs-date-to").value,
+                monthsBack: document.getElementById("pcs-months-back").value,
+            };
+        }
+        return {};
+    }
+
+    function _applyFatStages(stages) {
+        document.querySelectorAll("#stage-checkboxes input").forEach(cb => {
+            cb.checked = stages.includes(cb.value);
+        });
+    }
+
+    function applyParams(src, params) {
+        if (src === "fat") {
+            document.getElementById("f-keyword").value   = params.keyword  || "";
+            document.getElementById("f-cpv").value       = params.cpv      || "";
+            document.getElementById("f-min").value       = params.min      || "";
+            document.getElementById("f-max").value       = params.max      || "";
+            document.getElementById("f-buyer").value     = params.buyer    || "";
+            document.getElementById("f-date-from").value = params.dateFrom || "";
+            document.getElementById("f-date-to").value   = params.dateTo   || "";
+            const fwCb = document.getElementById("f-framework-only");
+            if (fwCb) fwCb.checked = !!params.frameworkOnly;
+            _pendingFatStages = params.stages || [];
+            _applyFatStages(_pendingFatStages);
+        }
+        if (src === "cf") {
+            document.getElementById("cf-keyword").value   = params.keyword  || "";
+            document.getElementById("cf-cpv").value       = params.cpv      || "";
+            document.getElementById("cf-min").value       = params.min      || "";
+            document.getElementById("cf-max").value       = params.max      || "";
+            document.getElementById("cf-buyer").value     = params.buyer    || "";
+            document.getElementById("cf-date-from").value = params.dateFrom || "";
+            document.getElementById("cf-date-to").value   = params.dateTo   || "";
+            if (params.daysBack) document.getElementById("cf-days-back").value = params.daysBack;
+            ["planning","tender","award","contract"].forEach(s => {
+                const el = document.getElementById("cf-stage-" + s);
+                if (el) el.checked = (params.stages || []).includes(s);
+            });
+        }
+        if (src === "pcs") {
+            document.getElementById("pcs-keyword").value   = params.keyword   || "";
+            document.getElementById("pcs-cpv").value       = params.cpv       || "";
+            document.getElementById("pcs-min").value       = params.min       || "";
+            document.getElementById("pcs-max").value       = params.max       || "";
+            document.getElementById("pcs-buyer").value     = params.buyer     || "";
+            document.getElementById("pcs-date-from").value = params.dateFrom  || "";
+            document.getElementById("pcs-date-to").value   = params.dateTo    || "";
+            if (params.monthsBack) document.getElementById("pcs-months-back").value = params.monthsBack;
+            [1,4,5].forEach(t => {
+                const el = document.getElementById("pcs-type-" + t);
+                if (el) el.checked = (params.stages || []).includes(String(t));
+            });
+        }
+    }
+
+    function saveCurrentSearch(src) {
+        const input = document.getElementById("ss-name-" + src);
+        const name  = (input.value || "").trim();
+        if (!name) { input.focus(); return; }
+        const all = _ssLoad();
+        if (!all[src]) all[src] = [];
+        all[src].push({ id: String(Date.now()), name, params: captureParams(src) });
+        _ssSave(all);
+        input.value = "";
+        renderSavedSearches(src);
+        // Auto-open the panel so the user sees the new entry
+        const body = document.getElementById("ss-body-" + src);
+        if (body && body.style.display !== "block") toggleSavedSearches(src);
+    }
+
+    function applySavedSearch(src, id) {
+        const search = ssGet(src).find(s => s.id === id);
+        if (!search) return;
+        if (activeSource !== src) switchSource(src);
+        applyParams(src, search.params);
+        fetchAndRender();
+    }
+
+    function deleteSavedSearch(src, id) {
+        const all = _ssLoad();
+        if (all[src]) all[src] = all[src].filter(s => s.id !== id);
+        _ssSave(all);
+        renderSavedSearches(src);
+    }
+
+    function renderSavedSearches(src) {
+        const list    = document.getElementById("ss-list-" + src);
+        const countEl = document.getElementById("ss-count-" + src);
+        if (!list) return;
+        const searches = ssGet(src);
+
+        countEl.textContent  = searches.length || "";
+        countEl.style.display = searches.length ? "" : "none";
+
+        if (!searches.length) {
+            list.innerHTML = `<div class="ss-empty">No saved searches yet.</div>`;
+            return;
+        }
+        list.innerHTML = searches.map(s => `
+            <div class="ss-item">
+                <span class="ss-name" title="${esc(s.name)}">${esc(s.name)}</span>
+                <button class="ss-apply-btn" onclick="applySavedSearch('${src}','${s.id}')">Apply</button>
+                <button class="ss-del-btn"   onclick="deleteSavedSearch('${src}','${s.id}')" title="Delete">×</button>
+            </div>`).join("");
+    }
+
+    // =====================
     // INIT
     // =====================
     fetchAndRender();
     loadTriageSessions();
+    ["fat","cf","pcs"].forEach(s => renderSavedSearches(s));
 </script>
 </body>
 </html>

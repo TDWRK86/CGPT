@@ -124,6 +124,125 @@
           "contract_end": ""
         }
       ]
+    },
+    {
+      "session_id": "triage_20260417_110814",
+      "label": "17 Apr 2026, 11:08",
+      "created_at": "2026-04-17T11:08:14.525232+01:00",
+      "opportunities": [
+        {
+          "id": "035006-2026",
+          "title": "Interim Management",
+          "buyer": "Barnsley Metropolitan Borough Council",
+          "value": null,
+          "cpvs": "",
+          "stage": "award, contract",
+          "published_date": "2026-04-17",
+          "description": "Provision of Interim Management for the Head of Highways Position",
+          "source_url": "https://www.find-tender.service.gov.uk/Notice/035006-2026",
+          "score": 0,
+          "notes": "",
+          "contract_start": "",
+          "contract_end": ""
+        },
+        {
+          "id": "035005-2026",
+          "title": "715838592 - Internal Communications System (ICS) - Technical Refresh (TS) - RFI",
+          "buyer": "Submarine Delivery Agency",
+          "value": 100000000.0,
+          "cpvs": "32412000",
+          "stage": "planning",
+          "published_date": "2026-04-17",
+          "description": "This in-service support is currently achieved via a sole source contract with the Original Equipment Manufacturer (OEM) including a contractual arrangement for the management of the Shore Reference Sets (SRS) associated with the ICS.\nICS provides a digital and analogue voice message exchange architecture that supports voice communications over digital and wireless networks and analogue circuits. The system also includes a telephone exchange, secondary, emergency damage control (DC) communication systems, submarine broadcast and general alarm functions. A-Class ICS employs a wholly, complex, 3-node communication architecture that employs digital switch and network technologies within a multi-layer software model. It supports essential communications between the submarine crew for operational and safety critical functions on-board.  The existing system in place is based on Integrated Services Digital Network (ISDN) and will need to move to the modern Voice Over Internet Protocol (VOIP) technology to allow long term support.\nICS is a complex system with many interfaces and nodes to allow personnel the opportunity to communicate throughout the platform.  This complexity is not always understood by Ship Staff so it is essential to have engineering backup available via Suitably Qualified and Experienced Personnel (SQEP) ICS engineers provisioned for via a support contract.  Astute ICS is a Priority 1 Master Equipment (ME) and is vital to delivering platform capability.  The software will need to be a SIL2 (Safety Integrity Level) system and integral to the whole boat safety case.",
+          "source_url": "https://www.find-tender.service.gov.uk/Notice/035005-2026",
+          "score": 0,
+          "notes": "",
+          "contract_start": "",
+          "contract_end": ""
+        },
+        {
+          "id": "035004-2026",
+          "title": "Taxi Vehicles",
+          "buyer": "London Borough of Merton",
+          "value": null,
+          "cpvs": "60170000",
+          "stage": "award, contract",
+          "published_date": "2026-04-17",
+          "description": "Taxi Vehicles",
+          "source_url": "https://www.find-tender.service.gov.uk/Notice/035004-2026",
+          "score": 0,
+          "notes": "",
+          "contract_start": "",
+          "contract_end": ""
+        },
+        {
+          "id": "034997-2026",
+          "title": "TD2357 - Council House Refurbishment of two existing passenger lifts (2 & 3)",
+          "buyer": "Derby City Council",
+          "value": 260000.0,
+          "cpvs": "42416100, 45313100, 50750000",
+          "stage": "tender",
+          "published_date": "2026-04-17",
+          "description": "Derby City Council (the Council) is undertaking this procurement to establish a contract for the refurbishment of two existing passenger lifts (2 & 3) at the Council House, Derby, DE1 2FS.\nThe procurement process adopted by the Council is based on the 'Open' tendering procedure as detailed in the Procurement Act 2023 (the \"Act\") and the Procurement Regulations 2024 (the \"Regulations\".)\nThe contract period is 85 weeks; the contract is estimated to commence on 5th October 2026 and expire on 23rd May 2028.\nPlease note suppliers wishing to express interest and obtain the documentation must do so by 12:00 on Thursday 21st May 2026. It is recommended that you express interest and obtain the documentation well before this time to allow sufficient time to prepare and submit a bid.\nThe deadline to submit clarification questions is 12:00 on Friday 1st May 2026.\nThe deadline for returns is 12:00 on Friday 22nd May 2026.\nDocuments are available at www.eastmidstenders.org\nPlease search for TD2357 or DN812557.\nPlease note: we will only accept expressions of interest through the e-tendering system.",
+          "source_url": "https://www.find-tender.service.gov.uk/Notice/034997-2026",
+          "score": 0,
+          "notes": "",
+          "contract_start": "",
+          "contract_end": ""
+        }
+      ]
+    },
+    {
+      "session_id": "triage_20260427_094618",
+      "label": "27 Apr 2026, 09:46",
+      "created_at": "2026-04-27T09:46:18.571110+01:00",
+      "opportunities": [
+        {
+          "id": "rls-1-APR553835",
+          "title": "Supply and Installation of UPVC Windows & Doors",
+          "buyer": "East Ayrshire Council",
+          "value": null,
+          "cpvs": "44221000, 44221220, 45421100",
+          "stage": "planning",
+          "published_date": "2026-04-14",
+          "description": "Supply and installation of windows and doors, including fire doors within council owned domestic properties.",
+          "source_url": "https://www.publiccontractsscotland.gov.uk",
+          "score": 0,
+          "notes": "",
+          "contract_start": "",
+          "contract_end": ""
+        },
+        {
+          "id": "rls-2-APR553817",
+          "title": "PIN - Easter Langlee Solar PV Feasibility Study",
+          "buyer": "Scottish Borders Council",
+          "value": null,
+          "cpvs": "71311300, 71311000, 71313000, 71314300, 71351200",
+          "stage": "planning",
+          "published_date": "2026-04-14",
+          "description": "Scottish Borders Council are seeking to engage with the market in relation to a proposed feasibility study for installation of solar PV at a former landfill.",
+          "source_url": "https://www.publiccontractsscotland.gov.uk",
+          "score": 0,
+          "notes": "",
+          "contract_start": "",
+          "contract_end": ""
+        },
+        {
+          "id": "rls-3-APR553754",
+          "title": "New Town Quarter, Edinburgh",
+          "buyer": "The Wheatley Housing Group Limited",
+          "value": 30000000.0,
+          "cpvs": "45000000, 45211360",
+          "stage": "planning",
+          "published_date": "2026-04-13",
+          "description": "The New Town Quarter development, located on Dundas Street, on the northern edge of Edinburgh\u00e2\u0080\u0099s New Town World Heritage Site. This brief is to deliver the affordable housing component (consisting of 108 Mid-Market Rent (MMR) homes delivered across a single block) of the wider mixed-use redevelopment of the former Royal Bank of Scotland headquarters, representing one of the city\u00e2\u0080\u0099s most significant brownfield regeneration opportunities.",
+          "source_url": "https://www.publiccontractsscotland.gov.uk",
+          "score": 0,
+          "notes": "",
+          "contract_start": "",
+          "contract_end": ""
+        }
+      ]
     }
   ]
 }
