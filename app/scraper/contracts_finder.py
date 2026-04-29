@@ -91,7 +91,7 @@ def fetch_contracts_finder(
     releases = []
     first    = True
     while next_url:
-        resp = requests.get(next_url, verify=False)
+        resp = requests.get(next_url, verify=False, timeout=30)
         resp.raise_for_status()
         data     = resp.json()
         releases.extend(data.get("releases", []))

@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash('c:/Users/tdook/Documents/Visual studio/Find Tender Scraping API/v2/.venv/Scripts/python.exe' -c ' *)"
+      "Bash('c:/Users/tdook/Documents/Visual studio/Find Tender Scraping API/v2/.venv/Scripts/python.exe' -c ' *)",
+      "Bash(python -c ' *)",
+      "Bash(sqlite3 app/scraper/data/procurement.db \".schema\")",
+      "Bash(python3)",
+      "Bash(python3 -c \"import sqlite3; conn = sqlite3.connect\\('app/scraper/data/procurement.db'\\); cursor = conn.cursor\\(\\); cursor.execute\\(\\\\\"SELECT name FROM sqlite_master WHERE type='table';\\\\\"\\); print\\([row for row in cursor.fetchall\\(\\)]\\)\")"
     ]
   }
 }

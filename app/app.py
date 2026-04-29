@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Optional
 from pydantic import BaseModel
 
+from app.db import init_db, load_triage, save_triage_session, delete_triage_session, update_triage_session_opportunities
 from app.scraper.contracts_finder import fetch_contracts_finder
 from app.scraper.pcs import fetch_pcs
 from app.scraper.find_tender import (
@@ -13,10 +14,6 @@ from app.scraper.find_tender import (
     load_csv,
     filter_opportunities,
     _load_batches,
-    load_triage,
-    save_triage_session,
-    delete_triage_session,
-    update_triage_session_opportunities,
     load_source_csv,
     save_to_source_csv,
     _load_source_batches,
@@ -28,6 +25,11 @@ from app.scraper.find_tender import (
 BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI()
+
+
+@app.on_event("startup")
+def startup():
+    init_db()
 
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
@@ -84,15 +86,16 @@ def backfill_suppliers():
 
 
 @app.post("/load")
-def load_opportunities():
-    """Fetch today's + yesterday's FaT opportunities, append new records to CSV."""
-    total_fetched, new_saved, batch_id = load_findtender_opps()
+def load_opportunities(days_back: int = Query(default=2, ge=1, le=30)):
+    """Fetch the last days_back days of FaT opportunities. Default 2 (today + yesterday)."""
+    total_fetched, new_saved, batch_id = load_findtender_opps(days_back=days_back)
     state = _load_batches()
     return JSONResponse({
         "total_fetched": total_fetched,
         "new_saved": new_saved,
         "batch_id": batch_id,
         "last_seen_batch_id": state.get("last_seen_batch_id"),
+        "days_back": days_back,
     })
 
 

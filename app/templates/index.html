@@ -384,6 +384,140 @@
         }
         .delete-session-btn:hover { background: #fdf0f0; }
 
+        /* ---- DASHBOARD PANEL ---- */
+        #panel-dashboard { flex-direction: column; padding: clamp(14px,1.5rem,24px); overflow-y: auto; }
+        .dash-day-nav {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 14px;
+        }
+        .dash-nav-btn {
+            background: #1a3a5c; color: white; border: none;
+            border-radius: 5px; width: 32px; height: 32px; font-size: 1rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; transition: background .15s;
+        }
+        .dash-nav-btn:hover { background: #f07232; }
+        .dash-nav-btn:disabled { background: #bbb; cursor: default; }
+        #dash-day-label { font-size: 1.05rem; font-weight: 700; color: #1a3a5c; }
+        #dash-day-sub { font-size: 0.75rem; color: #888; }
+        #dash-date-picker { border: 1px solid #ccd3dc; border-radius: 5px; padding: 4px 8px; font-size: 0.8rem; color: #333; }
+        .dash-config-btn {
+            background: none; border: 1px solid #ccd3dc; color: #555;
+            border-radius: 5px; padding: 5px 14px; font-size: 0.8rem;
+            cursor: pointer; margin-bottom: 16px; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .dash-config-btn:hover { border-color: #1a3a5c; color: #1a3a5c; }
+        .dash-account-section {
+            border: 1px solid #dde3ec; border-radius: 8px;
+            margin-bottom: 16px; overflow: hidden;
+            border-left-width: 4px;
+        }
+        .dash-account-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px; background: #f4f6f9;
+            border-bottom: 1px solid #dde3ec;
+            cursor: pointer; user-select: none;
+        }
+        .dash-account-header:hover { background: #eaeef4; }
+        .dash-account-section.collapsed .dash-account-header { border-bottom: none; }
+        .dash-account-section.collapsed .dash-account-body { display: none; }
+        .dash-account-name { font-size: 0.9rem; font-weight: 700; color: #1a3a5c; }
+        .dash-account-count { font-size: 0.75rem; color: #999; margin-left: auto; }
+        .dash-collapse-btn {
+            background: none; border: none; color: #888; cursor: pointer;
+            font-size: 0.85rem; padding: 0 4px; flex-shrink: 0;
+        }
+        .dash-account-body { padding: 14px; }
+        .dash-ai-placeholder {
+            display: flex; align-items: center; gap: 10px;
+            border: 1px dashed #ccd3dc; border-radius: 6px;
+            padding: 8px 14px; margin-bottom: 12px;
+            background: #fafbfc;
+        }
+        .dash-ai-label { font-size: 0.75rem; font-weight: 600; color: #888; }
+        .dash-ai-stub { font-size: 0.75rem; color: #bbb; font-style: italic; }
+        .dash-card {
+            background: #fff; border: 1px solid #dde3ec; border-radius: 8px;
+            padding: 12px 16px; margin-bottom: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.05);
+        }
+        .dash-card-title { font-weight: 600; font-size: 0.88rem; color: #1a3a5c; margin-bottom: 4px; }
+        .dash-card-title a { color: inherit; text-decoration: none; }
+        .dash-card-title a:hover { text-decoration: underline; }
+        .dash-card-meta { font-size: 0.76rem; color: #666; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
+        .dash-card-desc { font-size: 0.77rem; color: #555; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; cursor: pointer; }
+        .dash-card-desc.expanded { -webkit-line-clamp: unset; line-clamp: unset; }
+        .dash-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; gap: 8px; }
+        .dash-ai-card { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: #bbb; font-style: italic; }
+        .dash-ai-card-label { font-weight: 600; color: #aaa; font-style: normal; }
+        .dash-view-btn {
+            background: #eef2f7; border: 1px solid #ccd3dc; color: #1a3a5c;
+            border-radius: 4px; padding: 3px 10px; font-size: 0.75rem;
+            cursor: pointer; flex-shrink: 0; white-space: nowrap;
+        }
+        .dash-view-btn:hover { background: #dde3ec; }
+        .dash-tag { background: #eef2f7; color: #444; border-radius: 3px; padding: 1px 7px; font-size: 0.7rem; }
+        .dash-src-badge { border-radius: 3px; padding: 1px 7px; font-size: 0.68rem; font-weight: 600; }
+        .dash-src-fat { background: #e8f0fe; color: #1a56b0; }
+        .dash-src-cf  { background: #fef3e2; color: #92400e; }
+        .dash-src-pcs { background: #ecfdf5; color: #065f46; }
+        /* Config modal */
+        #dash-config-modal {
+            position: fixed; inset: 0; z-index: 900;
+            background: rgba(0,0,0,.45);
+            display: flex; align-items: flex-start; justify-content: center;
+            padding-top: 60px;
+        }
+        #dash-config-modal.hidden { display: none; }
+        .dash-modal-box {
+            background: #fff; border-radius: 10px; width: 560px; max-width: 96vw;
+            max-height: 80vh; overflow-y: auto;
+            padding: 28px; box-shadow: 0 8px 40px rgba(0,0,0,.22);
+        }
+        .dash-modal-title { font-size: 1.05rem; font-weight: 700; color: #1a3a5c; margin-bottom: 18px; }
+        .dash-profile-row {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 0; border-bottom: 1px solid #f0f3f8;
+        }
+        .dash-profile-color-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+        .dash-profile-row-name { font-size: 0.88rem; font-weight: 600; flex: 1; }
+        .dash-profile-row-sub { font-size: 0.72rem; color: #888; }
+        .dash-edit-btn, .dash-del-btn {
+            border: none; border-radius: 4px; padding: 3px 10px;
+            font-size: 0.74rem; cursor: pointer;
+        }
+        .dash-edit-btn { background: #eef2f7; color: #1a3a5c; }
+        .dash-edit-btn:hover { background: #dde3ec; }
+        .dash-del-btn { background: #fdf0f0; color: #c0464c; }
+        .dash-del-btn:hover { background: #fce4e4; }
+        .dash-form { margin-top: 18px; border-top: 1px solid #eee; padding-top: 16px; }
+        .dash-form-title { font-size: 0.88rem; font-weight: 700; color: #1a3a5c; margin-bottom: 12px; }
+        .dash-form label { display: block; font-size: 0.78rem; font-weight: 600; color: #555; margin: 10px 0 3px; }
+        .dash-form input[type=text], .dash-form input[type=number] {
+            width: 100%; border: 1px solid #ccd3dc; border-radius: 5px;
+            padding: 6px 9px; font-size: 0.82rem;
+        }
+        .dash-form input:focus { outline: 2px solid #1a3a5c; border-color: transparent; }
+        .dash-swatch-row { display: flex; gap: 8px; margin-top: 4px; }
+        .dash-swatch {
+            width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
+            border: 3px solid transparent; transition: border-color .12s;
+        }
+        .dash-swatch.selected { border-color: #1a3a5c; }
+        .dash-src-checks { display: flex; gap: 14px; margin-top: 4px; }
+        .dash-src-checks label { font-size: 0.8rem; font-weight: 400; display: flex; align-items: center; gap: 5px; margin: 0; }
+        .dash-form-actions { display: flex; gap: 8px; margin-top: 18px; }
+        .dash-save-btn {
+            background: #1a3a5c; color: white; border: none; border-radius: 5px;
+            padding: 7px 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+        }
+        .dash-save-btn:hover { background: #142d48; }
+        .dash-cancel-btn {
+            background: none; border: 1px solid #ccd3dc; color: #555;
+            border-radius: 5px; padding: 7px 16px; font-size: 0.85rem; cursor: pointer;
+        }
+        .dash-empty { font-size: 0.82rem; color: #aaa; font-style: italic; padding: 8px 0; }
+
         /* ---- FULLSCREEN OVERLAY ---- */
         #fullscreen-overlay {
             position: fixed; inset: 0; z-index: 1000;
@@ -538,9 +672,19 @@
         </div>
         <h1>Tender Intake — Proof of Concept</h1>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;">
-        <button class="load-btn" id="loadBtn" onclick="loadOpportunities()">Load today's opportunities</button>
-        <span id="load-status"></span>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+            <button class="load-btn" id="loadBtn" onclick="loadOpportunities()">Load today's opportunities</button>
+            <button class="load-btn" id="catchupBtn" onclick="loadOpportunities(14)"
+                    title="Load the last 14 days to catch up on missed data"
+                    style="background:#2d6a9f;font-size:0.78rem;padding:6px 12px;">↻ Catch up (14 days)</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;min-height:18px;">
+            <span id="load-status"></span>
+            <div id="load-bar-wrap" style="display:none;width:160px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px;overflow:hidden;">
+                <div id="load-bar" style="height:100%;background:#f07232;border-radius:2px;width:0%;transition:width 0.6s;"></div>
+            </div>
+        </div>
     </div>
 </header>
 
@@ -556,6 +700,7 @@
         <span class="tab-badge hidden" id="badge-triage"></span>
     </div>
     <div class="tab" id="tab-awards" onclick="switchTab('awards')">Awarded IT</div>
+    <div class="tab" id="tab-dashboard" onclick="switchTab('dashboard')">Dashboard</div>
 </div>
 
 <!-- ===== OPPORTUNITIES TAB ===== -->
@@ -848,6 +993,62 @@
     </div>
 </div>
 
+<!-- ===== DASHBOARD TAB ===== -->
+<div class="tab-panel" id="panel-dashboard">
+    <div class="dash-day-nav">
+        <button class="dash-nav-btn" id="dash-prev" onclick="dashNavDay(1)">&#8249;</button>
+        <span id="dash-day-label">—</span>
+        <button class="dash-nav-btn" id="dash-next" onclick="dashNavDay(-1)">&#8250;</button>
+        <input type="date" id="dash-date-picker" onchange="dashJumpToDate(this.value)"
+               title="Jump to a specific date" style="margin-left:8px;">
+        <span id="dash-day-sub"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+        <button class="dash-config-btn" style="margin-bottom:0;" onclick="openDashConfig()">⚙ Manage Accounts</button>
+        <span id="dash-last-loaded" style="font-size:0.74rem;color:#aaa;"></span>
+    </div>
+    <div id="dash-accounts-container"></div>
+</div>
+
+<!-- DASHBOARD CONFIG MODAL -->
+<div id="dash-config-modal" class="hidden">
+    <div class="dash-modal-box">
+        <div class="dash-modal-title">Account / Offering Profiles</div>
+        <div id="dash-profile-list"></div>
+        <div class="dash-form" id="dash-profile-form">
+            <div class="dash-form-title" id="dash-form-title">Add Account</div>
+            <input type="hidden" id="dash-form-id">
+            <label>Name</label>
+            <input type="text" id="dash-form-name" placeholder="e.g. Sherlock">
+            <label>Colour</label>
+            <div class="dash-swatch-row" id="dash-swatch-row"></div>
+            <input type="hidden" id="dash-form-color" value="#4a90d9">
+            <label>Sources</label>
+            <div class="dash-src-checks">
+                <label><input type="checkbox" class="dash-src-chk" value="fat" checked> Find a Tender</label>
+                <label><input type="checkbox" class="dash-src-chk" value="cf" checked> Contracts Finder</label>
+                <label><input type="checkbox" class="dash-src-chk" value="pcs" checked> Public Contracts Scotland</label>
+            </div>
+            <label>CPV Prefixes <span style="font-weight:400;color:#aaa;">(comma-separated, e.g. 72, 48)</span></label>
+            <input type="text" id="dash-form-cpv" placeholder="72, 48, 30">
+            <label>Keywords <span style="font-weight:400;color:#aaa;">(comma-separated, matched in title + description)</span></label>
+            <input type="text" id="dash-form-kw" placeholder="managed services, infrastructure">
+            <label>Min Value (£)</label>
+            <input type="number" id="dash-form-min" placeholder="e.g. 500000">
+            <label>Max Value (£)</label>
+            <input type="number" id="dash-form-max" placeholder="leave blank for no limit">
+            <label>Stages <span style="font-weight:400;color:#aaa;">(comma-separated, leave blank for all)</span></label>
+            <input type="text" id="dash-form-stages" placeholder="tender, planning">
+            <label>Buyer Keywords <span style="font-weight:400;color:#aaa;">(comma-separated)</span></label>
+            <input type="text" id="dash-form-buyer" placeholder="NHS, MOD">
+            <div class="dash-form-actions">
+                <button class="dash-save-btn" onclick="saveDashProfile()">Save Profile</button>
+                <button class="dash-cancel-btn" onclick="closeDashConfig()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- FULLSCREEN OVERLAY -->
 <div id="fullscreen-overlay" class="hidden">
     <div class="fs-header">
@@ -903,6 +1104,7 @@
         if (name === "review") renderReview();
         if (name === "triage") renderTriage();
         if (name === "awards") fetchAndRenderAwards();
+        if (name === "dashboard") fetchAndRenderDashboard();
     }
 
     // =====================
@@ -937,19 +1139,53 @@
     // =====================
     // LOAD
     // =====================
-    async function loadOpportunities() {
+    function _startLoadTimer(status, stages) {
+        const t0 = Date.now();
+        const bar = document.getElementById("load-bar");
+        const wrap = document.getElementById("load-bar-wrap");
+        if (wrap) wrap.style.display = "block";
+        if (bar)  bar.style.width = "0%";
+        // Animate bar to 90% over ~40s (never reaches 100 until done)
+        const tick = setInterval(() => {
+            const elapsed = Math.round((Date.now() - t0) / 1000);
+            const pct = Math.min(90, (elapsed / 40) * 100);
+            if (bar) bar.style.width = pct + "%";
+            const s = stages[Math.min(Math.floor(elapsed / 8), stages.length - 1)];
+            status.textContent = `${s} (${elapsed}s)`;
+        }, 800);
+        return {
+            clear: () => {
+                clearInterval(tick);
+                if (bar)  { bar.style.width = "100%"; setTimeout(() => { bar.style.width="0%"; if(wrap) wrap.style.display="none"; }, 600); }
+            },
+            elapsed: () => Math.round((Date.now() - t0) / 1000),
+        };
+    }
+
+    async function loadOpportunities(daysBack) {
         const btn    = document.getElementById("loadBtn");
         const status = document.getElementById("load-status");
+        const days   = daysBack || 2;
         btn.disabled = true;
-        btn.textContent = "Loading…";
+        btn.textContent = days > 2 ? `Loading last ${days} days…` : "Loading…";
         status.textContent = "";
+        const stages = [
+            "Connecting to Find a Tender…",
+            "Fetching notices (page 1)…",
+            "Fetching notices (page 2)…",
+            "Saving new records to database…",
+        ];
+        const timer = _startLoadTimer(status, stages);
         try {
-            const resp = await fetch("/load", { method: "POST" });
+            const resp = await fetch(`/load?days_back=${days}`, { method: "POST" });
             const data = await resp.json();
-            status.textContent = `✓ ${data.new_saved} new record(s) saved (${data.total_fetched} fetched)`;
-        } catch {
-            status.textContent = "⚠ Load failed";
+            if (!resp.ok) throw new Error(data.detail || `HTTP ${resp.status}`);
+            const elapsed = timer.elapsed();
+            status.textContent = `✓ ${data.new_saved} new · ${data.total_fetched} fetched · ${elapsed}s`;
+        } catch(e) {
+            status.textContent = `⚠ Load failed: ${e.message}`;
         } finally {
+            timer.clear();
             btn.disabled = false;
             btn.textContent = "Load today's opportunities";
         }
@@ -962,13 +1198,22 @@
         btn.disabled = true;
         btn.textContent = "Loading…";
         status.textContent = "";
+        const stages = [
+            "Connecting to Contracts Finder…",
+            "Fetching planning notices…",
+            "Fetching tender notices…",
+            "Saving new records to database…",
+        ];
+        const timer = _startLoadTimer(status, stages);
         try {
             const resp = await fetch("/load/contracts-finder", { method: "POST" });
             const data = await resp.json();
-            status.textContent = `✓ ${data.new_saved} new record(s) saved (${data.total_fetched} fetched)`;
-        } catch {
-            status.textContent = "⚠ Load failed";
+            if (!resp.ok) throw new Error(data.detail || `HTTP ${resp.status}`);
+            status.textContent = `✓ ${data.new_saved} new · ${data.total_fetched} fetched · ${timer.elapsed()}s`;
+        } catch(e) {
+            status.textContent = `⚠ Load failed: ${e.message}`;
         } finally {
+            timer.clear();
             btn.disabled = false;
             btn.textContent = "Load Contracts Finder";
         }
@@ -981,13 +1226,22 @@
         btn.disabled = true;
         btn.textContent = "Loading…";
         status.textContent = "";
+        const stages = [
+            "Connecting to Public Contracts Scotland…",
+            "Fetching this month's notices…",
+            "Fetching last month's notices…",
+            "Saving new records to database…",
+        ];
+        const timer = _startLoadTimer(status, stages);
         try {
             const resp = await fetch("/load/pcs", { method: "POST" });
             const data = await resp.json();
-            status.textContent = `✓ ${data.new_saved} new record(s) saved (${data.total_fetched} fetched)`;
-        } catch {
-            status.textContent = "⚠ Load failed";
+            if (!resp.ok) throw new Error(data.detail || `HTTP ${resp.status}`);
+            status.textContent = `✓ ${data.new_saved} new · ${data.total_fetched} fetched · ${timer.elapsed()}s`;
+        } catch(e) {
+            status.textContent = `⚠ Load failed: ${e.message}`;
         } finally {
+            timer.clear();
             btn.disabled = false;
             btn.textContent = "Load Public Contracts Scotland";
         }
@@ -1482,6 +1736,19 @@
         renderFsCard();
     }
 
+    function openDashFullscreen(profileId, startIndex) {
+        const opps = dashProfileOpps[profileId] || [];
+        if (!opps.length) return;
+        fsMode    = "dashboard";
+        fsSession = null;
+        fsOpps    = opps;
+        fsIndex   = startIndex || 0;
+        fsNotes   = {};
+        document.getElementById("fullscreen-overlay").classList.remove("hidden");
+        document.addEventListener("keydown", fsKeyHandler);
+        renderFsCard();
+    }
+
     function closeFullscreen() {
         fsSaveCurrentNotes();
         if (fsMode === "triage" && fsSession) {
@@ -1563,7 +1830,9 @@
         const id    = String(o.id);
         const notes = fsNotes[id] ?? "";
 
-        const headerLabel = fsMode === "review" ? "Review" : (fsSession ? fsSession.label : "");
+        const headerLabel = fsMode === "review" ? "Review"
+                          : fsMode === "dashboard" ? "Dashboard"
+                          : (fsSession ? fsSession.label : "");
         document.getElementById("fs-header-label").textContent = headerLabel;
         document.getElementById("fs-progress").textContent     = `${fsIndex + 1} / ${total}`;
         document.getElementById("fs-prev").disabled = fsIndex === 0;
@@ -1594,13 +1863,20 @@
             <hr class="fs-divider">
             <div class="fs-description">${esc(o.description || "No description provided")}</div>
             <hr class="fs-divider">
-            <div>
-                <div class="fs-notes-label">Notes</div>
-                <textarea class="fs-notes-textarea" id="fs-notes" placeholder="Add notes for this opportunity…">${esc(notes)}</textarea>
-            </div>`;
+            ${fsMode === "dashboard"
+                ? `<div style="font-size:0.8rem;color:#bbb;font-style:italic;padding:4px 0;">
+                       ⚡ AI recommendation — not yet configured
+                   </div>`
+                : `<div>
+                       <div class="fs-notes-label">Notes</div>
+                       <textarea class="fs-notes-textarea" id="fs-notes"
+                           placeholder="Add notes for this opportunity…">${esc(notes)}</textarea>
+                   </div>`
+            }`;
 
-        // Focus notes if there's content, otherwise leave cursor out of the way
-        document.getElementById("fs-notes").setSelectionRange(0, 0);
+        if (fsMode !== "dashboard") {
+            document.getElementById("fs-notes").setSelectionRange(0, 0);
+        }
     }
 
     // =====================
@@ -2263,6 +2539,326 @@
                 <button class="ss-apply-btn" onclick="applySavedSearch('${src}','${s.id}')">Apply</button>
                 <button class="ss-del-btn"   onclick="deleteSavedSearch('${src}','${s.id}')" title="Delete">×</button>
             </div>`).join("");
+    }
+
+    // =====================================================================
+    // DASHBOARD
+    // =====================================================================
+    const DASH_KEY = "dashboardProfiles";
+    const DASH_SWATCHES = ["#4a90d9","#f07232","#27a050","#8b5cf6","#e11d48","#0891b2"];
+    const DASH_SRC_LABELS = { fat: "Find a Tender", cf: "Contracts Finder", pcs: "Public Contracts Scotland" };
+    const DASH_SRC_MAP = {
+        "Find a Tender": "fat",
+        "Contracts Finder": "cf",
+        "Public Contracts Scotland": "pcs"
+    };
+
+    let dashAllOpps    = [];
+    let dashDays       = [];   // sorted unique YYYYMMDD published_date keys, descending
+    let dashDayIndex   = 0;
+    let dashCollapsed  = new Set();
+    let dashProfileOpps = {};  // profileId -> matched opps for current day (for fullscreen nav)
+
+    function _loadDashProfiles() {
+        try { return JSON.parse(localStorage.getItem(DASH_KEY)) || []; }
+        catch { return []; }
+    }
+    function _saveDashProfiles(arr) { localStorage.setItem(DASH_KEY, JSON.stringify(arr)); }
+
+    function batchDayKey(o) {
+        return (o.published_date || "").substring(0, 10).replace(/-/g, "") || "unknown";
+    }
+
+    function dashJumpToDate(dateStr) {
+        const key = dateStr.replace(/-/g, "");
+        const idx = dashDays.indexOf(key);
+        if (idx >= 0) { dashDayIndex = idx; renderDashDay(); }
+    }
+
+    function formatDayLabel(key) {
+        if (!key || key === "unknown") return "Unknown date";
+        const y = key.substring(0,4), m = key.substring(4,6), d = key.substring(6,8);
+        return new Date(`${y}-${m}-${d}T12:00:00`).toLocaleDateString("en-GB",
+            { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+    }
+
+    async function fetchAndRenderDashboard() {
+        document.getElementById("dash-day-label").textContent = "Loading…";
+        document.getElementById("dash-accounts-container").innerHTML =
+            "<div class='empty-state'>Fetching all sources…</div>";
+        try {
+            const [fat, cf, pcs] = await Promise.all([
+                fetch("/opportunities").then(r => r.json()),
+                fetch("/live/contracts-finder").then(r => r.json()),
+                fetch("/live/pcs").then(r => r.json()),
+            ]);
+            dashAllOpps = [
+                ...fat.map(o => ({...o, _src: DASH_SRC_MAP[o.source] || "fat"})),
+                ...cf.map(o  => ({...o, _src: DASH_SRC_MAP[o.source] || "cf"})),
+                ...pcs.map(o => ({...o, _src: DASH_SRC_MAP[o.source] || "pcs"})),
+            ];
+            const daySet = new Set(dashAllOpps.map(batchDayKey));
+            dashDays = [...daySet].filter(k => k !== "unknown").sort().reverse();
+            if (!dashDays.length && daySet.has("unknown")) dashDays = ["unknown"];
+            dashDayIndex = 0;
+
+            // Show staleness warning
+            const lastLoaded = document.getElementById("dash-last-loaded");
+            if (lastLoaded && dashDays.length) {
+                const newest = dashDays[0];
+                const newestDate = new Date(`${newest.substring(0,4)}-${newest.substring(4,6)}-${newest.substring(6,8)}T12:00:00`);
+                const daysSince = Math.round((Date.now() - newestDate.getTime()) / 86400000);
+                if (daysSince > 1) {
+                    lastLoaded.textContent = `⚠ Last data: ${daysSince} day${daysSince===1?"":"s"} ago — use ↻ Catch up to load missed days`;
+                    lastLoaded.style.color = "#e07b30";
+                } else {
+                    lastLoaded.textContent = `Data up to date (loaded today)`;
+                    lastLoaded.style.color = "#27a050";
+                }
+            }
+
+            renderDashDay();
+        } catch(e) {
+            document.getElementById("dash-day-label").textContent = "Error loading data";
+            document.getElementById("dash-accounts-container").innerHTML =
+                `<div class='empty-state'>${e.message}</div>`;
+        }
+    }
+
+    function dashNavDay(delta) {
+        dashDayIndex = Math.max(0, Math.min(dashDays.length - 1, dashDayIndex + delta));
+        renderDashDay();
+    }
+
+    function renderDashDay() {
+        const dayKey = dashDays[dashDayIndex] || null;
+        document.getElementById("dash-day-label").textContent =
+            dayKey ? formatDayLabel(dayKey) : "No data loaded";
+        document.getElementById("dash-prev").disabled = dashDayIndex >= dashDays.length - 1;
+        document.getElementById("dash-next").disabled = dashDayIndex <= 0;
+
+        // Sync calendar picker
+        if (dayKey && dayKey !== "unknown") {
+            const iso = `${dayKey.substring(0,4)}-${dayKey.substring(4,6)}-${dayKey.substring(6,8)}`;
+            document.getElementById("dash-date-picker").value = iso;
+        }
+
+        const dayOpps = dayKey
+            ? dashAllOpps.filter(o => batchDayKey(o) === dayKey)
+            : dashAllOpps;
+        document.getElementById("dash-day-sub").textContent =
+            dayKey ? `${dayOpps.length} published · ${dashDayIndex+1} of ${dashDays.length} days` : "";
+
+        const profiles = _loadDashProfiles();
+        const container = document.getElementById("dash-accounts-container");
+        if (!profiles.length) {
+            container.innerHTML = `<div class='empty-state'>No account profiles configured yet.
+                Click <strong>Manage Accounts</strong> to add one.</div>`;
+            return;
+        }
+        // Store matched opps per profile so fullscreen nav can reference them
+        dashProfileOpps = {};
+        container.innerHTML = profiles.map(p => {
+            const matched = filterForAccount(dayOpps, p);
+            dashProfileOpps[p.id] = matched;
+            const isCollapsed = dashCollapsed.has(p.id);
+            return `
+            <div class="dash-account-section${isCollapsed?" collapsed":""}"
+                 style="border-left-color:${p.color||"#4a90d9"}">
+                <div class="dash-account-header" onclick="toggleDashSection('${p.id}')">
+                    <span class="dash-account-name">${esc(p.name)}</span>
+                    <span class="dash-account-count">${matched.length} match${matched.length===1?"":"es"}</span>
+                    <button class="dash-collapse-btn">${isCollapsed?"▶":"▼"}</button>
+                </div>
+                <div class="dash-account-body">
+                    ${matched.length
+                        ? matched.map((o, i) => buildDashCard(o, p.id, i)).join("")
+                        : "<div class='dash-empty'>No matching opportunities published on this day.</div>"
+                    }
+                </div>
+            </div>`;
+        }).join("");
+    }
+
+    function toggleDashSection(profileId) {
+        if (dashCollapsed.has(profileId)) dashCollapsed.delete(profileId);
+        else dashCollapsed.add(profileId);
+        renderDashDay();
+    }
+
+    function filterForAccount(opps, profile) {
+        const cpvPrefixes   = (profile.cpvPrefixes   || []).map(s => s.trim()).filter(Boolean);
+        const keywords      = (profile.keywords      || []).map(s => s.trim().toLowerCase()).filter(Boolean);
+        const stages        = (profile.stages        || []).map(s => s.trim().toLowerCase()).filter(Boolean);
+        const buyerKeywords = (profile.buyerKeywords || []).map(s => s.trim().toLowerCase()).filter(Boolean);
+        const sources       = profile.sources || ["fat","cf","pcs"];
+
+        return opps.filter(o => {
+            if (sources.length && !sources.includes(o._src)) return false;
+            const val = parseFloat(o.value) || 0;
+            if (profile.minValue && val < profile.minValue) return false;
+            if (profile.maxValue && profile.maxValue > 0 && val > profile.maxValue) return false;
+            if (cpvPrefixes.length) {
+                const cpvList = (o.cpvs||"").split(",").map(c=>c.trim());
+                if (!cpvPrefixes.some(p => cpvList.some(c => c.startsWith(p)))) return false;
+            }
+            if (keywords.length) {
+                const hay = ((o.title||"")+" "+(o.description||"")).toLowerCase();
+                if (!keywords.some(k => hay.includes(k))) return false;
+            }
+            if (stages.length) {
+                const stg = (o.stage||"").toLowerCase();
+                if (!stages.some(s => stg.includes(s))) return false;
+            }
+            if (buyerKeywords.length) {
+                const b = (o.buyer||"").toLowerCase();
+                if (!buyerKeywords.some(k => b.includes(k))) return false;
+            }
+            return true;
+        });
+    }
+
+    function buildDashCard(o, profileId, index) {
+        const srcKey   = o._src || "fat";
+        const srcClass = `dash-src-${srcKey}`;
+        const srcLabel = DASH_SRC_LABELS[srcKey] || srcKey;
+        const val      = o.value ? "£" + Number(o.value).toLocaleString("en-GB") : "—";
+        const url      = o.source_url || "#";
+        const cardId   = "dc-" + (o.id||"").replace(/[^a-z0-9]/gi,"");
+        const profAttr = profileId ? `data-profile="${profileId}" data-idx="${index}"` : "";
+        return `
+        <div class="dash-card" ${profAttr}>
+            <div class="dash-card-title">
+                <a href="${esc(url)}" target="_blank" rel="noopener">${esc(o.title||"Untitled")}</a>
+            </div>
+            <div class="dash-card-meta">
+                <span>${esc(o.buyer||"—")}</span>
+                <span>${val}</span>
+                <span class="dash-tag">${esc(o.stage||"—")}</span>
+                <span class="dash-src-badge ${srcClass}">${srcLabel}</span>
+                ${o.cpvs ? `<span style="font-size:0.68rem;color:#aaa;">${esc(o.cpvs.split(",").slice(0,3).join(", "))}</span>` : ""}
+            </div>
+            <div class="dash-card-desc" id="${cardId}" onclick="this.classList.toggle('expanded')">${esc(o.description||"")}</div>
+            <div class="dash-card-footer">
+                <div class="dash-ai-card">
+                    <span class="dash-ai-card-label">⚡ AI:</span>
+                    <span>— not yet configured —</span>
+                </div>
+                ${profileId !== undefined
+                    ? `<button class="dash-view-btn" onclick="openDashFullscreen('${profileId}',${index})">Full View</button>`
+                    : ""}
+            </div>
+        </div>`;
+    }
+
+    // -- Config modal --
+    function openDashConfig() {
+        resetDashForm();
+        renderDashConfigList();
+        document.getElementById("dash-config-modal").classList.remove("hidden");
+        buildSwatches(document.getElementById("dash-form-color").value);
+    }
+    function closeDashConfig() {
+        document.getElementById("dash-config-modal").classList.add("hidden");
+        renderDashDay();
+    }
+
+    function buildSwatches(selectedColor) {
+        document.getElementById("dash-swatch-row").innerHTML = DASH_SWATCHES.map(c =>
+            `<div class="dash-swatch${c===selectedColor?" selected":""}"
+                  style="background:${c}"
+                  onclick="selectSwatch('${c}')"></div>`
+        ).join("");
+    }
+    function selectSwatch(color) {
+        document.getElementById("dash-form-color").value = color;
+        buildSwatches(color);
+    }
+
+    function renderDashConfigList() {
+        const profiles = _loadDashProfiles();
+        const el = document.getElementById("dash-profile-list");
+        if (!profiles.length) {
+            el.innerHTML = "<div class='dash-empty'>No profiles yet.</div>";
+            return;
+        }
+        el.innerHTML = profiles.map(p => {
+            const srcs = (p.sources||[]).map(s=>({fat:"FaT",cf:"CF",pcs:"PCS"}[s]||s)).join(", ");
+            const cpvs = (p.cpvPrefixes||[]).join(", ") || "any CPV";
+            return `
+            <div class="dash-profile-row">
+                <div class="dash-profile-color-dot" style="background:${p.color||"#4a90d9"}"></div>
+                <div style="flex:1">
+                    <div class="dash-profile-row-name">${esc(p.name)}</div>
+                    <div class="dash-profile-row-sub">${srcs} · CPV: ${cpvs}</div>
+                </div>
+                <button class="dash-edit-btn" onclick="editDashProfile('${p.id}')">Edit</button>
+                <button class="dash-del-btn"  onclick="deleteDashProfile('${p.id}')">Delete</button>
+            </div>`;
+        }).join("");
+    }
+
+    function editDashProfile(id) {
+        const p = _loadDashProfiles().find(x => x.id === id);
+        if (!p) return;
+        document.getElementById("dash-form-id").value    = p.id;
+        document.getElementById("dash-form-name").value  = p.name;
+        document.getElementById("dash-form-color").value = p.color || "#4a90d9";
+        document.getElementById("dash-form-cpv").value   = (p.cpvPrefixes||[]).join(", ");
+        document.getElementById("dash-form-kw").value    = (p.keywords||[]).join(", ");
+        document.getElementById("dash-form-min").value   = p.minValue || "";
+        document.getElementById("dash-form-max").value   = p.maxValue || "";
+        document.getElementById("dash-form-stages").value = (p.stages||[]).join(", ");
+        document.getElementById("dash-form-buyer").value = (p.buyerKeywords||[]).join(", ");
+        document.querySelectorAll(".dash-src-chk").forEach(chk => {
+            chk.checked = (p.sources||["fat","cf","pcs"]).includes(chk.value);
+        });
+        buildSwatches(p.color || "#4a90d9");
+        document.getElementById("dash-form-title").textContent = "Edit Account";
+    }
+
+    function resetDashForm() {
+        document.getElementById("dash-form-id").value     = "";
+        document.getElementById("dash-form-name").value   = "";
+        document.getElementById("dash-form-color").value  = DASH_SWATCHES[0];
+        document.getElementById("dash-form-cpv").value    = "";
+        document.getElementById("dash-form-kw").value     = "";
+        document.getElementById("dash-form-min").value    = "";
+        document.getElementById("dash-form-max").value    = "";
+        document.getElementById("dash-form-stages").value = "";
+        document.getElementById("dash-form-buyer").value  = "";
+        document.querySelectorAll(".dash-src-chk").forEach(chk => chk.checked = true);
+        document.getElementById("dash-form-title").textContent = "Add Account";
+    }
+
+    function saveDashProfile() {
+        const name = document.getElementById("dash-form-name").value.trim();
+        if (!name) { alert("Please enter a profile name."); return; }
+        const id      = document.getElementById("dash-form-id").value || String(Date.now());
+        const color   = document.getElementById("dash-form-color").value;
+        const sources = [...document.querySelectorAll(".dash-src-chk:checked")].map(c => c.value);
+        const split   = s => s.split(",").map(x=>x.trim()).filter(Boolean);
+        const profile = {
+            id, name, color, sources,
+            cpvPrefixes:   split(document.getElementById("dash-form-cpv").value),
+            keywords:      split(document.getElementById("dash-form-kw").value),
+            minValue:      parseFloat(document.getElementById("dash-form-min").value) || 0,
+            maxValue:      parseFloat(document.getElementById("dash-form-max").value) || 0,
+            stages:        split(document.getElementById("dash-form-stages").value),
+            buyerKeywords: split(document.getElementById("dash-form-buyer").value),
+        };
+        const profiles = _loadDashProfiles();
+        const idx = profiles.findIndex(p => p.id === id);
+        if (idx >= 0) profiles[idx] = profile; else profiles.push(profile);
+        _saveDashProfiles(profiles);
+        resetDashForm();
+        renderDashConfigList();
+    }
+
+    function deleteDashProfile(id) {
+        if (!confirm("Delete this profile?")) return;
+        _saveDashProfiles(_loadDashProfiles().filter(p => p.id !== id));
+        renderDashConfigList();
     }
 
     // =====================
