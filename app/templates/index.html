@@ -48,33 +48,33 @@
             -webkit-backdrop-filter: blur(12px);
             color: #ffffff;
             border-bottom: 1px solid rgba(0,0,0,0.25);
-            padding: 0.875rem 1.75rem;
+            padding: 0.45rem 1.25rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-shrink: 0;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             position: relative;
             z-index: 10;
         }
-        header h1 { font-size: 1.1rem; font-weight: 600; color: #fff; }
+        header h1 { font-size: 0.95rem; font-weight: 600; color: #fff; }
         .header-tagline {
-            font-size: 9px;
-            letter-spacing: 2.5px;
+            font-size: 8px;
+            letter-spacing: 2px;
             color: rgba(255,255,255,0.45);
             font-weight: 600;
             font-family: "GT Standard Extended", sans-serif;
             text-transform: uppercase;
-            margin-top: 2px;
+            margin-top: 1px;
         }
         .theme-toggle {
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.22);
             border-radius: 20px;
-            padding: 5px 14px;
+            padding: 4px 10px;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 600;
             color: rgba(255,255,255,0.65);
             transition: all .2s;
@@ -86,16 +86,16 @@
             background: #f07232;
             color: white;
             border: none;
-            padding: 8px 18px;
+            padding: 5px 13px;
             border-radius: 5px;
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             font-weight: 600;
             cursor: pointer;
             transition: background .15s;
         }
         .load-btn:hover { background: #d9612a; }
         .load-btn:disabled { background: #888; cursor: not-allowed; }
-        #load-status { font-size: 0.78rem; color: rgba(255,255,255,0.55); margin-left: 10px; }
+        #load-status { font-size: 0.74rem; color: rgba(255,255,255,0.55); margin-left: 8px; }
 
         /* ---- TABS ---- */
         .tab-bar {
@@ -111,8 +111,8 @@
             z-index: 9;
         }
         .tab {
-            padding: 0.75rem 1.1rem;
-            font-size: 0.78rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.76rem;
             font-weight: 600;
             color: rgba(255,255,255,0.38);
             cursor: pointer;
@@ -190,7 +190,30 @@
             border-right: 1px solid #c0cad9;
             padding: 12px 10px;
             overflow-y: auto;
+            overflow-x: hidden;
+            transition: width .2s ease, padding .2s ease;
+            position: relative;
         }
+        .sidebar.collapsed {
+            width: 28px;
+            padding: 8px 0;
+            overflow: hidden;
+        }
+        .sidebar.collapsed .sidebar-inner { display: none; }
+        .sidebar-inner { display: flex; flex-direction: column; min-width: 190px; }
+        .sidebar-toggle {
+            position: absolute; top: 8px; right: 6px;
+            width: 20px; height: 20px;
+            background: none; border: 1px solid #b0bed2; border-radius: 4px;
+            cursor: pointer; font-size: 0.7rem; color: #5a7090;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; z-index: 2; transition: all .15s;
+            padding: 0;
+        }
+        .sidebar-toggle:hover { background: #d0d8e8; border-color: #1a3a5c; color: #1a3a5c; }
+        .sidebar.collapsed .sidebar-toggle { right: 4px; top: 8px; }
+        body.dark .sidebar-toggle { border-color: rgba(255,255,255,0.2); color: #8aabca; }
+        body.dark .sidebar-toggle:hover { background: rgba(255,255,255,0.1); border-color: #7eb3f7; color: #7eb3f7; }
         .sidebar h2 { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: #7a90aa; margin-bottom: 10px; }
         .filter-group { margin-bottom: 10px; }
         .filter-group label { display: block; font-size: 0.72rem; font-weight: 600; color: #2e4a66; margin-bottom: 3px; }
@@ -215,6 +238,41 @@
         .checkbox-group label { font-weight: 400; font-size: 0.72rem; display: flex; align-items: center; gap: 5px; cursor: pointer; }
         .clear-btn { width: 100%; padding: 5px; background: #dce4f0; border: 1px solid #b8c6d9; border-radius: 4px; font-size: 0.72rem; color: #2e4a66; cursor: pointer; margin-top: 2px; }
         .clear-btn:hover { background: #cdd8ec; }
+
+        /* ---- ROUTE CHIPS + SCORE BADGES ---- */
+        .route-chip { display:inline-block; padding:2px 5px; border-radius:10px; font-size:0.67rem; font-weight:700; font-family:"GT Standard Extended",sans-serif; letter-spacing:0.02em; white-space:nowrap; }
+        .route-account   { background:#d1fae5; color:#065f46; }
+        .route-target-s  { background:#fef3c7; color:#92400e; }
+        .route-target-x  { background:#fef9c3; color:#a16207; }
+        .route-pursuit   { background:#dbeafe; color:#1e40af; }
+        .route-bid-mgmt  { background:#ede9fe; color:#5b21b6; }
+        .route-small     { background:#f3f4f6; color:#6b7280; }
+        .route-no-match  { background:#fee2e2; color:#991b1b; }
+        /* Dark mode chips — for dark-bg contexts (My View cards etc.) */
+        body.dark .route-account  { background:rgba(6,95,70,0.3);    color:#6ee7b7; }
+        body.dark .route-target-s { background:rgba(146,64,14,0.3);  color:#fcd34d; }
+        body.dark .route-target-x { background:rgba(161,98,7,0.3);   color:#fde68a; }
+        body.dark .route-pursuit  { background:rgba(30,64,175,0.3);  color:#93c5fd; }
+        body.dark .route-bid-mgmt { background:rgba(91,33,182,0.3);  color:#c4b5fd; }
+        body.dark .route-small    { background:rgba(107,114,128,0.2);color:#9ca3af; }
+        body.dark .route-no-match { background:rgba(153,27,27,0.2);  color:#fca5a5; }
+        /* Table is always light-bg — keep chips in their light-mode colours */
+        body.dark td .route-account  { background:#d1fae5; color:#065f46; }
+        body.dark td .route-target-s { background:#fef3c7; color:#92400e; }
+        body.dark td .route-target-x { background:#fef9c3; color:#a16207; }
+        body.dark td .route-pursuit  { background:#dbeafe; color:#1e40af; }
+        body.dark td .route-bid-mgmt { background:#ede9fe; color:#5b21b6; }
+        body.dark td .route-small    { background:#f3f4f6; color:#6b7280; }
+        body.dark td .route-no-match { background:#fee2e2; color:#991b1b; }
+        .score-badge { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; font-size:0.67rem; font-weight:700; font-family:"GT Standard Extended",sans-serif; margin-left:3px; vertical-align:middle; }
+        .score-pursue { background:#22c55e; color:#fff; }
+        .score-qualify{ background:#f59e0b; color:#fff; }
+        .score-pass   { background:#ef4444; color:#fff; }
+        .score-rec-lbl{ font-size:0.67rem; font-weight:700; font-family:"GT Standard Extended",sans-serif; vertical-align:middle; margin-left:3px; }
+        .score-rec-lbl.score-pursue { background:transparent; color:#16a34a; }
+        .score-rec-lbl.score-qualify{ background:transparent; color:#d97706; }
+        .score-rec-lbl.score-pass   { background:transparent; color:#dc2626; }
+        .mv-queue-score-row { display:flex; align-items:center; gap:6px; margin-top:5px; flex-wrap:wrap; }
 
         /* ---- OFFERING FILTER PILLS ---- */
         .off-filter-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
@@ -287,8 +345,8 @@
         .preset-banner-info strong { font-size: 0.82rem; color: #1a3a5c; display: block; }
         .preset-banner-info span { font-size: 0.72rem; color: #888; margin-top: 2px; display: block; }
         #awards-result-count { font-size: 0.8rem; color: #666; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.77rem; background: #f2f5fb; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
-        thead th { background: #1a3a5c; color: #fff; text-align: left; padding: 7px 8px; font-weight: 600; white-space: nowrap; position: relative; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.75rem; background: #f2f5fb; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+        thead th { background: #1a3a5c; color: #fff; text-align: left; padding: 6px 6px; font-weight: 600; white-space: nowrap; position: relative; }
         .col-resize-handle {
             position: absolute; right: 0; top: 0; bottom: 0; width: 6px;
             cursor: col-resize; user-select: none;
@@ -303,7 +361,7 @@
         tbody tr:nth-child(even) { background: #e8eef8; }
         tbody tr:hover { background: #dce6f5; }
         tbody tr.selected-row { background: #fde8d0 !important; }
-        td { padding: 6px 8px; vertical-align: top; border-bottom: 1px solid #d4dce9; }
+        td { padding: 5px 6px; vertical-align: top; border-bottom: 1px solid #d4dce9; }
         td.desc { max-width: 220px; color: #444; line-height: 1.4; vertical-align: top; }
         td.value { white-space: nowrap; width: 75px; }
         td.stage span { display: inline-block; background: #dde8f5; color: #1a3a5c; border-radius: 3px; padding: 1px 4px; font-size: 0.7rem; margin: 1px 2px 1px 0; }
@@ -327,9 +385,37 @@
         .read-more-btn {
             background: none; border: none; color: #1a3a5c;
             font-size: 0.72rem; cursor: pointer; padding: 2px 0 0;
-            text-decoration: underline; display: block;
+            text-decoration: underline; display: inline-block;
         }
         .read-more-btn:hover { color: #f07232; }
+
+        /* ---- DESCRIPTION POPUP ---- */
+        .desc-popup-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 9500;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .desc-popup-overlay.hidden { display: none; }
+        .desc-popup-box {
+            background: #fff; border-radius: 10px; padding: 20px 24px;
+            max-width: 580px; width: 90%; max-height: 65vh; overflow-y: auto;
+            position: relative; box-shadow: 0 8px 32px rgba(0,0,0,.22);
+        }
+        .desc-popup-close {
+            position: absolute; top: 10px; right: 14px;
+            background: none; border: none; font-size: 1.3rem;
+            cursor: pointer; color: #888; line-height: 1; padding: 0;
+        }
+        .desc-popup-close:hover { color: #1a3a5c; }
+        .desc-popup-label {
+            font-family: "GT Standard Extended", sans-serif; font-size: 0.68rem;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+            color: #7a90aa; margin-bottom: 10px;
+        }
+        .desc-popup-body { font-size: 0.82rem; line-height: 1.65; color: #222; }
+        body.dark .desc-popup-box { background: #1a1e2e; color: #dde3ec; }
+        body.dark .desc-popup-body { color: #cdd6e8; }
+        body.dark .desc-popup-close { color: #667; }
+        body.dark .desc-popup-close:hover { color: #dde3ec; }
 
         /* ---- LAST-LOADED DIVIDER ---- */
         tr.divider-banner td {
@@ -772,17 +858,17 @@
 
         /* ---- MY VIEW CONCEPT PANEL ---- */
         #panel-myview { flex-direction: column; overflow-y: auto; }
-        .mv-container { padding: clamp(20px,2rem,32px); max-width: 1400px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+        .mv-container { padding: clamp(8px,0.8rem,14px) clamp(10px,1rem,20px); max-width: 1400px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
         .mv-welcome {
-            background: #edf1f8; border: 1px solid #ccd5e3; border-radius: 14px;
-            padding: 28px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+            background: #edf1f8; border: 1px solid #ccd5e3; border-radius: 10px;
+            padding: 10px 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
         }
         .mv-greeting {
-            font-family: "GT Standard Extended", sans-serif; font-size: 1.9rem; font-weight: 700; line-height: 1.15; margin-bottom: 5px;
+            font-family: "GT Standard Extended", sans-serif; font-size: 1.3rem; font-weight: 700; line-height: 1.2; margin-bottom: 3px;
             background: linear-gradient(135deg, #1a3a5c 0%, #c94530 55%, #2459c4 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-        .mv-subtitle { font-size: 0.85rem; color: rgba(26,58,92,0.45); }
+        .mv-subtitle { font-size: 0.76rem; color: rgba(26,58,92,0.45); }
         .mv-date-block { text-align: right; }
         .mv-date-main { font-family: "GT Standard Extended", sans-serif; font-size: 0.82rem; font-weight: 700; color: #2e4a66; letter-spacing: 0.03em; }
         .mv-date-sub  { font-size: 0.7rem; color: rgba(26,58,92,0.38); margin-top: 3px; }
@@ -806,20 +892,20 @@
         .mv-view-select:hover { border-color: #E8583A; }
         .mv-view-select:focus { border-color: #2E6BE6; box-shadow: 0 0 0 2px rgba(46,107,230,0.12); }
         /* Stat cards */
-        .mv-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+        .mv-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
         .mv-stat {
-            background: #edf1f8; border: 1px solid #ccd5e3; border-radius: 12px;
-            padding: 18px 20px; position: relative; overflow: hidden;
+            background: #edf1f8; border: 1px solid #ccd5e3; border-radius: 10px;
+            padding: 10px 14px; position: relative; overflow: hidden;
         }
         .mv-stat::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:3px 3px 0 0; }
         .mv-stat--new::before     { background: linear-gradient(90deg,#2E6BE6,#60a5fa); }
         .mv-stat--tracked::before { background: linear-gradient(90deg,#E8583A,#fb923c); }
         .mv-stat--value::before   { background: linear-gradient(90deg,#27a050,#34d399); }
         .mv-stat--closing::before { background: linear-gradient(90deg,#f59e0b,#fcd34d); }
-        .mv-stat-icon  { font-size: 1.25rem; margin-bottom: 6px; opacity: 0.65; }
-        .mv-stat-num   { font-family: "GT Standard Extended", sans-serif; font-size: 1.75rem; font-weight: 700; color: #1a3a5c; line-height: 1; }
-        .mv-stat-label { font-size: 0.78rem; font-weight: 600; color: #5a6e82; margin-top: 4px; }
-        .mv-stat-trend { font-size: 0.7rem; color: #8a9bae; margin-top: 3px; }
+        .mv-stat-icon  { font-size: 1rem; margin-bottom: 3px; opacity: 0.65; }
+        .mv-stat-num   { font-family: "GT Standard Extended", sans-serif; font-size: 1.3rem; font-weight: 700; color: #1a3a5c; line-height: 1; }
+        .mv-stat-label { font-size: 0.72rem; font-weight: 600; color: #5a6e82; margin-top: 3px; }
+        .mv-stat-trend { font-size: 0.67rem; color: #8a9bae; margin-top: 2px; }
         .mv-stat-trend.up   { color: #2a8a48; }
         .mv-stat-trend.warn { color: #c07000; }
         /* Main grid */
@@ -1497,15 +1583,15 @@
 
 <!-- HEADER -->
 <header>
-    <div style="display:flex;align-items:center;gap:14px;">
-        <img src="/static/DXC-Full-Color.png" alt="DXC" style="height:30px;display:block;flex-shrink:0;">
+    <div style="display:flex;align-items:center;gap:10px;">
+        <img src="/static/DXC-Full-Color.png" alt="DXC" style="height:22px;display:block;flex-shrink:0;">
         <div>
             <h1>Tender Intake — Proof of Concept</h1>
             <div class="header-tagline">Impossible Delivered</div>
         </div>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-        <div style="display:flex;align-items:center;gap:10px;">
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
+        <div style="display:flex;align-items:center;gap:7px;">
             <button class="cfg-open-btn" onclick="openConfig()" title="AI Configuration">&#9881; Configure AI</button>
             <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">&#9790; Dark</button>
             <button class="load-btn" id="loadBtn" onclick="loadOpportunities()">Load today's opportunities</button>
@@ -1545,7 +1631,9 @@
 
 <div class="sub-panel active" id="sub-panel-opps">
 <div class="tab-panel" id="panel-opps" style="flex:1;display:flex;overflow:hidden;">
-    <aside class="sidebar">
+    <aside class="sidebar" id="opp-sidebar">
+        <button class="sidebar-toggle" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle filters">&#8249;</button>
+        <div class="sidebar-inner">
 
         <!-- ── Find a Tender Filters ── -->
         <div id="filters-fat" class="source-filters">
@@ -1594,6 +1682,17 @@
             <div class="filter-group">
                 <label>Stage / Tags</label>
                 <div class="checkbox-group" id="stage-checkboxes"></div>
+            </div>
+            <div class="filter-group">
+                <label>Route</label>
+                <div class="checkbox-group" id="route-checkboxes">
+                    <label><input type="checkbox" value="current_account"   onchange="applyRouteFilter()"> Account</label>
+                    <label><input type="checkbox" value="target_significant" onchange="applyRouteFilter()"> Target ★</label>
+                    <label><input type="checkbox" value="target_small"      onchange="applyRouteFilter()"> Target</label>
+                    <label><input type="checkbox" value="pursuit_team"      onchange="applyRouteFilter()"> Pursuit</label>
+                    <label><input type="checkbox" value="too_small"         onchange="applyRouteFilter()"> Too Small</label>
+                    <label><input type="checkbox" value="no_dxc_offering"   onchange="applyRouteFilter()"> No Match</label>
+                </div>
             </div>
             <div class="filter-group">
                 <label>Buyer Name</label>
@@ -1765,6 +1864,7 @@
             <button class="clear-btn" onclick="clearPcsFilters()">Clear all filters</button>
         </div>
 
+        </div><!-- .sidebar-inner -->
     </aside>
 
     <main class="content">
@@ -2204,6 +2304,15 @@
     </div><!-- /mv-container -->
 </div>
 
+<!-- DESCRIPTION POPUP -->
+<div id="desc-popup-overlay" class="desc-popup-overlay hidden" onclick="closeDescPopup()">
+    <div class="desc-popup-box" onclick="event.stopPropagation()">
+        <button class="desc-popup-close" onclick="closeDescPopup()">&times;</button>
+        <div class="desc-popup-label">Description</div>
+        <div class="desc-popup-body" id="desc-popup-body"></div>
+    </div>
+</div>
+
 <!-- OFFERING FULLSCREEN MODAL (shared by Security, Cloud, Workplace, Network) -->
 <div id="mv-off-fullscreen" class="mv-sec-fs-overlay hidden">
     <div class="mv-sec-fs-box">
@@ -2494,6 +2603,63 @@
                         <option value="tenders">Tenders</option>
                         <option value="dashboard">Dashboard</option>
                     </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Known Accounts -->
+        <div class="cfg-section">
+            <div class="cfg-section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>&#127968; Known Accounts</span>
+                <span class="cfg-section-caret">&#9660;</span>
+            </div>
+            <div class="cfg-section-body">
+                <div class="cfg-status-row">&#8505; Buyers we have an existing DXC relationship with. Opportunities from these buyers are routed to the Account team. One per line.</div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Current Account Buyers (one per line)</label>
+                    <textarea class="cfg-textarea" id="cfg-known-accounts" rows="6" placeholder="NHS England&#10;HMRC&#10;Ministry of Defence&#10;Cabinet Office&#10;Home Office"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Target Accounts -->
+        <div class="cfg-section">
+            <div class="cfg-section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>&#127919; Target Accounts</span>
+                <span class="cfg-section-caret">&#9660;</span>
+            </div>
+            <div class="cfg-section-body">
+                <div class="cfg-status-row">&#8505; New business targets. Format: <strong>Buyer Name | minimum £ value</strong>. Opportunities above the threshold are flagged as significant. One per line.</div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Target Account Buyers (one per line)</label>
+                    <textarea class="cfg-textarea" id="cfg-target-accounts" rows="6" placeholder="DWP | 5000000&#10;DVLA | 2000000&#10;HM Treasury | 3000000&#10;Dept for Transport | 2000000"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Offering Thresholds -->
+        <div class="cfg-section">
+            <div class="cfg-section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>&#9878; Offering Thresholds (£)</span>
+                <span class="cfg-section-caret">&#9660;</span>
+            </div>
+            <div class="cfg-section-body">
+                <div class="cfg-status-row">&#8505; Minimum contract value per offering. Opportunities below this are marked Too Small and excluded from routing.</div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Security</label>
+                    <input class="cfg-input" type="number" id="cfg-thresh-security" placeholder="2000000">
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Cloud</label>
+                    <input class="cfg-input" type="number" id="cfg-thresh-cloud" placeholder="3000000">
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Workplace</label>
+                    <input class="cfg-input" type="number" id="cfg-thresh-workplace" placeholder="1000000">
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Network</label>
+                    <input class="cfg-input" type="number" id="cfg-thresh-network" placeholder="2000000">
                 </div>
             </div>
         </div>
@@ -3195,7 +3361,10 @@
                     <div class="mv-queue-tasks">
                         ${o.tasks.map(t => `<span class="mv-task-item">${t}</span>`).join("")}
                     </div>
-                    ${o.ai ? `<div class="mv-queue-ai-teaser"><span class="mv-queue-ai-teaser-icon">&#9889;</span><span class="mv-queue-ai-teaser-text">${o.ai.substring(0, 160)}${o.ai.length > 160 ? "&hellip;" : ""}</span></div>` : ""}
+                    <div class="mv-queue-score-row">
+                        ${(()=>{ const _v = parseFloat((o.v||'').replace(/[^0-9.]/g,'')||'0') * (o.v&&o.v.includes('M')?1_000_000:1); const _o = {buyer:o.b,value:_v,cpvs:'',title:o.t,description:''}; return routingBadgeHtml(classifyOpp(_o)) + (placeholderScore(_o)?scoreBadgeHtml(placeholderScore(_o)):''); })()}
+                    </div>
+                    ${o.ai ? `<div class="mv-queue-ai-teaser"><span class="mv-queue-ai-teaser-icon">&#9889;</span><span class="mv-queue-ai-teaser-text">${o.ai.substring(0, 160)}${o.ai.length > 160 ? "&hellip;" : ""}</span>${o.ai.length > 160 ? ` <button class="read-more-btn" data-desc="${o.ai.replace(/"/g,'&quot;')}" data-html="1" onclick="showDescPopup(this)">Read more</button>` : ""}</div>` : ""}
                 </div>
                 <div class="mv-queue-note-col">${noteText}</div>
                 <div class="mv-queue-actions">
@@ -3321,7 +3490,7 @@
                     <div class="mv-team-status-row">
                         ${o.teamStatus.map(_teamPillHtml).join("")}
                     </div>
-                    ${o.ai ? `<div class="mv-queue-ai-teaser"><span class="mv-queue-ai-teaser-icon">&#9889;</span><span class="mv-queue-ai-teaser-text">${o.ai.substring(0, 160)}${o.ai.length > 160 ? "&hellip;" : ""}</span></div>` : ""}
+                    ${o.ai ? `<div class="mv-queue-ai-teaser"><span class="mv-queue-ai-teaser-icon">&#9889;</span><span class="mv-queue-ai-teaser-text">${o.ai.substring(0, 160)}${o.ai.length > 160 ? "&hellip;" : ""}</span>${o.ai.length > 160 ? ` <button class="read-more-btn" data-desc="${o.ai.replace(/"/g,'&quot;')}" data-html="1" onclick="showDescPopup(this)">Read more</button>` : ""}</div>` : ""}
                 </div>
                 <div class="mv-queue-note-col">${noteText}</div>
                 <div class="mv-queue-actions">
@@ -3794,8 +3963,8 @@
                 <td class="cpv">${buildCpvCell(o.cpvs)}</td>
                 <td class="supplier-cell">${esc(o.awarded_supplier || "—")}</td>
                 <td class="desc" style="min-width:120px;max-width:220px;">
-                    <div class="desc-clamp" id="adc-${id}">${esc(o.description || "")}</div>
-                    ${o.description ? `<button class="read-more-btn" onclick="toggleDesc('adc-${id}',this)">Read more</button>` : ""}
+                    <div class="desc-clamp">${esc(o.description || "")}</div>
+                    ${o.description ? `<button class="read-more-btn" data-desc="${esc(o.description)}" onclick="showDescPopup(this)">Read more</button>` : ""}
                 </td>
                 <td class="date-cell">
                     <div><span class="meta-lbl">Published</span>${fmtDate(o.published_date)}</div>
@@ -3819,12 +3988,6 @@
             <tbody>${rows}</tbody>
         </table>`;
 
-        document.querySelectorAll("#awards-table-container .desc-clamp").forEach(el => {
-            if (el.scrollHeight <= el.clientHeight) {
-                const btn = el.nextElementSibling;
-                if (btn && btn.classList.contains("read-more-btn")) btn.style.display = "none";
-            }
-        });
     }
 
     // =====================
@@ -3850,7 +4013,10 @@
     // RENDER TABLE
     // =====================
     function renderTable(data) {
-        sortedData  = sortData(data);
+        const filtered = _routeFilter.size
+            ? data.filter(o => _routeFilter.has(classifyOpp(o)))
+            : data;
+        sortedData  = sortData(filtered);
         currentPage = 1;
         document.getElementById("result-count").textContent =
             `${sortedData.length} opportunit${sortedData.length === 1 ? "y" : "ies"}`;
@@ -3934,8 +4100,8 @@
                 <td class="cpv">${buildCpvCell(o.cpvs)}</td>
                 <td class="supplier-cell">${esc(o.awarded_supplier || "—")}</td>
                 <td class="desc" style="min-width:120px;max-width:220px;">
-                    <div class="desc-clamp" id="dc-${id}">${esc(o.description || "")}</div>
-                    ${o.description ? `<button class="read-more-btn" onclick="toggleDesc('dc-${id}',this)">Read more</button>` : ""}
+                    <div class="desc-clamp">${esc(o.description || "")}</div>
+                    ${o.description ? `<button class="read-more-btn" data-desc="${esc(o.description)}" onclick="showDescPopup(this)">Read more</button>` : ""}
                 </td>
                 <td class="date-cell">
                     <div><span class="meta-lbl">Published</span>${fmtDate(o.published_date)}</div>
@@ -3947,6 +4113,7 @@
                         : ""}
                 </td>
                 <td class="term-cell">${contractMonths(o.contract_months, o.contract_start, o.contract_end)}</td>
+                <td style="white-space:nowrap;">${routingBadgeHtml(classifyOpp(o))}${scoreBadgeHtml(placeholderScore(o))}</td>
             </tr>`;
         };
 
@@ -3960,7 +4127,7 @@
                 : `↓ Last loaded ${esc(label)}`;
             dividerHtml = `
             <tr class="divider-banner">
-                <td colspan="11"><div class="divider-inner"><span>${leftText}</span></div></td>
+                <td colspan="12"><div class="divider-inner"><span>${leftText}</span></div></td>
             </tr>`;
         }
 
@@ -3968,7 +4135,7 @@
         <table>
             <thead><tr>
                 <th></th><th>Title</th><th>Buyer</th><th>Value</th>
-                <th>Stage</th><th>FW</th><th>CPVs</th><th>Awarded Supplier</th><th>Description</th><th>Dates</th><th>Term</th>
+                <th>Stage</th><th>FW</th><th>CPVs</th><th>Awarded Supplier</th><th>Description</th><th>Dates</th><th>Term</th><th>Route</th>
             </tr></thead>
             <tbody>
                 ${pageNewRows.map(renderRow).join("")}
@@ -3987,13 +4154,6 @@
             pgBar.innerHTML = "";
         }
 
-        // Hide "Read more" for descriptions that don't overflow
-        document.querySelectorAll("#table-container .desc-clamp").forEach(el => {
-            if (el.scrollHeight <= el.clientHeight) {
-                const btn = el.nextElementSibling;
-                if (btn && btn.classList.contains("read-more-btn")) btn.style.display = "none";
-            }
-        });
 
         initResizableColumns();
     }
@@ -4005,13 +4165,23 @@
     }
 
     // =====================
-    // DESCRIPTION TOGGLE
+    // DESCRIPTION POPUP
     // =====================
-    function toggleDesc(elemId, btn) {
-        const el = document.getElementById(elemId);
-        if (!el) return;
-        btn.textContent = el.classList.toggle("expanded") ? "Read less" : "Read more";
+    function showDescPopup(el) {
+        const body = document.getElementById('desc-popup-body');
+        // data-html flag means pre-encoded HTML entities (ai text) — use innerHTML
+        if (el.dataset.html) {
+            body.innerHTML = el.dataset.desc || '';
+        } else {
+            // Plain text from DB — use textContent to avoid XSS
+            body.textContent = el.dataset.desc || '';
+        }
+        document.getElementById('desc-popup-overlay').classList.remove('hidden');
     }
+    function closeDescPopup() {
+        document.getElementById('desc-popup-overlay').classList.add('hidden');
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDescPopup(); });
 
     // =====================
     // TOGGLE OLD ROWS
@@ -4567,6 +4737,9 @@
         // Reset offering pills
         document.querySelectorAll('.off-pill').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.off-pill[data-view="all"]').forEach(p => p.classList.add('active'));
+        // Reset route filter
+        _routeFilter = new Set();
+        document.querySelectorAll('#route-checkboxes input').forEach(cb => cb.checked = false);
         fetchAndRender();
     }
 
@@ -4577,6 +4750,25 @@
         workplace: { keyword: 'workplace', cpv: '72,48,30' },
         network:   { keyword: 'network',   cpv: '32,72' }
     };
+
+    function toggleSidebar() {
+        const sb  = document.getElementById('opp-sidebar');
+        const btn = document.getElementById('sidebar-toggle-btn');
+        const collapsed = sb.classList.toggle('collapsed');
+        btn.innerHTML   = collapsed ? '&#8250;' : '&#8249;';
+        btn.title       = collapsed ? 'Show filters' : 'Hide filters';
+        localStorage.setItem('sidebarCollapsed', collapsed ? '1' : '0');
+    }
+
+    // Restore sidebar state on load
+    (function() {
+        if (localStorage.getItem('sidebarCollapsed') === '1') {
+            const sb  = document.getElementById('opp-sidebar');
+            const btn = document.getElementById('sidebar-toggle-btn');
+            if (sb)  sb.classList.add('collapsed');
+            if (btn) { btn.innerHTML = '&#8250;'; btn.title = 'Show filters'; }
+        }
+    })();
 
     function filterByOffering(viewId, src) {
         // Update active pill state for this source's pill group
@@ -5248,6 +5440,18 @@
         setText('cfg-user-role',         saved.userRole);
         setText('cfg-team',              saved.team);
         setText('cfg-default-view',      saved.defaultView);
+        setText('cfg-thresh-security',   saved.threshSecurity);
+        setText('cfg-thresh-cloud',      saved.threshCloud);
+        setText('cfg-thresh-workplace',  saved.threshWorkplace);
+        setText('cfg-thresh-network',    saved.threshNetwork);
+
+        // Seed defaults if not yet set
+        const kaEl = document.getElementById('cfg-known-accounts');
+        if (kaEl) kaEl.value = saved.knownAccounts !== undefined ? saved.knownAccounts
+            : 'NHS England\nHMRC\nMinistry of Defence\nCabinet Office\nHome Office';
+        const taEl = document.getElementById('cfg-target-accounts');
+        if (taEl) taEl.value = saved.targetAccounts !== undefined ? saved.targetAccounts
+            : 'DWP | 5000000\nDVLA | 2000000\nHM Treasury | 3000000\nDept for Transport | 2000000';
 
         const offSaved = JSON.parse(localStorage.getItem(CFG_OFF_KEY) || '{}');
         ['security','cloud','workplace','network'].forEach(v => {
@@ -5262,7 +5466,7 @@
 
         const getVal = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
         const data = {
-            companyOverview: getVal('cfg-company-overview'),
+            companyOverview:  getVal('cfg-company-overview'),
             differentiators:  getVal('cfg-differentiators'),
             exclusions:       getVal('cfg-exclusions'),
             minValue:         getVal('cfg-min-value'),
@@ -5274,6 +5478,12 @@
             userRole:         getVal('cfg-user-role'),
             team:             getVal('cfg-team'),
             defaultView:      getVal('cfg-default-view'),
+            knownAccounts:    getVal('cfg-known-accounts'),
+            targetAccounts:   getVal('cfg-target-accounts'),
+            threshSecurity:   getVal('cfg-thresh-security')  || '2000000',
+            threshCloud:      getVal('cfg-thresh-cloud')     || '3000000',
+            threshWorkplace:  getVal('cfg-thresh-workplace') || '1000000',
+            threshNetwork:    getVal('cfg-thresh-network')   || '2000000',
         };
         localStorage.setItem(CFG_KEY, JSON.stringify(data));
         localStorage.setItem(CFG_OFF_KEY, JSON.stringify(_cfgOffData));
@@ -5316,6 +5526,113 @@
         if (!t) return;
         t.classList.add('show');
         setTimeout(() => t.classList.remove('show'), 2400);
+    }
+
+    // =====================
+    // ROUTING + SCORING
+    // =====================
+    const _ROUTE_META = {
+        current_account:    { label: 'Account',   cls: 'route-account'  },
+        target_significant: { label: 'Target ★',  cls: 'route-target-s' },
+        target_small:       { label: 'Target',    cls: 'route-target-x' },
+        pursuit_team:       { label: 'Pursuit',   cls: 'route-pursuit'  },
+        too_small:          { label: 'Too Small', cls: 'route-small'    },
+        no_dxc_offering:    { label: 'No Match',  cls: 'route-no-match' },
+    };
+
+    const _OFFERING_CPV = {
+        security:  ['72.2','72.7','72600','72700'],
+        cloud:     ['72200','72300','72400','72500'],
+        workplace: ['72','48','30'],
+        network:   ['32','34.9'],
+    };
+
+    const _OFFERING_KW = {
+        security:  ['security','cyber','soc','siem','threat','firewall','endpoint'],
+        cloud:     ['cloud','azure','aws','iaas','paas','migration','platform engineering'],
+        workplace: ['workplace','desktop','end user','eud','device','vdi','collaboration','unified comms'],
+        network:   ['network','telecoms','connectivity','infrastructure','wan','lan'],
+    };
+
+    let _routeFilter = new Set();
+
+    function _getRoutingConfig() {
+        const cfg = JSON.parse(localStorage.getItem(CFG_KEY) || '{}');
+        const knownAccounts  = (cfg.knownAccounts  || 'NHS England\nHMRC\nMinistry of Defence\nCabinet Office\nHome Office')
+            .split('\n').map(s => s.trim()).filter(Boolean);
+        const targetAccounts = (cfg.targetAccounts || 'DWP | 5000000\nDVLA | 2000000\nHM Treasury | 3000000\nDept for Transport | 2000000')
+            .split('\n').map(s => s.trim()).filter(Boolean);
+        const thresholds = {
+            security:  parseFloat(cfg.threshSecurity  || '2000000'),
+            cloud:     parseFloat(cfg.threshCloud     || '3000000'),
+            workplace: parseFloat(cfg.threshWorkplace || '1000000'),
+            network:   parseFloat(cfg.threshNetwork   || '2000000'),
+        };
+        return { knownAccounts, targetAccounts, thresholds };
+    }
+
+    function classifyOpp(o) {
+        const { knownAccounts, targetAccounts, thresholds } = _getRoutingConfig();
+        const buyer = (o.buyer || '').toLowerCase();
+        const value = parseFloat(o.value) || 0;
+        const cpvs  = (o.cpvs  || '').toLowerCase();
+        const hay   = ((o.title || '') + ' ' + (o.description || '')).toLowerCase();
+
+        for (const line of knownAccounts) {
+            const name = line.split('|')[0].trim().toLowerCase();
+            if (name && buyer.includes(name)) return 'current_account';
+        }
+        for (const line of targetAccounts) {
+            const parts  = line.split('|');
+            const name   = parts[0].trim().toLowerCase();
+            const thresh = parseFloat((parts[1] || '').replace(/[^0-9.]/g, '')) || 0;
+            if (name && buyer.includes(name))
+                return value >= thresh ? 'target_significant' : 'target_small';
+        }
+
+        // Offering match — CPV first, then keyword fallback
+        const matchedOffering = Object.entries(_OFFERING_CPV).find(([, pfx]) =>
+            pfx.some(p => cpvs.includes(p))
+        ) || Object.entries(_OFFERING_KW).find(([, kws]) =>
+            kws.some(k => hay.includes(k))
+        );
+        if (!matchedOffering) return 'no_dxc_offering';
+        const minVal = thresholds[matchedOffering[0]] || 0;
+        if (value && value < minVal) return 'too_small';
+        return 'pursuit_team';
+    }
+
+    function placeholderScore(o) {
+        const routing = classifyOpp(o);
+        if (routing !== 'pursuit_team' && routing !== 'target_significant') return null;
+        const value = parseFloat(o.value) || 0;
+        const score = Math.min(10, Math.max(1, Math.round(value / 5_000_000) + 5));
+        const rec   = score >= 7 ? 'PURSUE' : score >= 4 ? 'QUALIFY' : 'PASS';
+        const reasoning =
+            rec === 'PURSUE'  ? `Strong value alignment — recommend progressing to pursuit team review.` :
+            rec === 'QUALIFY' ? `Value within range — qualification call recommended before committing resource.` :
+                                `Low contract value relative to offering thresholds — assess strategic fit before pursuing.`;
+        return { score, rec, reasoning };
+    }
+
+    function routingBadgeHtml(routing) {
+        if (!routing) return '';
+        const m = _ROUTE_META[routing];
+        if (!m) return '';
+        return `<span class="route-chip ${m.cls}">${m.label}</span>`;
+    }
+
+    function scoreBadgeHtml(scoreObj) {
+        if (!scoreObj) return '';
+        const cls = scoreObj.rec === 'PURSUE' ? 'score-pursue' : scoreObj.rec === 'QUALIFY' ? 'score-qualify' : 'score-pass';
+        return `<span class="score-badge ${cls}" title="${scoreObj.rec}: ${scoreObj.reasoning}">${scoreObj.score}</span>`;
+    }
+
+    function applyRouteFilter() {
+        _routeFilter = new Set(
+            [...document.querySelectorAll('#route-checkboxes input:checked')].map(cb => cb.value)
+        );
+        renderTable(currentData);
     }
 
     // =====================
