@@ -1,0 +1,13 @@
+<!-- FULLSCREEN OVERLAY -->
+<div id="fullscreen-overlay" class="hidden">
+    <div class="fs-header">
+        <button class="fs-close-btn" onclick="closeFullscreen()">✕ Close</button>
+        <span id="fs-header-label" class="fs-header-label"></span>
+        <span id="fs-progress" class="fs-progress"></span>
+    </div>
+    <div class="fs-body">
+        <button id="fs-prev" class="fs-nav" onclick="fsNavigate(-1)">&#8249;</button>
+        <div class="fs-card" id="fs-card-inner"></div>
+        <button id="fs-next" class="fs-nav" onclick="fsNavigate(1)">&#8250;</button>
+    </div>
+</div>

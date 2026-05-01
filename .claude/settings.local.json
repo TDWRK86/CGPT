@@ -11,7 +11,9 @@
       "WebFetch(domain:support.loopio.com)",
       "WebFetch(domain:developer.loopio.com)",
       "WebFetch(domain:loopio.com)",
-      "WebFetch(domain:developer.salesforce.com)"
+      "WebFetch(domain:developer.salesforce.com)",
+      "Bash(python3 -)",
+      "Bash(python -)"
     ]
   }
 }

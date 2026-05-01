@@ -1,0 +1,21 @@
+<!-- OFFERING FULLSCREEN MODAL (shared by Security, Cloud, Workplace, Network) -->
+<div id="mv-off-fullscreen" class="mv-sec-fs-overlay hidden">
+    <div class="mv-sec-fs-box">
+        <div class="mv-sec-fs-header">
+            <div class="mv-sec-fs-title" id="mv-off-fs-title"></div>
+            <button class="mv-sec-fs-close" onclick="closeMvOffFs()">&#10005; Close</button>
+        </div>
+        <div class="mv-sec-fs-meta-row" id="mv-off-fs-meta"></div>
+        <div class="mv-sec-fs-body">
+            <div class="mv-sec-fs-section-lbl">&#9889; AI Summary <span class="mv-sec-fs-placeholder-tag">Placeholder</span></div>
+            <div class="mv-sec-fs-ai-box">
+                <div class="mv-sec-fs-ai-text" id="mv-off-fs-ai"></div>
+            </div>
+            <div class="mv-sec-fs-section-lbl" style="margin-top:18px;">Tasks</div>
+            <div class="mv-sec-fs-tasks-list" id="mv-off-fs-tasks"></div>
+            <div class="mv-sec-fs-actions" id="mv-off-fs-actions"></div>
+            <div class="mv-sec-fs-section-lbl" style="margin-top:18px;">Notes</div>
+            <textarea class="mv-fs-notes" id="mv-off-fs-notes" placeholder="Add notes for this opportunity..." oninput="offeringSaveNote(this)"></textarea>
+        </div>
+    </div>
+</div>

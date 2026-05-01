@@ -1,0 +1,55 @@
+<!-- ===== DASHBOARD TAB ===== -->
+<div class="tab-panel" id="panel-dashboard">
+    <div class="dash-day-nav">
+        <button class="dash-nav-btn" id="dash-prev" onclick="dashNavDay(1)">&#8249;</button>
+        <span id="dash-day-label">—</span>
+        <button class="dash-nav-btn" id="dash-next" onclick="dashNavDay(-1)">&#8250;</button>
+        <input type="date" id="dash-date-picker" onchange="dashJumpToDate(this.value)"
+               title="Jump to a specific date" style="margin-left:8px;">
+        <span id="dash-day-sub"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+        <button class="dash-config-btn" style="margin-bottom:0;" onclick="openDashConfig()">⚙ Manage Accounts</button>
+        <span id="dash-last-loaded" style="font-size:0.74rem;color:#aaa;"></span>
+    </div>
+    <div id="dash-accounts-container"></div>
+</div>
+
+<!-- DASHBOARD CONFIG MODAL -->
+<div id="dash-config-modal" class="hidden">
+    <div class="dash-modal-box">
+        <div class="dash-modal-title">Account / Offering Profiles</div>
+        <div id="dash-profile-list"></div>
+        <div class="dash-form" id="dash-profile-form">
+            <div class="dash-form-title" id="dash-form-title">Add Account</div>
+            <input type="hidden" id="dash-form-id">
+            <label>Name</label>
+            <input type="text" id="dash-form-name" placeholder="e.g. Sherlock">
+            <label>Colour</label>
+            <div class="dash-swatch-row" id="dash-swatch-row"></div>
+            <input type="hidden" id="dash-form-color" value="#4a90d9">
+            <label>Sources</label>
+            <div class="dash-src-checks">
+                <label><input type="checkbox" class="dash-src-chk" value="fat" checked> Find a Tender</label>
+                <label><input type="checkbox" class="dash-src-chk" value="cf" checked> Contracts Finder</label>
+                <label><input type="checkbox" class="dash-src-chk" value="pcs" checked> Public Contracts Scotland</label>
+            </div>
+            <label>CPV Prefixes <span style="font-weight:400;color:#aaa;">(comma-separated, e.g. 72, 48)</span></label>
+            <input type="text" id="dash-form-cpv" placeholder="72, 48, 30">
+            <label>Keywords <span style="font-weight:400;color:#aaa;">(comma-separated, matched in title + description)</span></label>
+            <input type="text" id="dash-form-kw" placeholder="managed services, infrastructure">
+            <label>Min Value (£)</label>
+            <input type="number" id="dash-form-min" placeholder="e.g. 500000">
+            <label>Max Value (£)</label>
+            <input type="number" id="dash-form-max" placeholder="leave blank for no limit">
+            <label>Stages <span style="font-weight:400;color:#aaa;">(comma-separated, leave blank for all)</span></label>
+            <input type="text" id="dash-form-stages" placeholder="tender, planning">
+            <label>Buyer Keywords <span style="font-weight:400;color:#aaa;">(comma-separated)</span></label>
+            <input type="text" id="dash-form-buyer" placeholder="NHS, MOD">
+            <div class="dash-form-actions">
+                <button class="dash-save-btn" onclick="saveDashProfile()">Save Profile</button>
+                <button class="dash-cancel-btn" onclick="closeDashConfig()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,255 @@
+<!-- ===== CONFIG PANEL OVERLAY ===== -->
+<div class="cfg-overlay hidden" id="cfg-overlay">
+    <div class="cfg-header">
+        <div class="cfg-header-left">
+            <div class="cfg-header-title">&#9881; AI Configuration</div>
+            <div class="cfg-header-sub">Configure how the AI understands DXC, your offerings, and your priorities</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+            <button class="cfg-save-all-btn" onclick="cfgSaveAll()">&#10003; Save All</button>
+            <button class="cfg-close-btn" onclick="closeConfig()">&#10005; Close</button>
+        </div>
+    </div>
+    <div class="cfg-body">
+
+        <!-- DXC Context -->
+        <div class="cfg-section">
+            <div class="cfg-section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>&#127970; DXC Company Context</span>
+                <span class="cfg-section-caret">&#9660;</span>
+            </div>
+            <div class="cfg-section-body">
+                <div class="cfg-status-row">&#8505; This context is passed to the AI when generating opportunity summaries and recommendations.</div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Company Overview</label>
+                    <textarea class="cfg-textarea" id="cfg-company-overview" rows="4" placeholder="Describe DXC Technology — what it does, its scale, key public sector focus areas…"></textarea>
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Key Differentiators</label>
+                    <textarea class="cfg-textarea" id="cfg-differentiators" rows="3" placeholder="What makes DXC distinctive in public sector bids? e.g. SC-cleared workforce, HSCN connectivity, NHS footprint…"></textarea>
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Exclusions / Do Not Pursue</label>
+                    <textarea class="cfg-textarea" id="cfg-exclusions" rows="2" placeholder="Sectors, regions, or contract types to exclude from recommendations…"></textarea>
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Minimum Contract Value (£)</label>
+                    <input class="cfg-input" type="number" id="cfg-min-value" placeholder="e.g. 1000000">
+                </div>
+            </div>
+        </div>
+
+        <!-- Offering Profiles -->
+        <div class="cfg-section open">
+            <div class="cfg-section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>&#127919; Offering Profiles</span>
+                <span class="cfg-section-caret">&#9660;</span>
+            </div>
+            <div class="cfg-section-body">
+                <div class="cfg-status-row">&#8505; Describe each offering's strengths so the AI can tailor recommendations per team.</div>
+                <div class="cfg-offering-tabs" id="cfg-off-tabs">
+                    <button class="cfg-otab active" onclick="switchCfgOffering('security',this)">Security</button>
+                    <button class="cfg-otab" onclick="switchCfgOffering('cloud',this)">Cloud</button>
+                    <button class="cfg-otab" onclick="switchCfgOffering('workplace',this)">Workplace</button>
+                    <button class="cfg-otab" onclick="switchCfgOffering('network',this)">Network</button>
+                </div>
+                <div id="cfg-off-panel">
+                    <div class="cfg-field">
+                        <label class="cfg-label">Focus Areas</label>
+                        <textarea class="cfg-textarea" id="cfg-off-focus" rows="2" placeholder="Key CPV codes, topics, or buyer types this offering targets…"></textarea>
+                    </div>
+                    <div class="cfg-field">
+                        <label class="cfg-label">Key Capabilities &amp; Credentials</label>
+                        <textarea class="cfg-textarea" id="cfg-off-caps" rows="3" placeholder="Describe the offering's technical strengths, certifications, reference customers…"></textarea>
+                    </div>
+                    <div class="cfg-field">
+                        <label class="cfg-label">Competitor Notes</label>
+                        <textarea class="cfg-textarea" id="cfg-off-competitors" rows="2" placeholder="Common competitors on these opportunities and DXC's differentiators against them…"></textarea>
+                    </div>
+                    <div class="cfg-field">
+                        <label class="cfg-label">Win Themes</label>
+                        <textarea class="cfg-textarea" id="cfg-off-winthemes" rows="2" placeholder="Key messages and value propositions to lead with in bid responses…"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Library -->
+        <div class="cfg-section">
+            <div class="cfg-section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>&#128196; Document Library</span>
+                <span class="cfg-section-caret">&#9660;</span>
+            </div>
+            <div class="cfg-section-body">
+                <div class="cfg-status-row">&#8505; Upload reference documents for the AI to draw on when generating summaries and bid guidance.</div>
+                <div class="cfg-upload-grid">
+                    <div class="cfg-upload-zone" onclick="this.querySelector('input').click()">
+                        <div class="cfg-upload-icon">&#128196;</div>
+                        <div class="cfg-upload-title">Framework Agreements</div>
+                        <div class="cfg-upload-hint">G-Cloud, RM6229, Crown Commercial…</div>
+                        <div class="cfg-upload-filename" id="cfg-file-frameworks-name" style="display:none;"></div>
+                        <input type="file" accept=".pdf,.docx,.txt" onchange="cfgFileSelected(this,'frameworks')">
+                    </div>
+                    <div class="cfg-upload-zone" onclick="this.querySelector('input').click()">
+                        <div class="cfg-upload-icon">&#128184;</div>
+                        <div class="cfg-upload-title">Rate Cards</div>
+                        <div class="cfg-upload-hint">Day rates, SFIA bands, blended rates…</div>
+                        <div class="cfg-upload-filename" id="cfg-file-ratecards-name" style="display:none;"></div>
+                        <input type="file" accept=".pdf,.docx,.xlsx,.txt" onchange="cfgFileSelected(this,'ratecards')">
+                    </div>
+                    <div class="cfg-upload-zone" onclick="this.querySelector('input').click()">
+                        <div class="cfg-upload-icon">&#127941;</div>
+                        <div class="cfg-upload-title">Case Studies</div>
+                        <div class="cfg-upload-hint">Past delivery references by sector…</div>
+                        <div class="cfg-upload-filename" id="cfg-file-casestudies-name" style="display:none;"></div>
+                        <input type="file" accept=".pdf,.docx,.txt" onchange="cfgFileSelected(this,'casestudies')">
+                    </div>
+                    <div class="cfg-upload-zone" onclick="this.querySelector('input').click()">
+                        <div class="cfg-upload-icon">&#128218;</div>
+                        <div class="cfg-upload-title">Strategy Documents</div>
+                        <div class="cfg-upload-hint">Sector strategy, growth plans…</div>
+                        <div class="cfg-upload-filename" id="cfg-file-strategy-name" style="display:none;"></div>
+                        <input type="file" accept=".pdf,.docx,.txt" onchange="cfgFileSelected(this,'strategy')">
+                    </div>
+                    <div class="cfg-upload-zone" onclick="this.querySelector('input').click()">
+                        <div class="cfg-upload-icon">&#127970;</div>
+                        <div class="cfg-upload-title">Company Profile</div>
+                        <div class="cfg-upload-hint">Corporate capabilities statement…</div>
+                        <div class="cfg-upload-filename" id="cfg-file-profile-name" style="display:none;"></div>
+                        <input type="file" accept=".pdf,.docx,.txt" onchange="cfgFileSelected(this,'profile')">
+                    </div>
+                    <div class="cfg-upload-zone" onclick="this.querySelector('input').click()">
+                        <div class="cfg-upload-icon">&#9989;</div>
+                        <div class="cfg-upload-title">Past Performance</div>
+                        <div class="cfg-upload-hint">Contract win/loss history, lessons…</div>
+                        <div class="cfg-upload-filename" id="cfg-file-performance-name" style="display:none;"></div>
+                        <input type="file" accept=".pdf,.docx,.xlsx,.txt" onchange="cfgFileSelected(this,'performance')">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Preferences -->
+        <div class="cfg-section">
+            <div class="cfg-section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>&#9889; AI Preferences</span>
+                <span class="cfg-section-caret">&#9660;</span>
+            </div>
+            <div class="cfg-section-body">
+                <div class="cfg-field">
+                    <label class="cfg-label">Response Tone</label>
+                    <select class="cfg-select" id="cfg-tone">
+                        <option value="concise">Concise — short action-oriented summaries</option>
+                        <option value="detailed">Detailed — full analysis with reasoning</option>
+                        <option value="executive">Executive — board-ready language</option>
+                    </select>
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Priority Sectors</label>
+                    <input class="cfg-input" type="text" id="cfg-sectors" placeholder="e.g. Defence, NHS, Central Government, Local Government">
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Bid/No-Bid Sensitivity</label>
+                    <select class="cfg-select" id="cfg-sensitivity">
+                        <option value="conservative">Conservative — only recommend strong fits</option>
+                        <option value="balanced" selected>Balanced — flag borderline cases</option>
+                        <option value="aggressive">Aggressive — cast wide, filter manually</option>
+                    </select>
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">AI Model Endpoint (optional)</label>
+                    <input class="cfg-input" type="text" id="cfg-endpoint" placeholder="https://api.anthropic.com/v1/messages">
+                </div>
+            </div>
+        </div>
+
+        <!-- User Settings -->
+        <div class="cfg-section">
+            <div class="cfg-section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>&#128100; User Settings</span>
+                <span class="cfg-section-caret">&#9660;</span>
+            </div>
+            <div class="cfg-section-body">
+                <div class="cfg-field">
+                    <label class="cfg-label">Your Name</label>
+                    <input class="cfg-input" type="text" id="cfg-user-name" placeholder="e.g. Toby Dook">
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Your Role</label>
+                    <input class="cfg-input" type="text" id="cfg-user-role" placeholder="e.g. Bid Manager, Pursuit Lead">
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Team Members</label>
+                    <textarea class="cfg-textarea" id="cfg-team" rows="2" placeholder="List team members and their roles, one per line…"></textarea>
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Default View on Load</label>
+                    <select class="cfg-select" id="cfg-default-view">
+                        <option value="myview" selected>My View</option>
+                        <option value="tenders">Tenders</option>
+                        <option value="dashboard">Dashboard</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Known Accounts -->
+        <div class="cfg-section">
+            <div class="cfg-section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>&#127968; Known Accounts</span>
+                <span class="cfg-section-caret">&#9660;</span>
+            </div>
+            <div class="cfg-section-body">
+                <div class="cfg-status-row">&#8505; Buyers we have an existing DXC relationship with. Opportunities from these buyers are routed to the Account team. One per line.</div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Current Account Buyers (one per line)</label>
+                    <textarea class="cfg-textarea" id="cfg-known-accounts" rows="6" placeholder="NHS England&#10;HMRC&#10;Ministry of Defence&#10;Cabinet Office&#10;Home Office"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Target Accounts -->
+        <div class="cfg-section">
+            <div class="cfg-section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>&#127919; Target Accounts</span>
+                <span class="cfg-section-caret">&#9660;</span>
+            </div>
+            <div class="cfg-section-body">
+                <div class="cfg-status-row">&#8505; New business targets. Format: <strong>Buyer Name | minimum £ value</strong>. Opportunities above the threshold are flagged as significant. One per line.</div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Target Account Buyers (one per line)</label>
+                    <textarea class="cfg-textarea" id="cfg-target-accounts" rows="6" placeholder="DWP | 5000000&#10;DVLA | 2000000&#10;HM Treasury | 3000000&#10;Dept for Transport | 2000000"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Offering Thresholds -->
+        <div class="cfg-section">
+            <div class="cfg-section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>&#9878; Offering Thresholds (£)</span>
+                <span class="cfg-section-caret">&#9660;</span>
+            </div>
+            <div class="cfg-section-body">
+                <div class="cfg-status-row">&#8505; Minimum contract value per offering. Opportunities below this are marked Too Small and excluded from routing.</div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Security</label>
+                    <input class="cfg-input" type="number" id="cfg-thresh-security" placeholder="2000000">
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Cloud</label>
+                    <input class="cfg-input" type="number" id="cfg-thresh-cloud" placeholder="3000000">
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Workplace</label>
+                    <input class="cfg-input" type="number" id="cfg-thresh-workplace" placeholder="1000000">
+                </div>
+                <div class="cfg-field">
+                    <label class="cfg-label">Network</label>
+                    <input class="cfg-input" type="number" id="cfg-thresh-network" placeholder="2000000">
+                </div>
+            </div>
+        </div>
+
+    </div><!-- .cfg-body -->
+</div><!-- .cfg-overlay -->
+<div class="cfg-saved-toast" id="cfg-toast">&#10003; Configuration saved</div>

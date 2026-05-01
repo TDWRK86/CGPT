@@ -1,0 +1,303 @@
+<!-- ===== MY VIEW TAB (CONCEPT) ===== -->
+<div class="tab-panel active" id="panel-myview">
+    <div class="mv-container">
+
+        <!-- Welcome banner -->
+        <div class="mv-welcome">
+            <div style="flex:1;">
+                <div class="mv-greeting" id="mv-greeting">Good morning, Toby.</div>
+                <div class="mv-subtitle" id="mv-subtitle">Your procurement intelligence overview &mdash; DXC Technology</div>
+            </div>
+            <div class="mv-welcome-right">
+                <div class="mv-view-wrap">
+                    <span class="mv-view-label">View</span>
+                    <select class="mv-view-select" id="mv-view-select" onchange="setMyView(this.value)">
+                        <option value="bidmanager">Bid Manager</option>
+                        <option value="security">Security</option>
+                        <option value="cloud">Cloud</option>
+                        <option value="workplace">Workplace</option>
+                        <option value="network">Network &amp; Infra</option>
+                    </select>
+                </div>
+                <div class="mv-date-block">
+                    <div class="mv-date-main" id="mv-date"></div>
+                    <div class="mv-date-sub">Proof of Concept &middot; Tender Intake</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="mv-stats">
+            <div class="mv-stat mv-stat--new">
+                <div class="mv-stat-icon" id="mv-s1-icon">&#128202;</div>
+                <div class="mv-stat-num" id="mv-s1-num">47</div>
+                <div class="mv-stat-label" id="mv-s1-label">New Today</div>
+                <div class="mv-stat-trend up" id="mv-s1-trend">&#8593; 12 from yesterday</div>
+            </div>
+            <div class="mv-stat mv-stat--tracked">
+                <div class="mv-stat-icon" id="mv-s2-icon">&#128203;</div>
+                <div class="mv-stat-num" id="mv-s2-num">12</div>
+                <div class="mv-stat-label" id="mv-s2-label">Tracked</div>
+                <div class="mv-stat-trend" id="mv-s2-trend">3 in active pursuit</div>
+            </div>
+            <div class="mv-stat mv-stat--value">
+                <div class="mv-stat-icon" id="mv-s3-icon">&#128176;</div>
+                <div class="mv-stat-num" id="mv-s3-num">&#163;48.2M</div>
+                <div class="mv-stat-label" id="mv-s3-label">Pipeline Value</div>
+                <div class="mv-stat-trend up" id="mv-s3-trend">Across 5 pursuits</div>
+            </div>
+            <div class="mv-stat mv-stat--closing">
+                <div class="mv-stat-icon" id="mv-s4-icon">&#9200;</div>
+                <div class="mv-stat-num" id="mv-s4-num">3</div>
+                <div class="mv-stat-label" id="mv-s4-label">Closing This Week</div>
+                <div class="mv-stat-trend warn" id="mv-s4-trend">&#9888; Action required</div>
+            </div>
+        </div>
+
+        <!-- Main grid (2 col) -->
+        <div class="mv-grid" id="mv-main-grid">
+
+            <!-- New Opportunities -->
+            <div class="mv-card">
+                <div class="mv-card-header">
+                    <div class="mv-card-title">
+                        <div class="mv-card-icon mv-icon-blue" id="mv-b1-icon">&#9733;</div>
+                        <span id="mv-b1-title">New Opportunities</span>
+                    </div>
+                    <a href="#" class="mv-card-link" id="mv-b1-link" onclick="switchTab('opps');return false;">View all &rarr;</a>
+                </div>
+                <div class="mv-card-body" id="mv-b1-body">
+                    <div class="mv-opp-row">
+                        <div class="mv-opp-title">Digital Workplace Transformation Services</div>
+                        <div class="mv-opp-meta">
+                            <span class="mv-opp-buyer">NHS Digital</span>
+                            <span class="mv-pill mv-pill-blue">tender</span>
+                            <span class="mv-pill mv-pill-fat">FaT</span>
+                            <span class="mv-value-tag">&#163;12.4M</span>
+                        </div>
+                    </div>
+                    <div class="mv-opp-row">
+                        <div class="mv-opp-title">Managed Security Operations Centre (MSOC)</div>
+                        <div class="mv-opp-meta">
+                            <span class="mv-opp-buyer">HMRC</span>
+                            <span class="mv-pill mv-pill-blue">tender</span>
+                            <span class="mv-pill mv-pill-fat">FaT</span>
+                            <span class="mv-value-tag">&#163;24.0M</span>
+                        </div>
+                    </div>
+                    <div class="mv-opp-row">
+                        <div class="mv-opp-title">Network Infrastructure Refresh Programme</div>
+                        <div class="mv-opp-meta">
+                            <span class="mv-opp-buyer">Department for Transport</span>
+                            <span class="mv-pill mv-pill-orange">planning</span>
+                            <span class="mv-pill mv-pill-fat">FaT</span>
+                            <span class="mv-value-tag">&#163;8.1M</span>
+                        </div>
+                    </div>
+                    <div class="mv-opp-row">
+                        <div class="mv-opp-title">End User Device Management &amp; Support</div>
+                        <div class="mv-opp-meta">
+                            <span class="mv-opp-buyer">Home Office</span>
+                            <span class="mv-pill mv-pill-blue">tender</span>
+                            <span class="mv-pill mv-pill-cf">CF</span>
+                            <span class="mv-value-tag">&#163;5.6M</span>
+                        </div>
+                    </div>
+                    <div class="mv-opp-row">
+                        <div class="mv-opp-title">Cloud Migration &amp; Managed Services</div>
+                        <div class="mv-opp-meta">
+                            <span class="mv-opp-buyer">Cabinet Office</span>
+                            <span class="mv-pill mv-pill-blue">tender</span>
+                            <span class="mv-pill mv-pill-fat">FaT</span>
+                            <span class="mv-value-tag">&#163;6.8M</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Views / Focus -->
+            <div class="mv-card">
+                <div class="mv-card-header">
+                    <div class="mv-card-title">
+                        <div class="mv-card-icon mv-icon-orange" id="mv-b2-icon">&#9632;</div>
+                        <span id="mv-b2-title">Account Views</span>
+                    </div>
+                    <a href="#" class="mv-card-link" id="mv-b2-link" onclick="switchTab('dashboard');return false;">Open dashboard &rarr;</a>
+                </div>
+                <div class="mv-card-body" id="mv-b2-body">
+                    <div class="mv-account-row">
+                        <div class="mv-account-top">
+                            <div class="mv-account-dot" style="background:#4a90d9;"></div>
+                            <div class="mv-account-name">Sherlock</div>
+                            <div class="mv-account-count">34 matches today</div>
+                        </div>
+                        <div class="mv-account-bar"><div class="mv-account-fill" style="width:88%;background:linear-gradient(90deg,#4a90d9,#60a5fa);"></div></div>
+                        <div class="mv-account-cpvs">CPV 72, 48 &middot; IT Services &amp; Software</div>
+                    </div>
+                    <div class="mv-account-row">
+                        <div class="mv-account-top">
+                            <div class="mv-account-dot" style="background:#E8583A;"></div>
+                            <div class="mv-account-name">White Lotus</div>
+                            <div class="mv-account-count">12 matches today</div>
+                        </div>
+                        <div class="mv-account-bar"><div class="mv-account-fill" style="width:31%;background:linear-gradient(90deg,#E8583A,#fb923c);"></div></div>
+                        <div class="mv-account-cpvs">CPV 48, 79 &middot; Software &amp; Consulting</div>
+                    </div>
+                    <div class="mv-account-row">
+                        <div class="mv-account-top">
+                            <div class="mv-account-dot" style="background:#27a050;"></div>
+                            <div class="mv-account-name">Horizon</div>
+                            <div class="mv-account-count">8 matches today</div>
+                        </div>
+                        <div class="mv-account-bar"><div class="mv-account-fill" style="width:21%;background:linear-gradient(90deg,#27a050,#34d399);"></div></div>
+                        <div class="mv-account-cpvs">CPV 50, 72 &middot; Maintenance &amp; IT</div>
+                    </div>
+                    <div class="mv-account-row">
+                        <div class="mv-account-top">
+                            <div class="mv-account-dot" style="background:#9333ea;"></div>
+                            <div class="mv-account-name">Meridian</div>
+                            <div class="mv-account-count">5 matches today</div>
+                        </div>
+                        <div class="mv-account-bar"><div class="mv-account-fill" style="width:13%;background:linear-gradient(90deg,#9333ea,#c084fc);"></div></div>
+                        <div class="mv-account-cpvs">CPV 32, 72 &middot; Telecoms &amp; IT</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Deadlines -->
+            <div class="mv-card">
+                <div class="mv-card-header">
+                    <div class="mv-card-title">
+                        <div class="mv-card-icon mv-icon-amber" id="mv-b3-icon">&#9888;</div>
+                        <span id="mv-b3-title">Upcoming Deadlines</span>
+                    </div>
+                    <a href="#" class="mv-card-link" id="mv-b3-link" style="display:none;"></a>
+                </div>
+                <div class="mv-card-body" id="mv-b3-body">
+                    <div class="mv-deadline-row">
+                        <div class="mv-deadline-badge mv-badge-urgent"><span class="mv-dd-day">2</span><span class="mv-dd-mon">May</span></div>
+                        <div class="mv-deadline-info">
+                            <div class="mv-deadline-title">Digital Workplace Transformation</div>
+                            <div class="mv-deadline-buyer">NHS Digital</div>
+                        </div>
+                        <div class="mv-deadline-days mv-days-urgent">3 days</div>
+                    </div>
+                    <div class="mv-deadline-row">
+                        <div class="mv-deadline-badge mv-badge-soon"><span class="mv-dd-day">8</span><span class="mv-dd-mon">May</span></div>
+                        <div class="mv-deadline-info">
+                            <div class="mv-deadline-title">Managed Security Operations Centre</div>
+                            <div class="mv-deadline-buyer">HMRC</div>
+                        </div>
+                        <div class="mv-deadline-days mv-days-soon">9 days</div>
+                    </div>
+                    <div class="mv-deadline-row">
+                        <div class="mv-deadline-badge mv-badge-ok"><span class="mv-dd-day">14</span><span class="mv-dd-mon">May</span></div>
+                        <div class="mv-deadline-info">
+                            <div class="mv-deadline-title">Network Infrastructure Refresh</div>
+                            <div class="mv-deadline-buyer">Dept for Transport</div>
+                        </div>
+                        <div class="mv-deadline-days mv-days-ok">15 days</div>
+                    </div>
+                    <div class="mv-deadline-row">
+                        <div class="mv-deadline-badge mv-badge-ok"><span class="mv-dd-day">20</span><span class="mv-dd-mon">May</span></div>
+                        <div class="mv-deadline-info">
+                            <div class="mv-deadline-title">Enterprise IT Outsourcing Programme</div>
+                            <div class="mv-deadline-buyer">Ministry of Defence</div>
+                        </div>
+                        <div class="mv-deadline-days mv-days-ok">21 days</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pursuit Pipeline -->
+            <div class="mv-card">
+                <div class="mv-card-header">
+                    <div class="mv-card-title">
+                        <div class="mv-card-icon mv-icon-green" id="mv-b4-icon">&#9650;</div>
+                        <span id="mv-b4-title">Pursuit Pipeline</span>
+                    </div>
+                    <a href="#" class="mv-card-link" id="mv-b4-link" onclick="switchTab('triage');return false;">View triage &rarr;</a>
+                </div>
+                <div class="mv-card-body" id="mv-b4-body">
+                    <div class="mv-pipeline-row">
+                        <div class="mv-pipeline-dot" style="background:#9333ea;"></div>
+                        <div class="mv-pipeline-name">Enterprise IT Outsourcing &mdash; MOD</div>
+                        <div class="mv-pipeline-value">&#163;45.0M</div>
+                        <div class="mv-pipeline-bar"><div class="mv-pipeline-fill" style="width:93%;background:#9333ea;"></div></div>
+                    </div>
+                    <div class="mv-pipeline-row">
+                        <div class="mv-pipeline-dot" style="background:#4a90d9;"></div>
+                        <div class="mv-pipeline-name">Managed Services Bundle &mdash; NHS</div>
+                        <div class="mv-pipeline-value">&#163;22.8M</div>
+                        <div class="mv-pipeline-bar"><div class="mv-pipeline-fill" style="width:47%;background:#4a90d9;"></div></div>
+                    </div>
+                    <div class="mv-pipeline-row">
+                        <div class="mv-pipeline-dot" style="background:#E8583A;"></div>
+                        <div class="mv-pipeline-name">Digital Transformation &mdash; DWP</div>
+                        <div class="mv-pipeline-value">&#163;18.3M</div>
+                        <div class="mv-pipeline-bar"><div class="mv-pipeline-fill" style="width:38%;background:#E8583A;"></div></div>
+                    </div>
+                    <div class="mv-pipeline-row">
+                        <div class="mv-pipeline-dot" style="background:#27a050;"></div>
+                        <div class="mv-pipeline-name">Cybersecurity Services &mdash; GCHQ</div>
+                        <div class="mv-pipeline-value">&#163;9.1M</div>
+                        <div class="mv-pipeline-bar"><div class="mv-pipeline-fill" style="width:19%;background:#27a050;"></div></div>
+                    </div>
+                    <div class="mv-pipeline-row">
+                        <div class="mv-pipeline-dot" style="background:#f59e0b;"></div>
+                        <div class="mv-pipeline-name">Cloud Migration &mdash; Cabinet Office</div>
+                        <div class="mv-pipeline-value">&#163;6.8M</div>
+                        <div class="mv-pipeline-bar"><div class="mv-pipeline-fill" style="width:14%;background:#f59e0b;"></div></div>
+                    </div>
+                    <div class="mv-total-row">
+                        <span class="mv-total-label">Total Pipeline</span>
+                        <span class="mv-total-value">&#163;102.0M</span>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /mv-grid -->
+
+        <!-- OFFERING LAYOUT (shown for Security, Cloud, Workplace, Network views) -->
+        <div id="mv-offering-layout" class="mv-sec-layout" style="display:none;">
+
+            <!-- Review Queue — full width -->
+            <div class="mv-card">
+                <div class="mv-card-header">
+                    <div class="mv-card-title">
+                        <div class="mv-card-icon mv-icon-blue" id="mv-off-queue-icon">&#128737;</div>
+                        <span id="mv-off-queue-title">Opportunities to Review &mdash; Today</span>
+                    </div>
+                    <span class="mv-queue-header-sub">Qualify each tender in or out</span>
+                </div>
+                <div class="mv-card-body" id="mv-off-queue-body"></div>
+            </div>
+
+            <!-- 2-col: Focus Areas + Pipeline -->
+            <div class="mv-grid">
+                <div class="mv-card">
+                    <div class="mv-card-header">
+                        <div class="mv-card-title">
+                            <div class="mv-card-icon mv-icon-orange">&#9632;</div>
+                            <span id="mv-off-focus-title">Focus Areas</span>
+                        </div>
+                        <a href="#" class="mv-card-link" onclick="switchTab('dashboard');return false;">Open dashboard &rarr;</a>
+                    </div>
+                    <div class="mv-card-body" id="mv-off-focus-body"></div>
+                </div>
+                <div class="mv-card">
+                    <div class="mv-card-header">
+                        <div class="mv-card-title">
+                            <div class="mv-card-icon mv-icon-green">&#9650;</div>
+                            <span id="mv-off-pipeline-title">Pipeline</span>
+                        </div>
+                        <a href="#" class="mv-card-link" onclick="switchTab('triage');return false;">View triage &rarr;</a>
+                    </div>
+                    <div class="mv-card-body" id="mv-off-pipeline-body"></div>
+                </div>
+            </div>
+
+        </div><!-- /mv-offering-layout -->
+
+    </div><!-- /mv-container -->
+</div>

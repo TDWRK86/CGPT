@@ -1,0 +1,62 @@
+<!-- BID MANAGER LAYOUT (shown only for Bid Manager view) -->
+<div id="mv-bidmanager-layout" class="mv-sec-layout" style="display:none;">
+
+    <!-- Full-width Active Pursuits card -->
+    <div class="mv-card">
+        <div class="mv-card-header">
+            <div class="mv-card-title">
+                <div class="mv-card-icon mv-icon-blue">&#128203;</div>
+                <span>Active Pursuits &mdash; Bid Tracker</span>
+            </div>
+            <span class="mv-queue-header-sub">Track qualification, team inputs &amp; submissions</span>
+        </div>
+        <div class="mv-card-body" id="mv-bid-pursuits-body"></div>
+    </div>
+
+    <!-- 2-col: Accounts + Pipeline -->
+    <div class="mv-grid">
+        <div class="mv-card">
+            <div class="mv-card-header">
+                <div class="mv-card-title">
+                    <div class="mv-card-icon mv-icon-orange">&#9632;</div>
+                    <span>Account Views</span>
+                </div>
+                <a href="#" class="mv-card-link" onclick="switchTab('dashboard');return false;">Open dashboard &rarr;</a>
+            </div>
+            <div class="mv-card-body" id="mv-bid-accts-body"></div>
+        </div>
+        <div class="mv-card">
+            <div class="mv-card-header">
+                <div class="mv-card-title">
+                    <div class="mv-card-icon mv-icon-green">&#9650;</div>
+                    <span>Pursuit Pipeline</span>
+                </div>
+                <a href="#" class="mv-card-link" onclick="switchTab('triage');return false;">View triage &rarr;</a>
+            </div>
+            <div class="mv-card-body" id="mv-bid-pipe-body"></div>
+        </div>
+    </div>
+
+</div><!-- /mv-bidmanager-layout -->
+
+<!-- BID MANAGER FULLSCREEN -->
+<div id="mv-bid-fullscreen" class="mv-sec-fs-overlay hidden">
+    <div class="mv-sec-fs-box">
+        <div class="mv-sec-fs-header">
+            <div class="mv-sec-fs-title" id="mv-bid-fs-title"></div>
+            <button class="mv-sec-fs-close" onclick="closeMvBidFs()">&#10005; Close</button>
+        </div>
+        <div class="mv-sec-fs-meta-row" id="mv-bid-fs-meta"></div>
+        <div class="mv-sec-fs-body">
+            <div class="mv-sec-fs-section-lbl">&#9889; AI Summary <span class="mv-sec-fs-placeholder-tag">Placeholder</span></div>
+            <div class="mv-sec-fs-ai-box">
+                <div class="mv-sec-fs-ai-text" id="mv-bid-fs-ai"></div>
+            </div>
+            <div class="mv-sec-fs-section-lbl" style="margin-top:18px;">Team Qualification Status</div>
+            <div id="mv-bid-fs-team"></div>
+            <div class="mv-sec-fs-section-lbl" style="margin-top:18px;">Notes</div>
+            <textarea class="mv-fs-notes" id="mv-bid-fs-notes" placeholder="Add bid notes, actions, decisions..." oninput="bidSaveNote(this)"></textarea>
+            <div class="mv-sec-fs-actions" id="mv-bid-fs-actions"></div>
+        </div>
+    </div>
+</div>

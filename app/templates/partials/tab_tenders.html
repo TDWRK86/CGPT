@@ -1,0 +1,324 @@
+<!-- ===== OPPORTUNITIES TAB ===== -->
+<div class="tab-panel" id="panel-tenders" style="flex-direction:column;">
+<nav class="sub-nav">
+    <button class="sub-nav-btn active" id="subnav-opps"    onclick="switchSubTab('opps')">Opportunities</button>
+    <button class="sub-nav-btn"        id="subnav-review"  onclick="switchSubTab('review')">
+        Review <span class="tab-badge hidden" id="badge-review-inner"></span>
+    </button>
+    <button class="sub-nav-btn"        id="subnav-triage"  onclick="switchSubTab('triage')">Morning Triage</button>
+</nav>
+
+<div class="sub-panel active" id="sub-panel-opps">
+<div class="tab-panel" id="panel-opps" style="flex:1;display:flex;overflow:hidden;">
+    <aside class="sidebar" id="opp-sidebar">
+        <button class="sidebar-toggle" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle filters">&#8249;</button>
+        <div class="sidebar-inner">
+
+        <!-- ── Find a Tender Filters ── -->
+        <div id="filters-fat" class="source-filters">
+            <div class="ss-section">
+                <div class="ss-header" onclick="toggleSavedSearches('fat')">
+                    <span>Saved Searches</span>
+                    <span class="ss-badge" id="ss-count-fat"></span>
+                    <span class="ss-caret" id="ss-caret-fat">▸</span>
+                </div>
+                <div class="ss-body" id="ss-body-fat">
+                    <div id="ss-list-fat"></div>
+                    <div class="ss-save-row">
+                        <input type="text" id="ss-name-fat" class="ss-name-input" placeholder="Name this search…"
+                               onkeydown="if(event.key==='Enter')saveCurrentSearch('fat')">
+                        <button class="ss-save-btn" onclick="saveCurrentSearch('fat')">Save</button>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-group" style="margin-bottom:8px;">
+                <label>Filter by Offering</label>
+                <div class="off-filter-row" id="off-pills-fat">
+                    <button class="off-pill active" data-view="all"       onclick="filterByOffering('all','fat')">All</button>
+                    <button class="off-pill"         data-view="security"  onclick="filterByOffering('security','fat')">Security</button>
+                    <button class="off-pill"         data-view="cloud"     onclick="filterByOffering('cloud','fat')">Cloud</button>
+                    <button class="off-pill"         data-view="workplace" onclick="filterByOffering('workplace','fat')">Workplace</button>
+                    <button class="off-pill"         data-view="network"   onclick="filterByOffering('network','fat')">Network</button>
+                </div>
+            </div>
+            <h2>Filters</h2>
+            <div class="filter-group">
+                <label>Keyword Search</label>
+                <input type="text" id="f-keyword" placeholder="e.g. framework, Ministry of Defence" oninput="debouncedFetch()">
+            </div>
+            <div class="filter-group">
+                <label>CPV Prefixes</label>
+                <input type="text" id="f-cpv" placeholder="e.g. 30, 48, 72" oninput="debouncedFetch()">
+                <div style="font-size:0.7rem;color:#aaa;margin-top:2px;">Comma-separated</div>
+            </div>
+            <div class="filter-group">
+                <label>Contract Value (£)</label>
+                <div class="row2">
+                    <input type="number" id="f-min" placeholder="Min" oninput="debouncedFetch()">
+                    <input type="number" id="f-max" placeholder="Max" oninput="debouncedFetch()">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Stage / Tags</label>
+                <div class="checkbox-group" id="stage-checkboxes"></div>
+            </div>
+            <div class="filter-group">
+                <label>Route</label>
+                <div class="checkbox-group" id="route-checkboxes">
+                    <label><input type="checkbox" value="current_account"   onchange="applyRouteFilter()"> Account</label>
+                    <label><input type="checkbox" value="target_significant" onchange="applyRouteFilter()"> Target ★</label>
+                    <label><input type="checkbox" value="target_small"      onchange="applyRouteFilter()"> Target</label>
+                    <label><input type="checkbox" value="pursuit_team"      onchange="applyRouteFilter()"> Pursuit</label>
+                    <label><input type="checkbox" value="too_small"         onchange="applyRouteFilter()"> Too Small</label>
+                    <label><input type="checkbox" value="no_dxc_offering"   onchange="applyRouteFilter()"> No Match</label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Buyer Name</label>
+                <input type="text" id="f-buyer" placeholder="Search buyer…" oninput="debouncedFetch()">
+            </div>
+            <div class="filter-group">
+                <label>Published Date</label>
+                <div class="row2">
+                    <input type="date" id="f-date-from" onchange="debouncedFetch()">
+                    <input type="date" id="f-date-to" onchange="debouncedFetch()">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label style="font-weight:400;"><input type="checkbox" id="f-framework-only" onchange="debouncedFetch()" style="margin-right:5px;">Framework / DPS only</label>
+            </div>
+            <button class="clear-btn" onclick="clearFilters()">Clear all filters</button>
+            <button class="clear-btn" id="backfill-btn" onclick="backfillContractMonths()" style="margin-top:6px;">Backfill contract lengths</button>
+            <span id="backfill-status" style="font-size:0.68rem;color:#888;display:block;margin-top:4px;"></span>
+            <button class="clear-btn" id="backfill-suppliers-btn" onclick="backfillSuppliers()" style="margin-top:6px;">Backfill awarded suppliers</button>
+            <span id="backfill-suppliers-status" style="font-size:0.68rem;color:#888;display:block;margin-top:4px;"></span>
+        </div>
+
+        <!-- ── Contracts Finder Filters ── -->
+        <div id="filters-cf" class="source-filters" style="display:none">
+            <div class="ss-section">
+                <div class="ss-header" onclick="toggleSavedSearches('cf')">
+                    <span>Saved Searches</span>
+                    <span class="ss-badge" id="ss-count-cf"></span>
+                    <span class="ss-caret" id="ss-caret-cf">▸</span>
+                </div>
+                <div class="ss-body" id="ss-body-cf">
+                    <div id="ss-list-cf"></div>
+                    <div class="ss-save-row">
+                        <input type="text" id="ss-name-cf" class="ss-name-input" placeholder="Name this search…"
+                               onkeydown="if(event.key==='Enter')saveCurrentSearch('cf')">
+                        <button class="ss-save-btn" onclick="saveCurrentSearch('cf')">Save</button>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-group" style="margin-bottom:8px;">
+                <label>Filter by Offering</label>
+                <div class="off-filter-row" id="off-pills-cf">
+                    <button class="off-pill active" data-view="all"       onclick="filterByOffering('all','cf')">All</button>
+                    <button class="off-pill"         data-view="security"  onclick="filterByOffering('security','cf')">Security</button>
+                    <button class="off-pill"         data-view="cloud"     onclick="filterByOffering('cloud','cf')">Cloud</button>
+                    <button class="off-pill"         data-view="workplace" onclick="filterByOffering('workplace','cf')">Workplace</button>
+                    <button class="off-pill"         data-view="network"   onclick="filterByOffering('network','cf')">Network</button>
+                </div>
+            </div>
+            <h2>Filters</h2>
+            <div class="filter-group">
+                <label>Keyword Search</label>
+                <input type="text" id="cf-keyword" placeholder="e.g. framework, software" oninput="debouncedFetch()">
+            </div>
+            <div class="filter-group">
+                <label>CPV Prefixes</label>
+                <input type="text" id="cf-cpv" placeholder="e.g. 30, 48, 72" oninput="debouncedFetch()">
+                <div style="font-size:0.7rem;color:#aaa;margin-top:2px;">Comma-separated</div>
+            </div>
+            <div class="filter-group">
+                <label>Contract Value (£)</label>
+                <div class="row2">
+                    <input type="number" id="cf-min" placeholder="Min" oninput="debouncedFetch()">
+                    <input type="number" id="cf-max" placeholder="Max" oninput="debouncedFetch()">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Procurement Stage</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="cf-stage-planning" value="planning" onchange="debouncedFetch()" checked> Planning</label>
+                    <label><input type="checkbox" id="cf-stage-tender"   value="tender"   onchange="debouncedFetch()" checked> Tender</label>
+                    <label><input type="checkbox" id="cf-stage-award"    value="award"    onchange="debouncedFetch()"> Award</label>
+                    <label><input type="checkbox" id="cf-stage-contract" value="contract" onchange="debouncedFetch()"> Contract</label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Buyer Name</label>
+                <input type="text" id="cf-buyer" placeholder="Search buyer…" oninput="debouncedFetch()">
+            </div>
+            <div class="filter-group">
+                <label>Published Date</label>
+                <div class="row2">
+                    <input type="date" id="cf-date-from" onchange="debouncedFetch()">
+                    <input type="date" id="cf-date-to"   onchange="debouncedFetch()">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Display period</label>
+                <select id="cf-days-back" onchange="debouncedFetch()">
+                    <option value="7"  selected>Last 7 days</option>
+                    <option value="14">Last 14 days</option>
+                    <option value="30">Last 30 days</option>
+                </select>
+            </div>
+            <button class="clear-btn" onclick="clearCfFilters()">Clear all filters</button>
+        </div>
+
+        <!-- ── Public Contracts Scotland Filters ── -->
+        <div id="filters-pcs" class="source-filters" style="display:none">
+            <div class="ss-section">
+                <div class="ss-header" onclick="toggleSavedSearches('pcs')">
+                    <span>Saved Searches</span>
+                    <span class="ss-badge" id="ss-count-pcs"></span>
+                    <span class="ss-caret" id="ss-caret-pcs">▸</span>
+                </div>
+                <div class="ss-body" id="ss-body-pcs">
+                    <div id="ss-list-pcs"></div>
+                    <div class="ss-save-row">
+                        <input type="text" id="ss-name-pcs" class="ss-name-input" placeholder="Name this search…"
+                               onkeydown="if(event.key==='Enter')saveCurrentSearch('pcs')">
+                        <button class="ss-save-btn" onclick="saveCurrentSearch('pcs')">Save</button>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-group" style="margin-bottom:8px;">
+                <label>Filter by Offering</label>
+                <div class="off-filter-row" id="off-pills-pcs">
+                    <button class="off-pill active" data-view="all"       onclick="filterByOffering('all','pcs')">All</button>
+                    <button class="off-pill"         data-view="security"  onclick="filterByOffering('security','pcs')">Security</button>
+                    <button class="off-pill"         data-view="cloud"     onclick="filterByOffering('cloud','pcs')">Cloud</button>
+                    <button class="off-pill"         data-view="workplace" onclick="filterByOffering('workplace','pcs')">Workplace</button>
+                    <button class="off-pill"         data-view="network"   onclick="filterByOffering('network','pcs')">Network</button>
+                </div>
+            </div>
+            <h2>Filters</h2>
+            <div class="filter-group">
+                <label>Keyword Search</label>
+                <input type="text" id="pcs-keyword" placeholder="e.g. framework, software" oninput="debouncedFetch()">
+            </div>
+            <div class="filter-group">
+                <label>CPV Prefixes</label>
+                <input type="text" id="pcs-cpv" placeholder="e.g. 30, 48, 72" oninput="debouncedFetch()">
+                <div style="font-size:0.7rem;color:#aaa;margin-top:2px;">Comma-separated</div>
+            </div>
+            <div class="filter-group">
+                <label>Contract Value (£)</label>
+                <div class="row2">
+                    <input type="number" id="pcs-min" placeholder="Min" oninput="debouncedFetch()">
+                    <input type="number" id="pcs-max" placeholder="Max" oninput="debouncedFetch()">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Notice Type</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="pcs-type-1" value="1" onchange="debouncedFetch()" checked> Contract Notice</label>
+                    <label><input type="checkbox" id="pcs-type-4" value="4" onchange="debouncedFetch()" checked> Prior Info Notice</label>
+                    <label><input type="checkbox" id="pcs-type-5" value="5" onchange="debouncedFetch()" checked> Award Notice</label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Buyer Name</label>
+                <input type="text" id="pcs-buyer" placeholder="Search buyer…" oninput="debouncedFetch()">
+            </div>
+            <div class="filter-group">
+                <label>Published Date</label>
+                <div class="row2">
+                    <input type="date" id="pcs-date-from" onchange="debouncedFetch()">
+                    <input type="date" id="pcs-date-to"   onchange="debouncedFetch()">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Display period</label>
+                <select id="pcs-months-back" onchange="debouncedFetch()">
+                    <option value="1">Last 1 month</option>
+                    <option value="2" selected>Last 2 months</option>
+                    <option value="3">Last 3 months</option>
+                </select>
+            </div>
+            <button class="clear-btn" onclick="clearPcsFilters()">Clear all filters</button>
+        </div>
+
+        </div><!-- .sidebar-inner -->
+    </aside>
+
+    <main class="content">
+        <div class="source-switcher">
+            <button class="source-pill active" id="src-fat"  onclick="switchSource('fat')">Find a Tender</button>
+            <button class="source-pill"        id="src-cf"   onclick="switchSource('cf')">Contracts Finder</button>
+            <button class="source-pill"        id="src-pcs"  onclick="switchSource('pcs')">Public Contracts Scotland</button>
+        </div>
+        <div class="toolbar">
+            <div style="display:flex;flex-direction:column;gap:2px;">
+                <span id="result-count">—</span>
+                <span id="last-updated-text" style="font-size:0.72rem;color:#aaa;"></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <button class="reset-cols-btn hidden" id="reset-cols-btn" onclick="resetColWidths()">Reset columns</button>
+                <select class="sort-select" id="sort-select" onchange="currentPage=1;renderTable(currentData)">
+                    <option value="date-desc">Newest first</option>
+                    <option value="date-asc">Oldest first</option>
+                    <option value="value-desc">Value: high to low</option>
+                    <option value="value-asc">Value: low to high</option>
+                    <option value="title-asc">Title: A → Z</option>
+                </select>
+            </div>
+        </div>
+        <div id="table-container">
+            <div class="empty-state">Click <strong>Load today's opportunities</strong> to fetch data.</div>
+        </div>
+        <div class="pagination-bar" id="pagination-bar"></div>
+        <div class="selection-bar hidden" id="selection-bar">
+            <span id="selection-label">0 opportunities selected</span>
+            <button class="review-btn" onclick="switchTab('review')">Review selected →</button>
+        </div>
+    </main>
+</div>
+
+</div><!-- /sub-panel-opps -->
+
+<div class="sub-panel" id="sub-panel-review">
+<div class="tab-panel" id="panel-review" style="flex:1;display:flex;overflow:hidden;">
+    <!-- Sticky triage bar -->
+    <div class="triage-bar hidden" id="triage-bar">
+        <span id="triage-bar-label">0 selected for triage</span>
+        <button class="triage-submit-btn" id="triage-submit-btn" onclick="submitTriage()">
+            Add to Morning Triage →
+        </button>
+    </div>
+    <!-- Scrollable card area -->
+    <div class="review-panel-inner">
+        <div class="review-header">
+            <h2>Selected for Review</h2>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button class="clear-review-btn hidden" id="clear-review-btn" onclick="clearReview()">✕ Clear all</button>
+                <span id="review-count"></span>
+            </div>
+        </div>
+        <div id="review-container">
+            <div class="review-empty">No opportunities selected yet.<br>
+                Go to the <strong>Opportunities</strong> tab and tick some checkboxes.</div>
+        </div>
+    </div>
+</div>
+
+</div><!-- /sub-panel-review -->
+
+<div class="sub-panel" id="sub-panel-triage">
+<div class="tab-panel" id="panel-triage" style="flex:1;display:flex;overflow:hidden;">
+    <div style="width:100%;">
+        <div class="review-header">
+            <h2>Morning Triage Sessions</h2>
+            <span id="triage-count"></span>
+        </div>
+        <div id="triage-container">
+            <div class="review-empty">Loading…</div>
+        </div>
+    </div>
+</div>
+</div><!-- /sub-panel-triage -->
+</div><!-- /panel-tenders -->
