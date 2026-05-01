@@ -5,7 +5,13 @@
       "Bash(python -c ' *)",
       "Bash(sqlite3 app/scraper/data/procurement.db \".schema\")",
       "Bash(python3)",
-      "Bash(python3 -c \"import sqlite3; conn = sqlite3.connect\\('app/scraper/data/procurement.db'\\); cursor = conn.cursor\\(\\); cursor.execute\\(\\\\\"SELECT name FROM sqlite_master WHERE type='table';\\\\\"\\); print\\([row for row in cursor.fetchall\\(\\)]\\)\")"
+      "Bash(python3 -c \"import sqlite3; conn = sqlite3.connect\\('app/scraper/data/procurement.db'\\); cursor = conn.cursor\\(\\); cursor.execute\\(\\\\\"SELECT name FROM sqlite_master WHERE type='table';\\\\\"\\); print\\([row for row in cursor.fetchall\\(\\)]\\)\")",
+      "WebFetch(domain:loopio.stoplight.io)",
+      "WebSearch",
+      "WebFetch(domain:support.loopio.com)",
+      "WebFetch(domain:developer.loopio.com)",
+      "WebFetch(domain:loopio.com)",
+      "WebFetch(domain:developer.salesforce.com)"
     ]
   }
 }
